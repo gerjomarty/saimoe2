@@ -180,6 +180,7 @@ DEPENDENCIES
   newrelic_rpm
   pg
   rails (= 3.2.3)
+  rake
   rspec-rails
   ruby-debug19
   thin
