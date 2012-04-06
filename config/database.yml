@@ -43,7 +43,7 @@ test:
   encoding: unicode
   database: saimoe2_test
   pool: 5
-  username: saimoe2
+  username: postgres
   password:
 
 production:
