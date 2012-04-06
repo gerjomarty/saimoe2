@@ -15,5 +15,5 @@ Copyright &copy; gerjomarty\. All rights reserved\. Licensed under the Creative 
 [2]: http://ast2011.sitemix.jp/
 [3]: http://www.animesaimoe.org/
 [4]: http://github.com/gerjomarty/saimoe
-[4]: http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png
-[5]: http://creativecommons.org/licenses/by-nc-sa/3.0/
+[5]: http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png
+[6]: http://creativecommons.org/licenses/by-nc-sa/3.0/
