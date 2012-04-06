@@ -1,4 +1,8 @@
 language: ruby
 rvm:
   - 1.9.2
+
 bundler_args: --without development production
+
+before_script:
+  - psql -c 'create database saimoe2_test;' -U postgres
