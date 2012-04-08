@@ -1,4 +1,4 @@
-Saimoe  [![Build Status][travisimage]][travislink]  [![Dependency Status][gemnasiumimage]][gemnasiumlink]
+Saimoe [![Build Status][travisimage]][travislink] [![Dependency Status][gemnasiumimage]][gemnasiumlink]
 ======
 
 This app is a Ruby on Rails 3.2 app in progress to document/analyse proceedings from the annual [2ch][2ch] [Anime Saimoe Tournament][officialsaimoe]\. Data is taken from the [unofficial English language Saimoe site][englishsaimoe]\.

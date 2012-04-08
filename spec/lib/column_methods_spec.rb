@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require 'spec_helper'
 
 describe ColumnMethods do
   before :each do
@@ -9,7 +9,7 @@ describe ColumnMethods do
     end
   end
 
-  describe :q_column do
+  describe "#q_column" do
     it "should quote a given String column name" do
       Dummy.q_column('foo').should == %Q{"dummies"."foo"}
     end
@@ -19,7 +19,7 @@ describe ColumnMethods do
     end
   end
 
-  describe :all_columns do
+  describe "#all_columns" do
     it "should return all quoted columns" do
       Dummy.all_columns.should == %Q{"dummies"."id", "dummies"."name", "dummies"."email"}
     end

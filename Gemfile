@@ -29,6 +29,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'acts_as_fu'
   gem 'mocha'
+  gem 'shoulda-matchers'
 end
 
 # To use ActiveModel has_secure_password
