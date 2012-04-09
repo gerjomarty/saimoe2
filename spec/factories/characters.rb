@@ -6,10 +6,12 @@ FactoryGirl.define do
     last_name "Last"
     given_name "Given"
 
+    association :main_series, factory: :series
+
     trait :empty do
-      first_name ""
-      last_name ""
-      given_name ""
+      first_name nil
+      last_name nil
+      given_name nil
     end
 
     trait :first do

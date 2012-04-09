@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe Character do
+  it { should belong_to(:main_series) }
+  it { should have_many(:character_roles) }
+
+  it { should validate_presence_of(:main_series_id) }
+  it { should validate_numericality_of(:main_series_id) }
+
   it "should not allow no names" do
     character = build :empty_character
     character.valid?.should be_false

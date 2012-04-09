@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :series do
     name "Series Name"
-    color_code ""
+    color_code nil
 
     trait :with_color_code do
       color_code "123456"

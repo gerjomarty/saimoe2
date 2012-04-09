@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe VoiceActor do
+  it { should have_many(:voice_actor_roles) }
+
   it "should not allow no names" do
     va = build :empty_voice_actor
     va.valid?.should be_false

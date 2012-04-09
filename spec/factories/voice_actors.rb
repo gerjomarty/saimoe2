@@ -6,8 +6,8 @@ FactoryGirl.define do
     last_name "Last"
 
     trait :empty do
-      first_name ""
-      last_name ""
+      first_name nil
+      last_name nil
     end
 
     trait :last_only do
