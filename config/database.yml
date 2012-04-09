@@ -46,6 +46,7 @@ test:
   pool: 5
   username: postgres
   password:
+  min_message: warning
 
 production:
   adapter: postgresql
