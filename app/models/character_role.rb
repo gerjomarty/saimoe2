@@ -5,6 +5,16 @@ class CharacterRole < ActiveRecord::Base
   belongs_to :series, inverse_of: :character_roles
   has_many :appearances, inverse_of: :character_role
 
-  validates :role_type, presence: true
+  ROLE_TYPES = [:major, :cameo].freeze
+
+  validates :role_type, presence: true, inclusion: {in: ROLE_TYPES}
   validates :character_id, :series_id, presence: true, numericality: {only_integer: true}
+
+  def role_type
+    (value = read_attribute(:role_type)) && value.to_sym
+  end
+
+  def role_type= value
+    write_attribute(:role_type, value && value.to_s)
+  end
 end
