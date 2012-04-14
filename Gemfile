@@ -1,22 +1,26 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.3'
+gem 'rails', '= 3.2.3'
 gem 'pg'
-gem 'jquery-rails'
 gem 'thin'
+gem 'jquery-rails', '~> 2.0.0'
 
 group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
-  gem 'twitter-bootstrap-rails'
-end
-
-group :production do
-  gem 'newrelic_rpm'
+  gem 'twitter-bootstrap-rails', '~> 2.0.0'
 end
 
 group :test, :development do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 2.9.0'
+end
+
+group :test do
+  gem 'rake'
+  gem 'factory_girl_rails', '~> 3.1.0'
+  gem 'acts_as_fu', '~> 0.0.0'
+  gem 'mocha', '~> 0.10.0'
+  gem 'shoulda-matchers', '~> 1.1.0'
 end
 
 group :development do
@@ -24,12 +28,8 @@ group :development do
   gem 'ruby-debug19', require: 'ruby-debug'
 end
 
-group :test do
-  gem 'rake'
-  gem 'factory_girl_rails'
-  gem 'acts_as_fu'
-  gem 'mocha'
-  gem 'shoulda-matchers'
+group :production do
+  gem 'newrelic_rpm', '~> 3.3.0'
 end
 
 # To use ActiveModel has_secure_password
