@@ -7,7 +7,7 @@ describe Appearance do
   it { should have_many(:voice_actor_roles) }
 
   it { should validate_presence_of(:character_role_id) }
-  it { should validate_numericality_of(:character_role_id) }
+  it { should validate_numericality_of(:character_role_id).only_integer }
   it { should validate_presence_of(:tournament_id) }
-  it { should validate_numericality_of(:tournament_id) }
+  it { should validate_numericality_of(:tournament_id).only_integer }
 end

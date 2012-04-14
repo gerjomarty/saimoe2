@@ -16,7 +16,7 @@ FactoryGirl.define do
     end
 
     trait :group_final do
-      group "a"
+      group :a
       stage :group_final
     end
 

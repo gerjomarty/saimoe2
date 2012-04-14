@@ -5,7 +5,7 @@ describe Character do
   it { should have_many(:character_roles) }
 
   it { should validate_presence_of(:main_series_id) }
-  it { should validate_numericality_of(:main_series_id) }
+  it { should validate_numericality_of(:main_series_id).only_integer }
 
   it "should not allow no names" do
     character = build :empty_character
