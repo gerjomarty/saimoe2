@@ -7,3 +7,7 @@ bundler_args: --without development production
 before_script:
   - psql -c 'create database saimoe2_test;' -U postgres
   - bundle exec rake db:migrate
+
+notifications:
+  email:
+    - gerjomarty@anientity.co.uk
