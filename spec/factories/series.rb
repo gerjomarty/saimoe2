@@ -1,7 +1,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :series do
+  factory :series, aliases: [:main_series] do
     name "Series Name"
     color_code nil
 

@@ -1,7 +1,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :match do
+  factory :match, aliases: [:previous_match] do
     tournament
 
     group :a

@@ -5,7 +5,7 @@ FactoryGirl.define do
     position 1
 
     match
-    association :previous_match, factory: :match
+    previous_match
     appearance
   end
 end
