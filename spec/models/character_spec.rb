@@ -41,6 +41,35 @@ describe Character do
     end
   end
 
+  describe "#find_by_name_and_series" do
+    before :each do
+      @series_1 = create :series, name: 'Series 1'
+      @series_2 = create :series, name: 'Series 2'
+      @char_1 = create :character, main_series: @series_1
+      create :character_role, character: @char_1, series: @series_1
+      @char_2 = create :empty_character, first_name: 'Foo', main_series: @series_1
+      create :character_role, character: @char_2, series: @series_1
+      @char_3 = create :character, main_series: @series_2
+      create :character_role, character: @char_3, series: @series_2
+    end
+
+    it "should return first character when given correct name and series" do
+      Character.find_by_name_and_series("First Last", @series_1).should == @char_1
+    end
+
+    it "should return second character when given different name" do
+      Character.find_by_name_and_series("Foo", @series_1).should == @char_2
+    end
+
+    it "should return nil when given second character with wrong series" do
+      Character.find_by_name_and_series("Foo", @series_2).should be_nil
+    end
+
+    it "should return third character when given second series" do
+      Character.find_by_name_and_series("First Last", @series_2).should == @char_3
+    end
+  end
+
   describe "#full_name" do
     it "should return first/last name if they exist" do
       character = build :character

@@ -19,6 +19,11 @@ class Character < ActiveRecord::Base
     end
   end
 
+  def self.find_by_name_and_series name, series
+    characters_for_name(name).joins(:character_roles)
+                             .where(:character_roles => {series_id: series && series.id}).first
+  end
+
   private
 
   def name_present
