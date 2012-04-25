@@ -4,12 +4,12 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
                     match_number: (match_no == 'null' ? nil : match_no)
 
   match_hash[:match_entries].each do |me|
-    name = match_hash[:actual_name] || match_hash[:name]
-    series = Series.where(name: match_hash[:series]).first!
+    name = me[:actual_name] || me[:name]
+    series = Series.where(name: me[:series]).first!
     char = Character.find_by_name_and_series(name, series)
     cr = CharacterRole.where(character_id: char && char.id, series_id: series && series.id).first!
     app = Appearance.where(tournament_id: t && t.id, character_role_id: cr && cr.id).first_or_create! do |a|
-      a.character_display_name = match_hash[:name] if match_hash[:actual_name]
+      a.character_display_name = me[:name] if me[:actual_name]
     end
 
     case va_hash[cr]
@@ -29,7 +29,7 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
                     stage: me[:previous_match][:stage],
                     group: me[:previous_match][:group],
                     match_number: me[:previous_match][:match_number] == 'null' ? nil : me[:previous_match][:match_number]).first!
-    if prev_match.nil? && (MatchInfo::STAGES - [:round_1]).include?(stage)
+    if prev_match.nil? && (MatchInfo::STAGES - [:round_1, :round_1_playoff]).include?(stage)
       raise "Possible problem with prev match for match entry #{me.inspect}"
     end
     MatchEntry.create! me.slice(:number_of_votes, :position).merge(match: m, appearance: app, previous_match: prev_match)
@@ -105,20 +105,21 @@ end
 
 $stderr.puts " done!"
 
-('2002'..'2011').each do |year|
+(2002..2011).each do |year|
+  year = year.to_s
   $stderr.print "Loading match data from #{year}..."
 
   results = YAML::load(File.open("#{Rails.root}/lib/data/#{year}_results.yml"))
 
   # First, make sure we have all of the characters already loaded properly.
-  results[:group_stages].values.collect(&:values).collect(&:values).collect {|match_h| match_h[:match_entries]}.collect {|me|
+  results[:group_stages].values.collect(&:values).flatten.collect(&:values).flatten.collect {|match_h| match_h[:match_entries]}.flatten.collect {|me|
     me.slice(:name, :actual_name, :series)
   }.flatten.uniq.each { |cs|
-    Character.where(name: (cs[:name] || cs[:actual_name]).to_s, series: cs[:series].to_s).first or raise RecordNotFound, <<_ERROR
+    Character.find_by_name_and_series(cs[:actual_name] || cs[:name], Series.where(name: cs[:series]).first!) or raise <<_ERROR
       #{year}: Problem with #{cs.inspect}. Checking Character, Series and CharacterRole...
-      Character: #{Character.find_by_name(cs[:name]).inspect}
+      Character: #{Character.find_by_name(cs[:actual_name] || cs[:name]).inspect}
       Series: #{Series.find_by_name(cs[:series]).inspect}
-      CharacterRole: #{CharacterRole.where(character_id: (c = Character.find_by_name(cs[:name])) && c.id,
+      CharacterRole: #{CharacterRole.where(character_id: (c = Character.find_by_name(cs[:actual_name] || cs[:name])) && c.id,
                                            series_id: (s = Series.find_by_name(cs[:series])) && s.id).first.inspect}
 _ERROR
   }

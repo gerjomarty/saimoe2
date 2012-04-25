@@ -1,15 +1,13 @@
 class Character < ActiveRecord::Base
-  attr_accessible :first_name, :given_name, :last_name
+  attr_accessible :first_name, :given_name, :last_name, :main_series
 
   belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id
   has_many :character_roles, inverse_of: :character
 
-  validates :main_series_id, presence: true, numericality: {only_integer: true}
+  validates :main_series_id, presence: true
   validate :name_present
 
   scope :characters_for_name, lambda {|name| where(self.name_query(name)) }
-  scope :find_by_name, lambda {|name| characters_for_name(name).first }
-  scope :find_all_by_name, lambda {|name| characters_for_name(name).all }
 
   def full_name
     if self.first_name && self.last_name
@@ -19,9 +17,17 @@ class Character < ActiveRecord::Base
     end
   end
 
+  def self.find_by_name name
+    characters_for_name(name).first
+  end
+
+  def self.find_all_by_name name
+    characters_for_name(name).all
+  end
+
   def self.find_by_name_and_series name, series
     characters_for_name(name).joins(:character_roles)
-                             .where(:character_roles => {series_id: series && series.id}).first
+    .where(:character_roles => {series_id: series && series.id}).first
   end
 
   private

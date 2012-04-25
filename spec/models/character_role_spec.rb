@@ -6,9 +6,7 @@ describe CharacterRole do
   it { should have_many(:appearances) }
 
   it { should validate_presence_of(:character_id) }
-  it { should validate_numericality_of(:character_id).only_integer }
   it { should validate_presence_of(:series_id) }
-  it { should validate_numericality_of(:series_id).only_integer }
   it { should validate_presence_of(:role_type) }
   it { should allow_value(:major).for(:role_type) }
   it { should allow_value(:cameo).for(:role_type) }

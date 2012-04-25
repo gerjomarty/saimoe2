@@ -1,15 +1,14 @@
 class Match < ActiveRecord::Base
-  attr_accessible :date, :group, :match_number, :stage
+  attr_accessible :date, :group, :match_number, :stage, :tournament
 
   belongs_to :tournament, inverse_of: :matches
   has_many :match_entries, inverse_of: :match
   #Possibly link to next_match_entries here (inverse of previous_match in MatchEntry)
 
-  validates :group, presence: true, group: true
+  validates :group, group: true
   validates :stage, presence: true, stage: true, uniqueness: {scope: [:tournament_id, :group, :match_number]}
-  validates :match_number, numericality: {only_integer: true}
-  validates :date, presence: true
-  validates :tournament_id, presence: true, numericality: {only_integer: true}
+  validates :match_number, numericality: {only_integer: true}, allow_nil: true
+  validates :date, :tournament_id, presence: true
 
   def group
     (value = read_attribute(:group)) && value.to_sym

@@ -8,7 +8,6 @@ describe Match do
   it { should validate_numericality_of(:match_number).only_integer }
   it { should validate_presence_of(:date) }
   it { should validate_presence_of(:tournament_id) }
-  it { should validate_numericality_of(:tournament_id).only_integer }
 
   it { should_not allow_value(:not_a_stage).for(:stage) }
 
