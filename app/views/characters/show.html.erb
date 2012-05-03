@@ -1,0 +1,31 @@
+<%- model_class = @character.class -%>
+<h1><%=t '.title', :default => model_class.model_name.human %></h1>
+
+<p>
+  <strong><%= model_class.human_attribute_name(:first_name) %>:</strong><br>
+  <%= @character.first_name %>
+</p>
+<p>
+  <strong><%= model_class.human_attribute_name(:last_name) %>:</strong><br>
+  <%= @character.last_name %>
+</p>
+<p>
+  <strong><%= model_class.human_attribute_name(:given_name) %>:</strong><br>
+  <%= @character.given_name %>
+</p>
+<p>
+  <strong><%= model_class.human_attribute_name(:main_series_id) %>:</strong><br>
+  <%= @character.main_series_id %>
+</p>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              characters_path, :class => 'btn'  %>
+  <%#<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_character_path(@character), :class => 'btn' %>
+  <%#<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              character_path(@character),
+              :method => 'delete',
+              :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')),
+              :class => 'btn btn-danger' %>
+</div>

@@ -40,6 +40,46 @@ describe Character do
     end
   end
 
+  describe "#ordered" do
+    before :each do
+      [["Mr", "Alpha", nil], ["Mr", "Bravo", nil], ["A", "Bravo", nil],
+       ["Foxtrot", nil, nil], ["Golf", nil, nil], [nil, "Bravo", nil],
+       [nil, "Golf", nil], [nil, nil, "Foxtrot"], [nil, nil, "Golf"]].shuffle.each do |names|
+        create(:empty_character, first_name: names[0], last_name: names[1], given_name: names[2])
+      end
+    end
+
+    context "normally ordered" do
+      subject { Character.ordered.all }
+
+      its(:size) { should == 9 }
+      its([0]) { should == Character.where(first_name: "Foxtrot", last_name: nil, given_name: nil).first! }
+      its([1]) { should == Character.where(first_name: "Golf", last_name: nil, given_name: nil).first! }
+      its([2]) { should == Character.where(first_name: "Mr", last_name: "Alpha", given_name: nil).first! }
+      its([3]) { should == Character.where(first_name: "A", last_name: "Bravo", given_name: nil).first! }
+      its([4]) { should == Character.where(first_name: "Mr", last_name: "Bravo", given_name: nil).first! }
+      its([5]) { should == Character.where(first_name: nil, last_name: "Bravo", given_name: nil).first! }
+      its([6]) { should == Character.where(first_name: nil, last_name: "Golf", given_name: nil).first! }
+      its([7]) { should == Character.where(first_name: nil, last_name: nil, given_name: "Foxtrot").first! }
+      its([8]) { should == Character.where(first_name: nil, last_name: nil, given_name: "Golf").first! }
+    end
+
+    context "reverse ordered" do
+      subject { Character.ordered.reverse_order.all }
+
+      its(:size) { should == 9 }
+      its([8]) { should == Character.where(first_name: "Foxtrot", last_name: nil, given_name: nil).first! }
+      its([7]) { should == Character.where(first_name: "Golf", last_name: nil, given_name: nil).first! }
+      its([6]) { should == Character.where(first_name: "Mr", last_name: "Alpha", given_name: nil).first! }
+      its([5]) { should == Character.where(first_name: "A", last_name: "Bravo", given_name: nil).first! }
+      its([4]) { should == Character.where(first_name: "Mr", last_name: "Bravo", given_name: nil).first! }
+      its([3]) { should == Character.where(first_name: nil, last_name: "Bravo", given_name: nil).first! }
+      its([2]) { should == Character.where(first_name: nil, last_name: "Golf", given_name: nil).first! }
+      its([1]) { should == Character.where(first_name: nil, last_name: nil, given_name: "Foxtrot").first! }
+      its([0]) { should == Character.where(first_name: nil, last_name: nil, given_name: "Golf").first! }
+    end
+  end
+
   describe "#find_by_name_and_series" do
     before :each do
       @series_1 = create :series, name: 'Series 1'

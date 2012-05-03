@@ -9,6 +9,12 @@ class Character < ActiveRecord::Base
 
   scope :characters_for_name, lambda {|name| where(self.name_query(name)) }
 
+  ORDER = ["(#{q_column :last_name} IS NOT NULL OR #{q_column :given_name} IS NOT NULL)",
+           "(#{q_column :last_name} IS NULL)", q_column(:last_name),
+           "(#{q_column :first_name} IS NULL)", q_column(:first_name),
+           "(#{q_column :given_name} IS NULL)", q_column(:given_name)].freeze
+  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+
   def full_name
     if self.first_name && self.last_name
       "#{self.first_name} #{self.last_name}"
@@ -27,7 +33,7 @@ class Character < ActiveRecord::Base
 
   def self.find_by_name_and_series name, series
     characters_for_name(name).joins(:character_roles)
-    .where(:character_roles => {series_id: series && series.id}).first
+                             .where(:character_roles => {series_id: series && series.id}).first
   end
 
   private

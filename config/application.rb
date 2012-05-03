@@ -63,8 +63,9 @@ module Saimoe2
     config.assets.version = '1.0'
 
     config.generators do |g|
-      g.test_framework :rspec, fixture_replacement: :factory_girl, views: false
+      g.test_framework :rspec, fixture_replacement: :factory_girl, views: false, requests: false
       g.view_specs false
+      g.request_specs false
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
   end
