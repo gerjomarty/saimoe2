@@ -9,6 +9,6 @@ describe VoiceActorRole do
 
   it "should not care about presence of voice actor when it has none" do
     var = build :voice_actor_role, voice_actor_id: nil, has_no_voice_actor: true
-    var.valid?.should be_true
+    var.should be_valid
   end
 end

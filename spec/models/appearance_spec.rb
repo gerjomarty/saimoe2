@@ -19,7 +19,7 @@ describe Appearance do
     it "with same character role" do
       app = build :appearance, tournament: @tournament, character_role: @char_role
 
-      app.valid?.should be_false
+      app.should_not be_valid
       app.errors.size.should == 1
       app.errors[:base][0].should == "Character can only appear once per tournament"
     end
@@ -28,7 +28,7 @@ describe Appearance do
       char_role = create :character_role, character: @char_role.character
       app = build :appearance, tournament: @tournament, character_role: char_role
 
-      app.valid?.should be_false
+      app.should_not be_valid
       app.errors.size.should == 1
       app.errors[:base][0].should == "Character can only appear once per tournament"
     end

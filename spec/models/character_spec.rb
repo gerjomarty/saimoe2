@@ -8,7 +8,7 @@ describe Character do
 
   it "should not allow no names" do
     character = build :empty_character
-    character.valid?.should be_false
+    character.should_not be_valid
     character.errors.size.should == 1
     character.errors[:base][0].should == "At least one name must be given"
   end

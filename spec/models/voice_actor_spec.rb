@@ -5,7 +5,7 @@ describe VoiceActor do
 
   it "should not allow no names" do
     va = build :empty_voice_actor
-    va.valid?.should be_false
+    va.should_not be_valid
     va.errors.size.should == 1
     va.errors[:base][0].should == "At least one name must be given"
   end
