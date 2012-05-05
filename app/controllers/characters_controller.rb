@@ -12,6 +12,10 @@ class CharactersController < ApplicationController
   def show
     @character = Character.find(params[:id])
 
+    if request.path != character_path(@character)
+      return redirect_to character_url(@character), status: :moved_permanently
+    end
+
     respond_to do |format|
       format.html # show.html.erb
     end
