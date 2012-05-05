@@ -21,4 +21,37 @@ describe VoiceActor do
       va.full_name.should == "Last"
     end
   end
+
+  describe "#ordered" do
+    before :each do
+      [["Alpha", nil], ["Beta", nil], [nil, "Alpha"], [nil, "Beta"],
+       ["A", "Beta"], ["B", "Beta"]].shuffle.each do |names|
+        create :voice_actor, first_name: names.first, last_name: names.last
+      end
+    end
+
+    context "normally ordered" do
+      subject { VoiceActor.ordered.all }
+
+      its(:size) { should == 6 }
+      its([0]) { should == VoiceActor.where(first_name: "Alpha", last_name: nil).first! }
+      its([1]) { should == VoiceActor.where(first_name: "Beta", last_name: nil).first! }
+      its([2]) { should == VoiceActor.where(first_name: nil, last_name: "Alpha").first! }
+      its([3]) { should == VoiceActor.where(first_name: "A", last_name: "Beta").first! }
+      its([4]) { should == VoiceActor.where(first_name: "B", last_name: "Beta").first! }
+      its([5]) { should == VoiceActor.where(first_name: nil, last_name: "Beta").first! }
+    end
+
+    context "reverse ordered" do
+      subject { VoiceActor.ordered.reverse_order.all }
+
+      its(:size) { should == 6 }
+      its([5]) { should == VoiceActor.where(first_name: "Alpha", last_name: nil).first! }
+      its([4]) { should == VoiceActor.where(first_name: "Beta", last_name: nil).first! }
+      its([3]) { should == VoiceActor.where(first_name: nil, last_name: "Alpha").first! }
+      its([2]) { should == VoiceActor.where(first_name: "A", last_name: "Beta").first! }
+      its([1]) { should == VoiceActor.where(first_name: "B", last_name: "Beta").first! }
+      its([0]) { should == VoiceActor.where(first_name: nil, last_name: "Beta").first! }
+    end
+  end
 end

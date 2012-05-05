@@ -190,7 +190,7 @@ DEPENDENCIES
   rspec-rails (~> 2.9.0)
   ruby-debug19
   shoulda-matchers (~> 1.1.0)
-  simplecov
+  simplecov (~> 0.6.0)
   thin
   twitter-bootstrap-rails (~> 2.0.0)
   uglifier (>= 1.0.3)

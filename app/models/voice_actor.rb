@@ -5,6 +5,11 @@ class VoiceActor < ActiveRecord::Base
 
   validate :name_present
 
+  ORDER = ["(#{q_column :last_name} IS NOT NULL)",
+           "(#{q_column :last_name} IS NULL)", q_column(:last_name),
+           "(#{q_column :first_name} IS NULL)", q_column(:first_name)].freeze
+  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+
   def full_name
     if self.first_name && self.last_name
       "#{self.first_name} #{self.last_name}"

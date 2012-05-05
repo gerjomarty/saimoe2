@@ -18,10 +18,10 @@ end
 group :test do
   gem 'rake'
   gem 'factory_girl_rails', '~> 3.2.0'
-  gem 'acts_as_fu', '~> 0.0.0'
+  gem 'acts_as_fu', '~> 0.0.0', require: false
   gem 'mocha', '~> 0.11.0'
   gem 'shoulda-matchers', '~> 1.1.0'
-  gem 'simplecov', require: false
+  gem 'simplecov', '~> 0.6.0', require: false
 end
 
 group :development do
