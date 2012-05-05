@@ -3,11 +3,14 @@ require 'spec_helper'
 describe VoiceActor do
   it { should have_many(:voice_actor_roles) }
 
+  it { should validate_presence_of(:slug) }
+
   it "should not allow no names" do
     va = build :empty_voice_actor
     va.should_not be_valid
-    va.errors.size.should == 1
+    va.errors.size.should == 2
     va.errors[:base][0].should == "At least one name must be given"
+    va.errors[:slug][0].should == "can't be blank"
   end
 
   describe "#full_name" do

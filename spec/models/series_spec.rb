@@ -5,6 +5,7 @@ describe Series do
   it { should have_many(:character_roles) }
 
   it { should validate_presence_of(:name) }
+  it { should validate_presence_of(:slug) }
   it { should allow_value('ABCDEF').for(:color_code) }
   it { should_not allow_value('khgrds').for(:color_code) }
   it { should_not allow_value('123').for(:color_code) }
