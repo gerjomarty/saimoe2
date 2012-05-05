@@ -5,6 +5,6 @@ module ColumnMethods
   end
 
   def all_columns
-    lambda { self.column_names.collect {|cn| "#{self.quoted_table_name}.#{ActiveRecord::Base.connection.quote_column_name cn}"}.join(', ') }.call
+    lambda { self.column_names.collect {|cn| self.q_column(cn) }.join(', ') }.call
   end
 end

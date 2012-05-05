@@ -7,6 +7,9 @@ class Series < ActiveRecord::Base
   validates :name, presence: true
   validates :color_code, format: {with: /[\dA-Fa-f]{6}/}, length: {is: 6}, allow_nil: true
 
+  ORDER = [q_column(:name)].freeze
+  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+
   def color_code= code
     write_attribute(:color_code, code && code.to_s.upcase)
   end

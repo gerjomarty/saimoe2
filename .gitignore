@@ -18,3 +18,4 @@ lib/data/
 .idea/
 .rvmrc
 .rspec
+coverage

@@ -21,6 +21,7 @@ group :test do
   gem 'acts_as_fu', '~> 0.0.0'
   gem 'mocha', '~> 0.11.0'
   gem 'shoulda-matchers', '~> 1.1.0'
+  gem 'simplecov', require: false
 end
 
 group :development do

@@ -13,7 +13,7 @@ describe Character do
     character.errors[:base][0].should == "At least one name must be given"
   end
 
-  describe "#characters_for_name" do
+  describe "custom name finders" do
     before :each do
       @chars = create_list :character, 17
       @chars << create(:empty_character, first_name: 'Foo', last_name: 'Bar')
@@ -22,19 +22,20 @@ describe Character do
     end
 
     it "should return 17 results for 'First Last'" do
-      list = Character.characters_for_name('First Last').all
+      list = Character.find_all_by_name('First Last')
       list.size.should == 17
       list.should == @chars[0..16]
     end
 
     it "should return 1 result for 'Foo Bar'" do
-      list = Character.characters_for_name('Foo Bar').all
+      list = Character.find_all_by_name('Foo Bar')
       list.size.should == 1
       list.should == [@chars[17]]
+      Character.find_by_name('Foo Bar').should == @chars[17]
     end
 
     it "should return 2 results for 'Bar Baz'" do
-      list = Character.characters_for_name('Bar Baz').all
+      list = Character.find_all_by_name('Bar Baz')
       list.size.should == 2
       list.should == @chars[18..19]
     end
@@ -45,7 +46,7 @@ describe Character do
       [["Mr", "Alpha", nil], ["Mr", "Bravo", nil], ["A", "Bravo", nil],
        ["Foxtrot", nil, nil], ["Golf", nil, nil], [nil, "Bravo", nil],
        [nil, "Golf", nil], [nil, nil, "Foxtrot"], [nil, nil, "Golf"]].shuffle.each do |names|
-        create(:empty_character, first_name: names[0], last_name: names[1], given_name: names[2])
+        create(:character, first_name: names[0], last_name: names[1], given_name: names[2])
       end
     end
 
