@@ -4,6 +4,7 @@ gem 'rails', '= 3.2.3'
 gem 'pg'
 gem 'thin'
 gem 'jquery-rails', '~> 2.0.0'
+gem 'friendly_id', '~> 4.0.0'
 
 group :assets do
   gem 'coffee-rails', '~> 3.2.1'
