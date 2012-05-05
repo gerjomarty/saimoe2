@@ -5,12 +5,14 @@ describe Character do
   it { should have_many(:character_roles) }
 
   it { should validate_presence_of(:main_series_id) }
+  it { should validate_presence_of(:slug) }
 
   it "should not allow no names" do
     character = build :empty_character
     character.should_not be_valid
-    character.errors.size.should == 1
+    character.errors.size.should == 2
     character.errors[:base][0].should == "At least one name must be given"
+    character.errors[:slug][0].should == "can't be blank"
   end
 
   describe "custom name finders" do
@@ -124,6 +126,24 @@ describe Character do
     it "should return given name if only given there" do
       character = build :character_with_given_only
       character.full_name.should == "Given"
+    end
+  end
+
+  describe "slugging with series" do
+    it "should change slug after a conflicting character is added" do
+      series = create :series, name: "Foo Series"
+      series2 = create :series, name: "Bar Series"
+
+      character = create :empty_character, first_name: "Kana", main_series: series
+      character.slug.should == "kana"
+
+      character2 = create :empty_character, first_name: "Kana", main_series: series2
+      character.slug.should == "kana"
+      character2.slug.should == "kana--bar-series"
+
+      character.save!
+      character.slug.should == "kana--foo-series"
+      character2.slug.should == "kana--bar-series"
     end
   end
 end

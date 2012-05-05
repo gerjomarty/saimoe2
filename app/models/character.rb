@@ -1,10 +1,13 @@
 class Character < ActiveRecord::Base
+  extend FriendlyId
+
   attr_accessible :first_name, :given_name, :last_name, :main_series
 
   belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id
   has_many :character_roles, inverse_of: :character
 
   validates :main_series_id, presence: true
+  validates :slug, presence: true, uniqueness: {case_sensitive: false}
   validate :name_present
 
   scope :characters_for_name, lambda {|name| where(self.name_query(name)) }
@@ -15,12 +18,28 @@ class Character < ActiveRecord::Base
            "(#{q_column :given_name} IS NULL)", q_column(:given_name)].freeze
   scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
 
+  friendly_id :slug_parts, use: [:slugged, :history]
+
   def full_name
     if self.first_name && self.last_name
       "#{self.first_name} #{self.last_name}"
     else
       self.first_name || self.last_name || self.given_name
     end
+  end
+
+  # If there are any name clashes, we want the slugs to be appended with their main
+  # series name rather than just a number sequence.
+  # This assumes there won't be any characters that have the same name *and* series.
+  def normalize_friendly_id parts
+    slug = super(parts[:full_name])
+    sep = self.friendly_id_config.sequence_separator
+
+    dups = self.class.where("LOWER(slug) = LOWER(?) OR LOWER(slug) LIKE LOWER(?)", slug, "#{slug}#{sep}%")
+    dups = dups.where("id <> ?", parts[:id]) unless parts[:new_record]
+
+    slug << "#{sep}#{super(Series.find(parts[:main_series_id]).name)}" if dups.any?
+    slug
   end
 
   def self.find_by_name name
@@ -42,6 +61,11 @@ class Character < ActiveRecord::Base
     unless self.first_name || self.last_name || self.given_name
       errors.add :base, "At least one name must be given"
     end
+  end
+
+  def slug_parts
+    {id: self.id, main_series_id: self.main_series_id,
+     new_record: self.new_record?, full_name: self.full_name}
   end
 
   def self.name_parts name
