@@ -3,6 +3,7 @@ Saimoe2::Application.routes.draw do
   with_options only: [:index, :show] do |m|
     m.resources(:characters)
     m.resources(:series)
+    m.resources(:voice_actors, path: 'voice-actors')
   end
 
   # The priority is based upon order of creation:
