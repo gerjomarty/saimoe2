@@ -20,9 +20,11 @@ class AlphabeticalPagination
       if first == second
         @data.select {|l,_| l == first}
       elsif first == @default_letter
-        @data.select {|l,_| ([@default_letter] + ('A'...second).to_a).compact.include?(l)}
+        range = second == 'Z' ? ('A'..second) : ('A'...second)
+        @data.select {|l,_| ([@default_letter] + range.to_a).compact.include?(l)}
       else
-        @data.select {|l,_| (first...second).to_a.include?(l)}
+        range = second == 'Z' ? (first..second) : (first...second)
+        @data.select {|l,_| range.to_a.include?(l)}
       end
     end # Return array of hashes
   end
