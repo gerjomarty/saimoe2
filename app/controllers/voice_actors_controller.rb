@@ -1,7 +1,14 @@
+require "#{Rails.root}/lib/alphabetical_pagination"
+
 class VoiceActorsController < ApplicationController
   # GET /voice_actors
   def index
-    @voice_actors = VoiceActor.ordered.all
+    @ap = AlphabeticalPagination.new
+    @ap.relation = VoiceActor.ordered
+    @ap.letter_method = Proc.new {|va| va.last_name || va.first_name}
+    @ap.no_of_columns = 3
+
+    @ap.get_data
 
     respond_to do |format|
       format.html # index.html.erb

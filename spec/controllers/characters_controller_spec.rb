@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CharactersController do
   before :each do
-    @character = create :character
+    @character = create :character, last_name: "Alpha"
   end
 
   describe "#index" do
@@ -15,7 +15,7 @@ describe CharactersController do
     it { should_not set_the_flash }
 
     it "assigns all characters as @characters" do
-      assigns(:characters).should == [@character]
+      assigns(:ap).get_data.should == [{'S' => {@character.main_series => [@character]}}]
     end
   end
 

@@ -1,0 +1,11 @@
+<% raise ArgumentError, "Locals not defined" unless active_letters %>
+<%# TODO: Make an equivalent of a smaller width for smaller screens %>
+<div class="visible-desktop pagination pagination-centered">
+  <ul>
+    <% ([defined?(default_letter) ? default_letter : nil] + ('A'..'Z').to_a).compact.each do |l| %>
+      <li class="<%= "disabled" unless active_letters.include?(l) %>">
+        <%= link_to(l, "##{l}") %>
+      </li>
+    <% end %>
+  </ul>
+</div>

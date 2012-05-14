@@ -17,6 +17,7 @@ class Character < ActiveRecord::Base
            "(#{q_column :first_name} IS NULL)", q_column(:first_name),
            "(#{q_column :given_name} IS NULL)", q_column(:given_name)].freeze
   scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+  scope :ordered_by_main_series, includes(:main_series).merge(Series.ordered).ordered
 
   friendly_id :slug_parts, use: [:slugged, :history]
 

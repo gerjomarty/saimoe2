@@ -83,6 +83,34 @@ describe Character do
     end
   end
 
+  describe "#ordered_by_main_series" do
+    before :each do
+      @series_a = create :series, name: "Series A"
+      @series_b = create :series, name: "Series B"
+      [[@series_a, "Foxtrot"], [@series_a, "Golf"], [@series_b, "Alpha"]].shuffle.each do |names|
+        create :empty_character, first_name: names.last, main_series: names.first
+      end
+    end
+
+    context "ordered" do
+      subject { Character.ordered_by_main_series.all }
+
+      its(:size) { should == 3 }
+      its([0]) { should == Character.where(first_name: "Foxtrot", main_series_id: @series_a.id).first! }
+      its([1]) { should == Character.where(first_name: "Golf", main_series_id: @series_a.id).first! }
+      its([2]) { should == Character.where(first_name: "Alpha", main_series_id: @series_b.id).first! }
+    end
+
+    context "reverse ordered" do
+      subject { Character.ordered_by_main_series.reverse_order.all }
+
+      its(:size) { should == 3 }
+      its([2]) { should == Character.where(first_name: "Foxtrot", main_series_id: @series_a.id).first! }
+      its([1]) { should == Character.where(first_name: "Golf", main_series_id: @series_a.id).first! }
+      its([0]) { should == Character.where(first_name: "Alpha", main_series_id: @series_b.id).first! }
+    end
+  end
+
   describe "#find_by_name_and_series" do
     before :each do
       @series_1 = create :series, name: 'Series 1'

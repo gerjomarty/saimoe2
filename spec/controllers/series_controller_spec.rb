@@ -15,7 +15,7 @@ describe SeriesController do
     it { should_not set_the_flash }
 
     it "assigns all series as @series" do
-      assigns(:series).should == [@series]
+      assigns(:ap).get_data.should == [{'S' => [@series]}]
     end
   end
 

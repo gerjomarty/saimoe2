@@ -1,7 +1,15 @@
+require "#{Rails.root}/lib/alphabetical_pagination"
+
 class SeriesController < ApplicationController
   # GET /series
   def index
-    @series = Series.ordered.all
+    @ap = AlphabeticalPagination.new
+    @ap.relation = Series.ordered
+    @ap.letter_method = Proc.new {|s| s.name}
+    @ap.default_letter = '#'
+    @ap.no_of_columns = 3
+
+    @ap.get_data
 
     respond_to do |format|
       format.html # index.html.erb

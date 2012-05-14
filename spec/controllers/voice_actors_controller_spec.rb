@@ -15,7 +15,7 @@ describe VoiceActorsController do
     it { should_not set_the_flash }
 
     it "assigns all voice actors as @voice_actors" do
-      assigns(:voice_actors).should == [@voice_actor]
+      assigns(:ap).get_data.should == [{'L' => [@voice_actor]}]
     end
   end
 
