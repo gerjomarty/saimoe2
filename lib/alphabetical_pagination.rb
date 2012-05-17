@@ -29,13 +29,6 @@ class AlphabeticalPagination
     end # Return array of hashes
   end
 
-  def inspect
-    <<_STR
-      Dividing letters: #{@dividing_letters.inspect}
-      Range arguments: #{@range_arguments.inspect}
-_STR
-  end
-
   def real_no_of_columns
     if @no_of_columns <= 1 || @data.keys.size <= 1
       1
