@@ -3,7 +3,7 @@ language: ruby
 rvm:
   - 1.9.2
 
-env: COVERAGE=
+env: NO_COVERAGE=true
 
 bundler_args: --without development production
 
