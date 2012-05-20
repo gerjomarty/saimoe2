@@ -1,4 +1,4 @@
-unless ENV['TRAVIS']
+unless ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start 'rails' do
     add_group 'Validators', 'app/validators'
