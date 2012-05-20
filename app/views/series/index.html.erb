@@ -1,5 +1,15 @@
 <div class="page-header">
-  <h1>Series</h1>
+  <div class="row-fluid">
+    <div class="span8">
+      <h1>Series</h1>
+    </div>
+    <div class="span4">
+      <%= render partial: "shared/autocomplete_box",
+                 locals: {placeholder_text: "Search for a series...",
+                          source_path: autocomplete_series_index_path,
+                          target_path: series_index_path} %>
+    </div>
+  </div>
 </div>
 
 <%= render partial: "shared/alpha_pagination",

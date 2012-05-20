@@ -1,0 +1,22 @@
+<% raise ArgumentError, "locals not defined" unless source_path && target_path %>
+<%= text_field_tag 'autocomplete_name',
+                   nil,
+                   class: 'span3 search-query',
+                   placeholder: defined?(placeholder_text) && placeholder_text %>
+
+<% content_for(:bottom_of_body) do %>
+  <script type="text/javascript">
+    (function() {
+      $(document).ready(function() {
+        return $('input#autocomplete_name').autocomplete({
+          source: "<%= source_path %>",
+          minLength: 3,
+          position: {my: "right top", at: "right bottom"},
+          select: function(event, ui) {
+            window.open("<%= target_path %>/" + ui.item.id, '_self')
+          }
+        });
+      });
+    }).call(this);
+  </script>
+<% end %>

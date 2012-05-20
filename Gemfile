@@ -5,15 +5,18 @@ gem 'pg'
 gem 'thin'
 gem 'jquery-rails', '~> 2.0.0'
 gem 'friendly_id', '~> 4.0.0'
+gem 'soulmate', '~> 0.1.0'
 
 group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails', '~> 2.0.0'
+  gem 'jquery-ui-rails', '~> 0.4.0'
 end
 
 group :test, :development do
   gem 'rspec-rails', '~> 2.9.0'
+  gem 'rspec-rails-uncommitted', '~> 2.0'
 end
 
 group :test do

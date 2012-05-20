@@ -1,9 +1,9 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
 
-require File.expand_path('../../lib/foreign_key_migration', __FILE__)
-require File.expand_path('../../lib/nullify_blank_attributes', __FILE__)
-require File.expand_path('../../lib/column_methods', __FILE__)
+require 'foreign_key_migration'
+require 'nullify_blank_attributes'
+require 'column_methods'
 
 # Initialize the rails application
 Saimoe2::Application.initialize!

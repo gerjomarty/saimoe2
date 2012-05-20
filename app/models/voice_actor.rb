@@ -1,4 +1,7 @@
+require 'soulmate_search'
+
 class VoiceActor < ActiveRecord::Base
+  include SoulmateSearch
   extend FriendlyId
 
   attr_accessible :first_name, :last_name
@@ -21,6 +24,12 @@ class VoiceActor < ActiveRecord::Base
     else
       self.first_name || self.last_name
     end
+  end
+
+  # Soulmate methods
+
+  def soulmate_term
+    self.full_name
   end
 
   private

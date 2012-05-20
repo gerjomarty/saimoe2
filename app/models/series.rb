@@ -1,4 +1,7 @@
+require 'soulmate_search'
+
 class Series < ActiveRecord::Base
+  include SoulmateSearch
   extend FriendlyId
 
   attr_accessible :color_code, :name
@@ -17,5 +20,11 @@ class Series < ActiveRecord::Base
 
   def color_code= code
     write_attribute(:color_code, code && code.to_s.upcase)
+  end
+
+  # Soulmate methods
+
+  def soulmate_term
+    self.name
   end
 end

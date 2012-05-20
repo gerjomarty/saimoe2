@@ -49,6 +49,7 @@
     </div> <!-- /container -->
 
     <%= javascript_include_tag "application" %>
+    <%= yield(:bottom_of_body) if content_for?(:bottom_of_body) %>
 
   </body>
 </html>

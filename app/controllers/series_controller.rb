@@ -1,4 +1,4 @@
-require "#{Rails.root}/lib/alphabetical_pagination"
+require 'alphabetical_pagination'
 
 class SeriesController < ApplicationController
   # GET /series
@@ -7,13 +7,9 @@ class SeriesController < ApplicationController
     @ap.relation = Series.ordered
     @ap.letter_method = Proc.new {|s| s.name}
     @ap.default_letter = '#'
-    @ap.no_of_columns = 3
+    @ap.no_of_columns = 4
 
     @ap.get_data
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   # GET /series/1
@@ -21,11 +17,12 @@ class SeriesController < ApplicationController
     @series = Series.find(params[:id])
 
     if request.path != series_path(@series)
-      return redirect_to series_url(@series), status: :moved_permanently
+      redirect_to series_url(@series), status: :moved_permanently
     end
+  end
 
-    respond_to do |format|
-      format.html # show.html.erb
-    end
+  # GET /series/autocomplete
+  def autocomplete
+    render json: Series.search(params[:term])
   end
 end

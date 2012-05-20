@@ -1,4 +1,7 @@
+require 'soulmate_search'
+
 class Character < ActiveRecord::Base
+  include SoulmateSearch
   extend FriendlyId
 
   attr_accessible :first_name, :given_name, :last_name, :main_series
@@ -54,6 +57,20 @@ class Character < ActiveRecord::Base
   def self.find_by_name_and_series name, series
     characters_for_name(name).joins(:character_roles)
                              .where(:character_roles => {series_id: series && series.id}).first
+  end
+
+  # Soulmate methods
+
+  def soulmate_term
+    self.full_name
+  end
+
+  def soulmate_data
+    {'series_name' => self.main_series.name}
+  end
+
+  def self.soulmate_label_for id, term, data
+    "#{term} (#{data['series_name']})"
   end
 
   private

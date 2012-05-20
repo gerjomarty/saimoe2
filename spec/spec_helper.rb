@@ -1,17 +1,19 @@
-require 'simplecov'
-SimpleCov.start 'rails' do
-  add_group 'Validators', 'app/validators'
+unless ENV['TRAVIS']
+  require 'simplecov'
+  SimpleCov.start 'rails' do
+    add_group 'Validators', 'app/validators'
+  end
 end
 
-ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'acts_as_fu'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
 
 RSpec.configure do |config|
   # ## Mock Framework

@@ -19,3 +19,4 @@ lib/data/
 .rvmrc
 .rspec
 coverage
+spec/db/*.rdb

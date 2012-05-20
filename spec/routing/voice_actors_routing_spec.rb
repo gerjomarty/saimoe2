@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe VoiceActorsController do
   describe "routing" do
@@ -11,5 +11,8 @@ describe VoiceActorsController do
       get("/voice-actors/1").should route_to("voice_actors#show", :id => "1")
     end
 
+    it "routes to #autocomplete" do
+      get("/voice-actors/autocomplete").should route_to("voice_actors#autocomplete")
+    end
   end
 end

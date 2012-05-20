@@ -1,9 +1,9 @@
 Saimoe2::Application.routes.draw do
 
   with_options only: [:index, :show] do |m|
-    m.resources(:characters)
-    m.resources(:series)
-    m.resources(:voice_actors, path: 'voice-actors')
+    m.resources(:characters) { get 'autocomplete', on: :collection }
+    m.resources(:series) { get 'autocomplete', on: :collection }
+    m.resources(:voice_actors, path: 'voice-actors') { get 'autocomplete', on: :collection }
   end
 
   # The priority is based upon order of creation:

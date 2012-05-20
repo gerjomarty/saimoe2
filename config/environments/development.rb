@@ -1,7 +1,7 @@
 Saimoe2::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-  ENV['SECRET_TOKEN'] = File.read File.expand_path('../../../lib/data/secret_token', __FILE__)
+  ENV['SECRET_TOKEN'] = '589b5bc7af50816cbcdd7f1b77c50afadc85ddde44907a92a38f2632c7f5721144159ef3d3221ce9ea2e19a3bba578baecde1f80bc9963c6f472dc68122a8d24'
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development

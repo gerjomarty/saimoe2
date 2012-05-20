@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe SeriesController do
   describe "routing" do
@@ -11,5 +11,8 @@ describe SeriesController do
       get("/series/1").should route_to("series#show", :id => "1")
     end
 
+    it "routes to #autocomplete" do
+      get("/series/autocomplete").should route_to("series#autocomplete")
+    end
   end
 end
