@@ -41,12 +41,13 @@ task :force_test_env => :environment do
   Rails.env = 'test'
 end
 
-# Start redis before the tests, and stop it after
-
 force_test_env = Rake::Task['force_test_env']
 spec_task = Rake::Task['spec']
 start_task = Rake::Task['redis:start']
 stop_task = Rake::Task['redis:stop']
+
+# Before running the specs, force the test env to be 'test' and start the Redis server
+# After running the specs, stop the Redis server
 
 spec_task.enhance([force_test_env, start_task]) do
   stop_task.invoke
