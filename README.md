@@ -1,5 +1,5 @@
 Saimoe [![Build Status][travisimage]][travislink] [![Dependency Status][gemnasiumimage]][gemnasiumlink]
-======
+=======================================================================================================
 
 This app is a Ruby on Rails 3.2 app in progress to document/analyse proceedings from the annual [2ch][2ch] [Anime Saimoe Tournament][officialsaimoe]\. Data is taken from the [unofficial English language Saimoe site][englishsaimoe]\.
 
@@ -8,7 +8,7 @@ This app is a Ruby on Rails 3.2 app in progress to document/analyse proceedings 
 Licence information
 -------------------
 
-![Creative Commons License][licenseimage]
+[![Creative Commons License][licenseimage]][licenselink]
 
 Copyright &copy; gerjomarty\. All rights reserved\. Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3\.0 Unported License\. Terms of the license can be found [here][licenselink]\.
 
