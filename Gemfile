@@ -15,13 +15,13 @@ group :assets do
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 2.9.0'
+  gem 'rspec-rails', '~> 2.10.0'
   gem 'rspec-rails-uncommitted', '~> 2.0'
 end
 
 group :test do
   gem 'rake'
-  gem 'factory_girl_rails', '~> 3.2.0'
+  gem 'factory_girl_rails', '~> 3.3.0'
   gem 'acts_as_fu', '~> 0.0.0', require: false
   gem 'mocha', '~> 0.11.0'
   gem 'shoulda-matchers', '~> 1.1.0'
