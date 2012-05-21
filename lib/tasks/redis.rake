@@ -36,12 +36,18 @@ namespace :redis do
   end
 end
 
+desc "Force Rails env to be 'test'"
+task :force_test_env => :environment do
+  Rails.env = 'test'
+end
+
 # Start redis before the tests, and stop it after
 
+force_test_env = Rake::Task['force_test_env']
 spec_task = Rake::Task['spec']
 start_task = Rake::Task['redis:start']
 stop_task = Rake::Task['redis:stop']
 
-spec_task.enhance([start_task]) do
+spec_task.enhance([force_test_env, start_task]) do
   stop_task.invoke
 end
