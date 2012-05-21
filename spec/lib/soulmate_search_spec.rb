@@ -35,12 +35,15 @@ describe SoulmateSearch do
 
     it "should return matches" do
       dummy = BasicDummy.create name: 'Bar'
-      BasicDummy.matcher.matches_for_term("Bar", cache: false).should ==
-          [{'id' => dummy.id, 'term' => 'Bar', 'data' => {}}]
+      BasicDummy.matcher.matches_for_term('Bar', cache: false).should ==
+          ['id' => dummy.id, 'term' => 'Bar', 'data' => {}]
       dummy2 = BasicDummy.create name: 'Bartholomew'
-      BasicDummy.matcher.matches_for_term("Bar", cache: false).sort_by {|h| h['id']}.should ==
+      BasicDummy.matcher.matches_for_term('Bar', cache: false).sort_by {|h| h['id']}.should ==
           [{'id' => dummy.id, 'term' => 'Bar', 'data' => {}},
            {'id' => dummy2.id, 'term' => 'Bartholomew', 'data' => {}}].sort_by {|h| h['id']}
+      dummy.destroy
+      BasicDummy.matcher.matches_for_term('Bar', cache: false).should ==
+          ['id' => dummy2.id, 'term' => 'Bartholomew', 'data' => {}]
     end
 
     it "should return properly formatted results from search" do
