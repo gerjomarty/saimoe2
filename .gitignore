@@ -19,4 +19,5 @@ lib/data/
 .rvmrc
 .rspec
 coverage
-spec/db/*.rdb
+db/redis/*.pid
+db/redis/*.rdb

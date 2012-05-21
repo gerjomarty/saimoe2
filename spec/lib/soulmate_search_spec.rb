@@ -9,7 +9,7 @@ describe SoulmateSearch do
 
         include SoulmateSearch
       end
-      Soulmate::Loader.new(BadDummy.to_s).load([])
+      BadDummy.loader.load([])
     end
 
     it "should fail when trying to add a record" do
@@ -30,17 +30,25 @@ describe SoulmateSearch do
           self.name
         end
       end
-      Soulmate::Loader.new(BasicDummy.to_s).load([])
+      BasicDummy.loader.load([])
     end
 
     it "should return matches" do
       dummy = BasicDummy.create name: 'Bar'
-      Soulmate::Matcher.new(BasicDummy.to_s).matches_for_term("Bar", cache: false).should ==
+      BasicDummy.matcher.matches_for_term("Bar", cache: false).should ==
           [{'id' => dummy.id, 'term' => 'Bar', 'data' => {}}]
       dummy2 = BasicDummy.create name: 'Bartholomew'
-      Soulmate::Matcher.new(BasicDummy.to_s).matches_for_term("Bar", cache: false).sort_by {|h| h['id']}.should ==
+      BasicDummy.matcher.matches_for_term("Bar", cache: false).sort_by {|h| h['id']}.should ==
           [{'id' => dummy.id, 'term' => 'Bar', 'data' => {}},
            {'id' => dummy2.id, 'term' => 'Bartholomew', 'data' => {}}].sort_by {|h| h['id']}
+    end
+
+    it "should return properly formatted results from search" do
+      dummy = BasicDummy.create name: 'Bar'
+      dummy2 = BasicDummy.create name: 'Bartholomew'
+      BasicDummy.search('Bar').sort_by {|h| h[:id]}.should ==
+          [{id: dummy.id, value: 'Bar', label: 'Bar'},
+           {id: dummy2.id, value: 'Bartholomew', label: 'Bartholomew'}].sort_by {|h| h[:id]}
     end
   end
 
@@ -60,14 +68,26 @@ describe SoulmateSearch do
         def soulmate_data
           {'email' => self.email}
         end
+
+        def self.soulmate_label_for id, term, data
+          "term #{term} for data #{data['email']}"
+        end
       end
-      Soulmate::Loader.new(ComplexDummy.to_s).load([])
+      ComplexDummy.loader.load([])
     end
 
     it "should return matches" do
-      dummy = ComplexDummy.create name: "Baz", email: "Bar"
-      Soulmate::Matcher.new(ComplexDummy.to_s).matches_for_term("Baz", cache: false).should ==
+      dummy = ComplexDummy.create name: 'Baz', email: 'Bar'
+      ComplexDummy.matcher.matches_for_term("Baz", cache: false).should ==
           [{'id' => dummy.id, 'term' => 'Baz', 'data' => {'email' => dummy.email}}]
+    end
+
+    it "should return properly formatted results from search" do
+      dummy = ComplexDummy.create name: 'Baz', email: 'Bar'
+      dummy2 = ComplexDummy.create name: 'Bazzy', email: 'Baz'
+      ComplexDummy.search('Baz').sort_by {|h| h[:id]}.should ==
+          [{id: dummy.id, value: 'Baz', label: 'term Baz for data Bar'},
+           {id: dummy2.id, value: 'Bazzy', label: 'term Bazzy for data Baz'}].sort_by {|h| h[:id]}
     end
   end
 end

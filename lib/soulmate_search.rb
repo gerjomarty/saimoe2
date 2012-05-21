@@ -13,9 +13,7 @@ module SoulmateSearch
 
   def load_into_soulmate
     begin
-      Soulmate::Loader.new(self.class.to_s).add('id' => self.id,
-                                                'term' => self.soulmate_term,
-                                                'data' => self.soulmate_data)
+      self.class.loader.add('id' => self.id, 'term' => self.soulmate_term, 'data' => self.soulmate_data)
     rescue Errno::ECONNREFUSED => e
       Rails.logger.warn "Cannot contact Redis: #{e}"
     end
@@ -23,7 +21,7 @@ module SoulmateSearch
 
   def delete_from_soulmate
     begin
-      Soulmate::Loader.new(self.class.to_s).remove('id' => self.id)
+      self.class.loader.remove('id' => self.id)
     rescue Errno::ECONNREFUSED => e
       Rails.logger.warn "Cannot contact Redis: #{e}"
     end
@@ -38,12 +36,23 @@ module SoulmateSearch
   end
 
   module ClassMethods
+    attr_reader :loader, :matcher
+
+    def loader
+      @loader ||= Soulmate::Loader.new(self.to_s)
+    end
+
+    def matcher
+      @matcher ||= Soulmate::Matcher.new(self.to_s)
+    end
+
     def soulmate_label_for id, term, data
       term
     end
 
     def search term
-      Soulmate::Matcher.new(self.to_s).matches_for_term(term).collect do |m|
+      options = {cache: !Rails.env.test?}
+      self.matcher.matches_for_term(term, options).collect do |m|
         {id: m['id'],
          value: m['term'],
          label: self.soulmate_label_for(m['id'], m['term'], m['data'])}

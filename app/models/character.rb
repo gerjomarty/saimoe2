@@ -66,11 +66,11 @@ class Character < ActiveRecord::Base
   end
 
   def soulmate_data
-    {'series_name' => self.main_series.name}
+    {'sn' => self.main_series.name}
   end
 
   def self.soulmate_label_for id, term, data
-    "#{term} (#{data['series_name']})"
+    "#{term} (#{data['sn']})"
   end
 
   private
