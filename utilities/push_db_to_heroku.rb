@@ -3,6 +3,7 @@
 require 'optparse'
 
 hostname = 'localhost'
+soulmate = regen_database = false
 username = db_name = dropbox = nil
 
 opts = OptionParser.new do |opts|
@@ -13,6 +14,8 @@ opts = OptionParser.new do |opts|
   opts.on('-u', '--user USERNAME', String, 'Database username') {|u| username = u}
   opts.on('-n', '--name DB_NAME', String, 'Database name') {|n| db_name = n}
   opts.on('-d', '--dropbox FOLDER', String, 'Dropbox folder to dump to - must be public') {|d| dropbox = d.chomp('/')}
+  opts.on('-g', '--[no-]regenerate-database', 'Regenerate the database from the base data first', "(#{regen_database})") {|g| regen_database = g}
+  opts.on('-s', '--[no-]soulmate', 'Generate Soulmate keys on Heroku', "(#{soulmate})") {|s| soulmate = s}
   opts.on('-h', '--help', 'Display these options') {puts opts; exit 1}
 end
 opts.parse!
@@ -30,6 +33,14 @@ end
 unless File.absolute_path(dropbox) =~ /\/Public/
   $stderr.puts "Error: database dump must be in Public folder"
   exit 1
+end
+
+if regen_database
+  $stdout.puts "Regenerating the database from the base YAML data..."
+  unless system("rake db:drop:all && rake db:create:all && rake db:migrate && rake db:seed")
+    $stderr.puts "Error when regenerating database: #{$?}"
+    exit 1
+  end
 end
 
 $stdout.puts "Dumping database to #{dropbox}..."
@@ -64,7 +75,10 @@ unless system("git push heroku master")
   exit 1
 end
 
-#unless system("heroku run console production utilities/generate_soulmate_keys.rb")
-#  $stderr.puts "Error when generating Soulmate keys: #{$?}"
-#  exit 1
-#end
+if soulmate
+  $stdout.puts "Generating Soulmate keys on Heroku..."
+  unless system("heroku run console production utilities/generate_soulmate_keys.rb")
+    $stderr.puts "Error when generating Soulmate keys: #{$?}"
+    exit 1
+  end
+end
