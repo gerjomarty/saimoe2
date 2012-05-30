@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120505203343) do
+ActiveRecord::Schema.define(:version => 20120525200403) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20120505203343) do
     t.datetime "updated_at",             :null => false
     t.integer  "character_role_id",      :null => false
     t.integer  "tournament_id",          :null => false
+    t.string   "character_avatar"
   end
 
   add_index "appearances", ["character_role_id"], :name => "index_appearances_on_character_role_id"
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(:version => 20120505203343) do
     t.datetime "updated_at",     :null => false
     t.integer  "main_series_id", :null => false
     t.string   "slug",           :null => false
+    t.string   "avatar"
   end
 
   add_index "characters", ["main_series_id"], :name => "index_characters_on_main_series_id"

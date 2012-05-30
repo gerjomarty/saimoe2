@@ -3,7 +3,7 @@
     <div class="span8">
       <h1>Characters <small>Sorted by series</small></h1>
     </div>
-    <div class="span4">
+    <div class="span3">
       <%= render partial: "shared/autocomplete_box",
                  locals: {placeholder_text: "Search for a character...",
                           source_path: autocomplete_characters_path,
@@ -24,7 +24,7 @@
           <h4><%= link_to(series.name, series_path(series)) %></h4>
           <div class="well">
             <% c_data.each do |character| %>
-              <p><%= link_to(character.full_name, character_path(character)) %></p>
+              <p><%= image_tag character.avatar_url(:thumb) %><%= link_to(character.full_name, character_path(character)) %></p>
             <% end %>
           </div>
         <% end %>

@@ -1,6 +1,8 @@
 class Appearance < ActiveRecord::Base
   attr_accessible :character_display_name, :character_role, :tournament
 
+  mount_uploader :character_avatar, AvatarUploader
+
   belongs_to :character_role, inverse_of: :appearances
   belongs_to :tournament, inverse_of: :appearances
   has_many :match_entries, inverse_of: :appearance

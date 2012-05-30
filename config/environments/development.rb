@@ -4,6 +4,12 @@ Saimoe2::Application.configure do
   ENV['SECRET_TOKEN'] = '589b5bc7af50816cbcdd7f1b77c50afadc85ddde44907a92a38f2632c7f5721144159ef3d3221ce9ea2e19a3bba578baecde1f80bc9963c6f472dc68122a8d24'
   ENV['REDIS_URL'] = 'redis://localhost:6379'
 
+  aws_keys = YAML::load(File.open("#{Rails.root}/lib/data/aws_keys.yml"))
+  ENV['AWS_ACCESS_KEY_ID'] = aws_keys['aws_access_key_id']
+  ENV['AWS_SECRET_ACCESS_KEY'] = aws_keys['aws_secret_access_key']
+  ENV['AWS_BUCKET'] = aws_keys['aws_bucket']
+  ENV['AWS_BUCKET_DEVELOPMENT'] = aws_keys['aws_bucket_development']
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.

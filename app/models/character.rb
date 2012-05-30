@@ -6,6 +6,8 @@ class Character < ActiveRecord::Base
 
   attr_accessible :first_name, :given_name, :last_name, :main_series
 
+  mount_uploader :avatar, AvatarUploader
+
   belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id
   has_many :character_roles, inverse_of: :character
 
@@ -66,11 +68,11 @@ class Character < ActiveRecord::Base
   end
 
   def soulmate_data
-    {'sn' => self.main_series.name}
+    {'s' => self.main_series.name}
   end
 
   def self.soulmate_label_for id, term, data
-    "#{term} (#{data['sn']})"
+    "#{term} (#{data['s']})"
   end
 
   private

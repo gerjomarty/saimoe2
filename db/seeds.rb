@@ -11,6 +11,9 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
     app = Appearance.where(tournament_id: t && t.id, character_role_id: cr && cr.id).first_or_create! do |a|
       a.character_display_name = me[:name] if me[:actual_name]
     end
+    if me[:image]
+      ActiveRecord::Base.connection.execute "UPDATE appearances SET character_avatar = '#{me[:image]}' WHERE id = #{app.id}"
+    end
 
     case va_hash[cr]
       when Hash, Array # one or more VAs
@@ -75,7 +78,7 @@ cr_va_mapping = {}
 
 # Need to create main characters and roles before doing cameo roles.
 characters.sort_by {|c| c[:role_type] == :cameo ? 1 : 0}.each do |c|
-  char_role = nil
+  char_role = character = nil
   if c[:role_type] != :cameo
     # Main character and role
     series = Series.where(name: c[:series]).first_or_create!
@@ -89,6 +92,11 @@ characters.sort_by {|c| c[:role_type] == :cameo ? 1 : 0}.each do |c|
     character = Character.where(c.slice(:first_name, :given_name, :last_name)
                                  .merge(main_series_id: main_series && main_series.id)).first!
     char_role = CharacterRole.create! c.slice(:role_type).merge(character: character, series: cameo_series)
+  end
+
+  # Load avatars too
+  if c[:image]
+    ActiveRecord::Base.connection.execute "UPDATE characters SET avatar = '#{c[:image]}' WHERE id = #{character.id}"
   end
 
   # Keep a record of the voice actor per character role for later
