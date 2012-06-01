@@ -24,8 +24,10 @@
           <h4><%= link_to(series.name, series_path(series)) %></h4>
           <div class="well">
             <% c_data.each do |character| %>
-              <p><%= link_to(image_tag(character.avatar_url(:thumb)) + ' ' + character.full_name,
-                             character_path(character)) %></p>
+              <div class="thumbnail character_entry">
+                <%= link_to image_tag(character.avatar_url(:thumb), size: '40x40'), character_path(character) %>
+                <%= link_to(character.full_name, character_path(character)) %>
+              </div>
             <% end %>
           </div>
         <% end %>
