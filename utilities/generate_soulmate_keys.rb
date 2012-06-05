@@ -13,7 +13,7 @@ ActiveRecord::Base.descendants.select do |m|
   m.respond_to?(:search) && m.method_defined?(:soulmate_term) && m.method_defined?(:soulmate_data)
 end.each do |model|
   begin
-    model.find_each(model === Character ? {include: :main_series} : {}) do |record|
+    model.find_each(model === Character ? {includes: :main_series} : {}) do |record|
       record.load_into_soulmate
     end
   rescue Exception => e
