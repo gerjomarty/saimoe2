@@ -2,21 +2,6 @@
 <%= text_field_tag 'autocomplete_name',
                    nil,
                    class: 'span12 search-query',
+                   'data-source-path' => source_path,
+                   'data-target-path' => target_path,
                    placeholder: defined?(placeholder_text) && placeholder_text %>
-
-<% content_for(:bottom_of_body) do %>
-  <script type="text/javascript">
-    (function() {
-      $(document).ready(function() {
-        return $('input#autocomplete_name').autocomplete({
-          source: "<%= source_path %>",
-          minLength: 3,
-          position: {my: "right top", at: "right bottom"},
-          select: function(event, ui) {
-            window.open("<%= target_path %>/" + ui.item.id, '_self')
-          }
-        });
-      });
-    }).call(this);
-  </script>
-<% end %>

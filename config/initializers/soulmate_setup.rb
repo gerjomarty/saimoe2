@@ -1,0 +1,1 @@
+Soulmate.redis = ENV['REDISTOGO_URL']

@@ -2,7 +2,7 @@ Saimoe2::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   ENV['SECRET_TOKEN'] = '869311e2fd552bf0f0d04883566042f545e96075a122b8659b9295956d25b20a48eb7f6300031afc2c634297fc12468687daf6afd1b94b5738b58b2dddf59ea4'
-  ENV['REDIS_URL'] = 'redis://localhost:6380'
+  ENV['REDISTOGO_URL'] = 'redis://localhost:6380'
 
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
