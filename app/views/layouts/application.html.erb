@@ -30,9 +30,9 @@
           <a class="brand" href="#">Saimoe</a>
           <div class="container-fluid nav-collapse">
             <ul class="nav">
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
+              <li><%= link_to 'Characters', characters_path %></li>
+              <li><%= link_to 'Series', series_index_path %></li>
+              <li><%= link_to 'Voice Actors', voice_actors_path %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -49,7 +49,6 @@
     </div> <!-- /container -->
 
     <%= javascript_include_tag "application" %>
-    <%= yield(:bottom_of_body) if content_for?(:bottom_of_body) %>
 
   </body>
 </html>

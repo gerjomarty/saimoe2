@@ -1,12 +1,16 @@
 <div class="row-fluid">
-  <div class="span2" style="text-align: center;">
-    <%= image_tag @character.avatar_url, size: '100x100' %>
-  </div>
-  <div class="span9 offset1">
-    <h1><%= @character.full_name %></h1>
-    <h3>Series: <em><%= link_to @character.main_series.name, series_path(@character.main_series) %></em></h3>
-    <%= format_other_series_list(@character.other_series) %>
-  </div>
+  <% if @character.avatar? %>
+    <div class="span2" style="text-align: center;">
+      <%= image_tag @character.avatar_url, size: '100x100' %>
+    </div>
+    <div class="span9 offset1">
+  <% else %>
+    <div class="span12">
+  <% end %>
+      <h1><%= @character.full_name %></h1>
+      <h3>Series: <em><%= link_to @character.main_series.name, series_path(@character.main_series) %></em></h3>
+      <%= format_other_series_list @character %>
+    </div>
 </div>
 
 <div class="page-header">

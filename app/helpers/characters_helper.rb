@@ -1,5 +1,6 @@
 module CharactersHelper
-  def format_other_series_list series
+  def format_other_series_list character
+    series = character.other_series
     unless series.empty?
       content_tag :h4 do
         "Also appears in: ".html_safe +
