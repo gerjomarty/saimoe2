@@ -174,4 +174,18 @@ describe Character do
       character2.slug.should == "kana--bar-series"
     end
   end
+
+  describe "#other_series" do
+    before :each do
+      @character = create :character
+      create :series
+      create :character_role
+      @series_2 = create :series, name: 'Other Series'
+      create :character_role, character: @character, series: @series_2
+    end
+
+    it "should return other series" do
+      @character.other_series.should == [@series_2]
+    end
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120525200403) do
+ActiveRecord::Schema.define(:version => 20120603122445) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -88,11 +88,12 @@ ActiveRecord::Schema.define(:version => 20120525200403) do
   add_index "matches", ["tournament_id"], :name => "index_matches_on_tournament_id"
 
   create_table "series", :force => true do |t|
-    t.string   "name",                    :null => false
-    t.string   "color_code", :limit => 6
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
-    t.string   "slug",                    :null => false
+    t.string   "name",                       :null => false
+    t.string   "color_code",    :limit => 6
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+    t.string   "slug",                       :null => false
+    t.string   "sortable_name",              :null => false
   end
 
   add_index "series", ["slug"], :name => "index_series_on_slug", :unique => true

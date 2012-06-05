@@ -34,6 +34,12 @@ class Character < ActiveRecord::Base
     end
   end
 
+  def other_series
+    Series.joins(:character_roles => :character)
+          .where(:character_roles => {:characters => {id: self.id}})
+          .where("#{Series.q_column(:id)} <> ?", self.main_series_id)
+  end
+
   # If there are any name clashes, we want the slugs to be appended with their main
   # series name rather than just a number sequence.
   # This assumes there won't be any characters that have the same name *and* series.

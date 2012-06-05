@@ -5,7 +5,7 @@ class SeriesController < ApplicationController
   def index
     @ap = AlphabeticalPagination.new
     @ap.relation = Series.ordered
-    @ap.letter_method = Proc.new {|s| s.name}
+    @ap.letter_method = Proc.new {|s| s.sortable_name}
     @ap.default_letter = '#'
     @ap.no_of_columns = 4
 

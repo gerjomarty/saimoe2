@@ -13,8 +13,10 @@ ActiveRecord::Base.descendants.select do |m|
   m.respond_to?(:search) && m.method_defined?(:soulmate_term) && m.method_defined?(:soulmate_data)
 end.each do |model|
   begin
-    model.find_each {|record| record.load_into_soulmate}
-  rescue
-    Rails.logger.fatal "Error when generating Soulmate keys: #{$!}"
+    model.find_each(model === Character ? {include: :main_series} : {}) do |record|
+      record.load_into_soulmate
+    end
+  rescue Exception => e
+    Rails.logger.fatal "Error when generating Soulmate keys: #{e}"
   end
 end

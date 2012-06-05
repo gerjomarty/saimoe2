@@ -6,7 +6,7 @@ class CharactersController < ApplicationController
     @ap = AlphabeticalPagination.new
     @ap.relation = Character.ordered_by_main_series
     @ap.secondary_method = Proc.new {|c| c.main_series}
-    @ap.letter_method = Proc.new {|c| c.main_series.name}
+    @ap.letter_method = Proc.new {|c| c.main_series.sortable_name}
     @ap.default_letter = '#'
     @ap.no_of_columns = 4
 
