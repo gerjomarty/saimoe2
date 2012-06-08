@@ -22,6 +22,7 @@ class Character < ActiveRecord::Base
            "(#{q_column :first_name} IS NULL)", q_column(:first_name),
            "(#{q_column :given_name} IS NULL)", q_column(:given_name)].freeze
   scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+
   scope :ordered_by_main_series, includes(:main_series).merge(Series.ordered).ordered
 
   friendly_id :slug_parts, use: [:slugged, :history]
@@ -37,7 +38,21 @@ class Character < ActiveRecord::Base
   def other_series
     Series.joins(:character_roles => :character)
           .where(:character_roles => {:characters => {id: self.id}})
-          .where("#{Series.q_column(:id)} <> ?", self.main_series_id)
+          .where("#{Series.q_column(:id)} <> ?", self.main_series_id).ordered.uniq
+  end
+
+  def tournament_history
+    {}.tap do |th|
+      Tournament.all_for(self).each do |t|
+        th[t] ||= {}
+        t.matches.all_for(self).each do |m|
+          th[t][m.stage] ||= {}
+          th[t][m.stage][:match] = m
+          th[t][m.stage][:match_entry] = m.match_entries.all_for(self).first!
+        end
+      end
+    end
+
   end
 
   # If there are any name clashes, we want the slugs to be appended with their main
