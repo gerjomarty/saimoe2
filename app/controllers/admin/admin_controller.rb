@@ -22,7 +22,7 @@ class Admin::AdminController < ApplicationController
 
       if info[:transform] == 'name_list'
 
-        if (name_arr = CSV.parse(info[:name_csv].chomp)).empty?
+        if (name_arr = info[:name_csv].lines.to_a).empty?
           # The list of Japanese identifiers is empty - just output the whole list
           @result = info_arr.collect {|char_t, series_t|
             "#{char_t.last} @ #{series_t.last}: &lt;&lt;#{char_t.first}@#{series_t.first}&gt;&gt;"
