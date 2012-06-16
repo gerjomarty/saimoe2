@@ -1,2 +1,11 @@
-$('#results-title').html('Results');
-$('#results').html("<%= escape_javascript(@result) %>")
+if("<%= escape_javascript(@alert) %>" === '') {
+  $('#results-title').html('Results');
+  $('#results').html("<%= escape_javascript(@result) %>");
+  $('#flash-alert').html('');
+  $('#flash-alert').attr('style', 'display: none;');
+} else {
+  $('#results-title').html('');
+  $('#results').html('');
+  $('#flash-alert').html("<%= escape_javascript(@alert) %>");
+  $('#flash-alert').removeAttr('style');
+}
