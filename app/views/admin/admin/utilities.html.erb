@@ -1,0 +1,54 @@
+<div class="page-header">
+  <h1>Utilities</h1>
+</div>
+
+<%= form_for :info, method: :get, remote: true do |f| -%>
+  <div class="row-fluid">
+    <div class="span12">
+      <h2>Characters and series</h2>
+      <h4>In format <em>Japanese Character Name,English Character Name,Japanese Series Name,English Series Name</em> - one per line</h4>
+      <%= f.text_area :character_series_csv, size: '10x10' %>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <h2>Text to transform</h2>
+      <div class="well">
+        <h4>
+          <%= f.radio_button :transform, :name_list, checked: true %>
+          Convert list of <em>&lt;&lt;Japanese Name @ Japanese Series&gt;&gt;</em>
+        </h4>
+        <%= f.text_area :name_csv, size: '10x10' %>
+      </div>
+      <div class="well">
+        <h4>
+          <%#= f.radio_button :transform, :result_list %>
+          <!--Convert list of results with Japanese Names and Series-->
+        </h4>
+        <%#= f.text_area :result_csv, size: '10x10' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Submit', class: 'btn btn-primary' %>
+  </div>
+<% end -%>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="page-header">
+      <h1 id="results-title"></h1>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div id="results"></div>
+  </div>
+</div>
+
+<br />
+<br />

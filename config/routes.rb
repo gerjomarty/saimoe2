@@ -1,5 +1,9 @@
 Saimoe2::Application.routes.draw do
 
+  namespace :admin do
+    get 'utilities', to: 'admin#utilities'
+  end
+
   with_options only: [:index, :show] do |m|
     m.resources(:characters) { get 'autocomplete', on: :collection }
     m.resources(:series) { get 'autocomplete', on: :collection }
