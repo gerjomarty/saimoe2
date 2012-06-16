@@ -1,7 +1,7 @@
 Saimoe2::Application.routes.draw do
 
   namespace :admin do
-    get 'utilities', to: 'admin#utilities'
+    match 'utilities', to: 'admin#utilities', via: [:get, :post]
   end
 
   with_options only: [:index, :show] do |m|
