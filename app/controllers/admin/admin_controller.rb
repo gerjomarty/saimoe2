@@ -10,7 +10,7 @@ class Admin::AdminController < ApplicationController
   def utilities
     if (info = params && params[:info])
 
-      info_arr = CSV.parse(info[:character_series_csv].chomp)
+      info_arr = CSV.parse(info[:character_series_csv]).collect {|i| i.collect(&:chomp)}
 
       unless info_arr.all? {|i| i.size == 4}
         @result = "Malformed CSV input - #{info_arr.select {|i| i.size != 4}.inspect}"
@@ -22,7 +22,7 @@ class Admin::AdminController < ApplicationController
 
       if info[:transform] == 'name_list'
 
-        if (name_arr = info[:name_csv].lines.to_a).empty?
+        if (name_arr = info[:name_csv].lines.to_a.collect(&:chomp)).empty?
           # The list of Japanese identifiers is empty - just output the whole list
           @result = info_arr.collect {|char_t, series_t|
             "#{char_t.last} @ #{series_t.last}: &lt;&lt;#{char_t.first}@#{series_t.first}&gt;&gt;"
@@ -31,8 +31,13 @@ class Admin::AdminController < ApplicationController
           # The list of Japanese identifiers is not empty - convert and sort that list
           name_series = name_arr.collect {|str| /\A<<([\w\s]+)@([\w\s]+)>>\Z/.match(str).to_a}
           @result = name_series.collect {|j_string, j_name, j_series|
-            entry = info_arr.select {|char_t, series_t| char_t.first == j_name && series_t.first == j_series}[0]
-            "#{entry.first.last} @ #{entry.last.last}: #{j_string}"
+            entry_index = info_arr.index {|char_t, series_t| char_t.first == j_name && series_t.first == j_series}
+            [entry_index, j_string]
+          }.sort_by {|entry_index, _|
+            [entry_index]
+          }.collect {|entry_index, j_string|
+            char, series = info_arr[entry_index]
+            "#{char.last} @ #{series.last}: #{j_string.gsub(/</, '&lt;').gsub(/>/, '&gt;')}"
           }.join('<br />').html_safe
         end
 
