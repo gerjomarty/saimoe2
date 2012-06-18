@@ -11,15 +11,34 @@ class Admin::AdminController < ApplicationController
   def utilities
     if (info = params && params[:info])
 
-      character_arr = nil
-      series_arr = nil
+      character_arr = series_arr = nil
+      character_string, series_string = info[:character_csv].read, info[:series_csv].read
+
       begin
-        character_arr = CSV.parse(info[:character_csv].read).collect {|i| i.collect {|ii| ii.strip.chomp.strip}}
-        series_arr = CSV.parse(info[:series_csv].read).collect {|i| i.collect {|ii| ii.strip.chomp.strip}}
+        character_arr = CSV.parse(character_string)
       rescue CSV::MalformedCSVError => e
-        flash[:alert] = "Malformed CSV input: #{e}"
+        flash[:alert] = "Malformed CSV input in characters file: #{e}"
         return
+      rescue ArgumentError => e
+        if e.message =~ /invalid byte sequence in UTF-8/
+          character_string = character_string.force_encoding('Shift_JIS').encode('UTF-8')
+          retry
+        end
       end
+      begin
+        series_arr = CSV.parse(series_string)
+      rescue CSV::MalformedCSVError => e
+        flash[:alert] = "Malformed CSV input in series file: #{e}"
+        return
+      rescue ArgumentError => e
+        if e.message =~ /invalid byte sequence in UTF-8/
+          series_string = series_string.force_encoding('Shift_JIS').encode('UTF-8')
+          retry
+        end
+      end
+
+      character_arr.collect! {|i| i.collect {|ii| ii.strip.chomp.strip}}
+      series_arr.collect! {|i| i.collect {|ii| ii.strip.chomp.strip}}
 
       unless character_arr.all? {|i| i.size == 2} || series_arr.all? {|i| i.size == 2}
         flash[:alert] = "Some lines not in correct format: #{(character_arr + series_arr).select {|i| i.size != 2}.inspect}"
@@ -31,20 +50,24 @@ class Admin::AdminController < ApplicationController
 
       if info[:transform] == 'name_list'
 
-        name_arr = info[:name_csv].read.lines.to_a.collect {|l| l.strip.chomp.strip}
+        name_string = info[:name_csv].read
+        unless name_string.valid_encoding?
+          name_string = name_string.force_encoding('Shift_JIS').encode('UTF-8')
+        end
+        name_arr = name_string.lines.to_a.collect {|l| l.strip.chomp.strip}
 
         @result = name_arr.collect {|str|
           /\A<<(.*?)[@\uff20](.*?)>>\Z/.match(str).to_a.collect(&:strip)
         }.collect {|id_string, id_name, id_series|
           char_index = character_arr.index {|j_name, _| j_name == id_name}
           series_index = series_arr.index {|j_series, _| j_series == id_series}
-          [char_index, series_index, id_name, id_series]
-        }.sort_by {|char_index, series_index, _, _|
-          [series_index, char_index]
-        }.collect {|char_index, series_index, id_name, id_series|
           j_name, e_name, j_series, e_series = nil
           j_name, e_name = character_arr[char_index] if char_index
           j_series, e_series = series_arr[series_index] if series_index
+          [j_name, e_name, j_series, e_series]
+        }.sort_by {|_, e_name, _, e_series|
+          [e_series, (split_name = e_name.split(/ /)).size == 1 ? nil : split_name.last, e_name]
+        }.collect {|j_name, e_name, j_series, e_series|
           "#{e_name || '???'} @ #{e_series || '???'}: &lt;&lt;#{j_name || id_name}\uff20#{j_series || id_series}&gt;&gt;"
         }.join('<br />').html_safe
 
@@ -52,7 +75,11 @@ class Admin::AdminController < ApplicationController
 
       elsif info[:transform] == 'result_list'
 
-        result_arr = info[:result_csv].read.lines.to_a.collect {|l| l.strip.chomp.strip}
+        result_string = info[:result_csv].read
+        unless result_string.valid_encoding?
+          result_string = result_string.force_encoding('Shift_JIS').encode('UTF-8')
+        end
+        result_arr = result_string.lines.to_a.collect {|l| l.strip.chomp.strip}
 
         total_votes = 0
         @result = result_arr.collect {|str|
@@ -60,24 +87,20 @@ class Admin::AdminController < ApplicationController
         }.collect {|res_string, place, votes, res_name, res_series|
           char_index = character_arr.index {|j_name, _| j_name == res_name}
           series_index = series_arr.index {|j_series, _| j_series == res_series}
-          #unless char_index && series_index
-          #  @alert = "Couldn't find #{char_index ? 'series' : 'character'} transliteration for '#{res_string}'"
-          #  return
-          #end
+          j_name, e_name, j_series, e_series = nil
+          j_name, e_name = character_arr[char_index] if char_index
+          j_series, e_series = series_arr[series_index] if series_index
           total_votes += votes.to_i
-          [place.to_i, votes.to_i, nil, char_index, series_index, res_name, res_series]
-        }.sort_by {|place, votes, _, char_index, series_index, _, _|
-          [place, -votes, series_index, char_index]
-        }.collect {|place, votes, _, char_index, series_index, res_name, res_series|
-          e_name, e_series = nil
-          e_name = character_arr[char_index].last if char_index
-          e_series = series_arr[series_index].last if series_index
+          [place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
+        }.sort_by {|place, votes, _, e_name, _, e_series|
+          [place, -votes, e_series, (split_name = e_name.split(/ /)).size == 1 ? nil : split_name.last, e_name]
+        }.collect {|place, votes, j_name, e_name, j_series, e_series|
           vote_share = votes.to_f / total_votes.to_f
           str = "#{place.ordinalize} #{votes} (#{format_percent(vote_share)}) #{e_name || '???'} @ #{e_series || '???'}"
-          if char_index && series_index
+          if e_name && e_series
             str
           else
-            str << " &lt;&lt;#{res_name}\uff20#{res_series}&gt;&gt;"
+            str << " &lt;&lt;#{j_name}\uff20#{j_series}&gt;&gt;"
           end
         }.join('<br />').html_safe
 
