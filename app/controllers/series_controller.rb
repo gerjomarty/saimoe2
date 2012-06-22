@@ -18,7 +18,25 @@ class SeriesController < ApplicationController
 
     if request.path != series_path(@series)
       redirect_to series_url(@series), status: :moved_permanently
+      return
     end
+
+    majors = Character.ordered.joins(:character_roles)
+                              .where(:character_roles => {role_type: :major, series_id: @series.id}).all
+    cameos = Character.ordered.joins(:character_roles)
+                              .where(:character_roles => {role_type: :cameo, series_id: @series.id}).all
+
+    m_size, m_rem = majors.size.divmod 4
+    @major_chars = ([m_size]*4).collect.with_index {|s, i|
+      s += 1 if i < m_rem
+      majors.slice!(0...s)
+    }.reject(&:empty?)
+
+    c_size, c_rem = cameos.size.divmod 4
+    @cameo_chars = ([c_size]*4).collect.with_index {|s, i|
+      s += 1 if i < c_rem
+      cameos.slice!(0...s)
+    }.reject(&:empty?)
   end
 
   # GET /series/autocomplete

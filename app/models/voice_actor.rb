@@ -26,6 +26,18 @@ class VoiceActor < ActiveRecord::Base
     end
   end
 
+  def tournament_history
+    {}.tap do |th|
+      Tournament.all_for(self).each do |t|
+        th[t] ||= {}
+        t.matches.all_for(self).each do |m|
+          th[t][m.stage] ||= []
+          th[t][m.stage] += m.match_entries.all_for(self)
+        end
+      end
+    end
+  end
+
   # Soulmate methods
 
   def soulmate_term

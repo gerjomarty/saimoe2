@@ -17,7 +17,17 @@ class VoiceActorsController < ApplicationController
 
     if request.path != voice_actor_path(@voice_actor)
       redirect_to voice_actor_url(@voice_actor), status: :moved_permanently
+      return
     end
+
+    chars = Character.ordered.joins(:character_roles => {:appearances => :voice_actor_roles})
+                     .where(:character_roles => {:appearances => {:voice_actor_roles => {voice_actor_id: @voice_actor.id}}}).all.uniq
+
+    c_size, c_rem = chars.size.divmod 4
+    @chars = ([c_size]*4).collect.with_index {|s, i|
+      s += 1 if i < c_rem
+      chars.slice!(0...s)
+    }
   end
 
   # GET /voice-actors/autocomplete

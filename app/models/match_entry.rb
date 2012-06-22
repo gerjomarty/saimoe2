@@ -26,8 +26,9 @@ class MatchEntry < ActiveRecord::Base
     self.number_of_votes && (self.number_of_votes.to_f / match.number_of_votes.to_f)
   end
 
-  #th[t][m.stage][:match_entry] = m.match_entries.joins(:appearance => {:character_role => :character})
-  #.where(:appearances => {:character_roles => {:characters => {id: self.id}}}).first!
+  def character_name
+    appearance.character_display_name || appearance.character_role.character.full_name
+  end
 
   def self.all_for model
     join_conds = case model
@@ -38,6 +39,6 @@ class MatchEntry < ActiveRecord::Base
                    raise ArgumentError, "Invalid model passed to MatchEntry#all_for"
                  end
 
-    joins(join_conds).where(Whereize.perform(join_conds, model)).ordered_by_votes
+    joins(join_conds).where(Whereize.perform(join_conds, model)).ordered_by_votes.uniq
   end
 end

@@ -1,0 +1,7 @@
+<% raise ArgumentError, "locals not defined" unless stage && match_entries %>
+<button class="button-popover btn <%= history_button_type_for(match_entries) %>" data-original-title="<%= pretty_stage(stage) %>">
+  <%= pretty_stage(stage) %>
+</button>
+<div class="button-popover-content" style="display: none;">
+  <%= popover_content_for(match_entries) %>
+</div>

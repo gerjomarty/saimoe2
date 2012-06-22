@@ -1,4 +1,5 @@
 $(document).ready ->
+  $('#autocomplete_name').removeAttr('style')
   $('#autocomplete_name').autocomplete({
     source: $('#autocomplete_name').attr('data-source-path'),
     minLength: 3,

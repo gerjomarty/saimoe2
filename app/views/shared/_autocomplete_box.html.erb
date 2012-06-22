@@ -2,6 +2,6 @@
 <%= text_field_tag 'autocomplete_name',
                    nil,
                    class: 'span12 search-query',
-                   'data-source-path' => source_path,
-                   'data-target-path' => target_path,
+                   style: 'display: none;',
+                   data: {source_path: source_path, target_path: target_path},
                    placeholder: defined?(placeholder_text) && placeholder_text %>

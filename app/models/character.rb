@@ -37,8 +37,14 @@ class Character < ActiveRecord::Base
 
   def other_series
     Series.joins(:character_roles => :character)
-          .where(:character_roles => {:characters => {id: self.id}})
+          .where(:character_roles => {character_id: self.id})
           .where("#{Series.q_column(:id)} <> ?", self.main_series_id).ordered.uniq
+  end
+
+  def voice_actors
+    VoiceActor.joins(:voice_actor_roles => {:appearance => {:character_role => :character}})
+              .where(:character_roles => {character_id: self.id})
+              .ordered.all.uniq
   end
 
   def tournament_history

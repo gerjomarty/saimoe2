@@ -13,8 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.autocomplete
+//= require twitter/bootstrap/bootstrap-collapse
 //= require twitter/bootstrap/bootstrap-tooltip
 //= require twitter/bootstrap/bootstrap-popover
 //= require autocomplete_box
-//= require match_popover
+//= require button_popover
 //= require_tree .

@@ -14,27 +14,21 @@ class Admin::AdminController < ApplicationController
       character_arr = series_arr = nil
       character_string, series_string = info[:character_csv].read, info[:series_csv].read
 
-      begin
-        character_arr = CSV.parse(character_string)
-      rescue CSV::MalformedCSVError => e
-        flash[:alert] = "Malformed CSV input in characters file: #{e}"
-        return
-      rescue ArgumentError => e
-        if e.message =~ /invalid byte sequence in UTF-8/
-          character_string = character_string.force_encoding('Shift_JIS').encode('UTF-8')
-          retry
-        end
+      unless character_string.valid_encoding?
+        character_string = character_string.force_encoding('Shift_JIS').encode('UTF-8')
       end
+      unless series_string.valid_encoding?
+        series_string = series_string.force_encoding('Shift_JIS').encode('UTF-8')
+      end
+
       begin
+        c_done = false
+        character_arr = CSV.parse(character_string)
+        c_done = true
         series_arr = CSV.parse(series_string)
       rescue CSV::MalformedCSVError => e
-        flash[:alert] = "Malformed CSV input in series file: #{e}"
+        flash[:alert] = "Malformed CSV input in #{c_done ? 'series' : 'characters'} file: #{e}"
         return
-      rescue ArgumentError => e
-        if e.message =~ /invalid byte sequence in UTF-8/
-          series_string = series_string.force_encoding('Shift_JIS').encode('UTF-8')
-          retry
-        end
       end
 
       character_arr.collect! {|i| i.collect {|ii| ii.strip.chomp.strip}}

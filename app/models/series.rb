@@ -18,10 +18,22 @@ class Series < ActiveRecord::Base
   ORDER = [q_column(:sortable_name)].freeze
   scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
 
-  friendly_id :name, use: [:slugged, :history]
+  friendly_id :sortable_name, use: [:slugged, :history]
 
   def color_code= code
     write_attribute(:color_code, code && code.to_s.upcase)
+  end
+
+  def tournament_history
+    {}.tap do |th|
+      Tournament.all_for(self).each do |t|
+        th[t] ||= {}
+        t.matches.all_for(self).each do |m|
+          th[t][m.stage] ||= []
+          th[t][m.stage] += m.match_entries.all_for(self)
+        end
+      end
+    end
   end
 
   # Soulmate methods

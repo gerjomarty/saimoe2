@@ -4,6 +4,10 @@ Saimoe2::Application.configure do
   ENV['SECRET_TOKEN'] = '589b5bc7af50816cbcdd7f1b77c50afadc85ddde44907a92a38f2632c7f5721144159ef3d3221ce9ea2e19a3bba578baecde1f80bc9963c6f472dc68122a8d24'
   ENV['REDISTOGO_URL'] = 'redis://localhost:6379'
 
+  user = YAML::load(File.open("#{Rails.root}/lib/data/user.yml"))
+  ENV['APP_USERNAME'] = user.keys.first
+  ENV['APP_PASSWORD'] = user.values.first
+
   aws_keys = YAML::load(File.open("#{Rails.root}/lib/data/aws_keys.yml"))
   ENV['AWS_ACCESS_KEY_ID'] = aws_keys['aws_access_key_id']
   ENV['AWS_SECRET_ACCESS_KEY'] = aws_keys['aws_secret_access_key']
