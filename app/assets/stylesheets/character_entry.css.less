@@ -1,0 +1,43 @@
+.character_entry {
+    padding: 2px;
+    div {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .character_image {
+        float: left;
+        margin-right: 0.4em;
+    }
+    .character_name, .series_name {
+        position: relative;
+        height: 1.2em;
+    }
+    .character_name {
+        top: 0.5em;
+    }
+    .series_name {
+        top: 0.7em;
+        font-size: smaller;
+    }
+    &.right {
+        .character_image {
+            float: right;
+            margin-left: 0.4em;
+        }
+        .character_name, .series_name {
+            text-align: right;
+        }
+    }
+    &.hide_series {
+        .character_name {
+            top: 1em;
+        }
+        .series_name {
+            display: none;
+        }
+    }
+    .cb {
+        clear: both;
+    }
+}

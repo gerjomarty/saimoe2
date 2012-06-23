@@ -1,4 +1,5 @@
 module ApplicationHelper
+  # Takes a float between 0 and 1, and outputs a percentage with up to two decimal places
   def format_percent number
     num = number * 100
     if fewer_decimal_places_than num, 1
@@ -10,33 +11,62 @@ module ApplicationHelper
     end
   end
 
-  def pretty_match match, short_form=false
-    if match.stage == :final
-      short_form ? 'Final' : 'Grand Final'
-    elsif MatchInfo::FINAL_STAGES.include? match.stage
-      if short_form
-        "#{pretty_stage(match.stage).gsub(/[a-z\s]/, '')}#{match.match_number}"
-      else
+  # Renders a nice box with avatar, character name, and series
+  def character_entry character, right_align=false, hide_series=false, series=nil
+    content_tag :div, class: "thumbnail character_entry#{' right' if right_align}#{' hide_series' if hide_series}" do
+      c = content_tag :div, class: 'character_image' do
+        image_tag character.avatar_url(:thumb), size: '40x40'
+      end
+      c << content_tag(:div, class: 'character_name') do
+        link_to character.full_name, character_path(character)
+      end
+      unless hide_series
+        series ||= character.main_series
+        c << content_tag(:div, class: 'series_name') do
+          content_tag(:em, link_to(series.name, series_path(series)))
+        end
+      end
+      c << content_tag(:div, '', class: 'cb')
+    end
+  end
+
+  def pretty_match match
+    case match.stage
+      when :final
+        'Grand Final'
+      when :semi_final, :quarter_final, :last_16
         "#{pretty_stage match.stage} #{match.match_number}"
-      end
-    elsif match.stage == :group_final
-      short_form ? "#{match.group.upcase} Final" : "#{pretty_group match.group} Final"
-    elsif short_form && match.stage == :round_1
-      "#{match.group.upcase}#{match.match_number.to_s.rjust(2, '0')}"
-    else
-      if short_form
-        "#{match.group.upcase}#{match.stage.to_s.gsub(/[^\d]/, '')}-#{match.match_number}"
+      when :group_final
+        "#{pretty_group match.group} Final"
       else
-        m_no = match.stage == :round_1 ? match.match_number.to_s.rjust(2, '0') : match.match_number.to_s
-        "#{pretty_stage match.stage} Match #{match.group.upcase}#{m_no}"
-      end
+        "#{pretty_stage match.stage} Match #{match.group.upcase}#{match.match_number}"
+    end
+  end
+
+  def short_pretty_match match
+    case match.stage
+      when :final
+        'Final'
+      when :semi_final
+        "SF#{match.match_number}"
+      when :quarter_final
+        "QF#{match.match_number}"
+      when :last_16
+        "L16 #{match.match_number}"
+      when :group_final
+        "#{match.group.upcase} Final"
+      else
+        "#{match.group.upcase}#{match.match_number}"
     end
   end
 
   def pretty_stage stage
-    return '' unless stage
-    return 'Grand Final' if stage == :final
-    stage.to_s.gsub(/_/, ' ').titleize
+    case stage
+      when :final
+        'Grand Final'
+      else
+        stage.to_s.gsub(/_/, ' ').titleize
+    end
   end
 
   def pretty_group group
@@ -84,7 +114,7 @@ module ApplicationHelper
           c = content_tag :h3, title
           c << entries.collect do |entry|
             content_tag :p do
-              cc = content_tag :small, pretty_match(entry.match, true)
+              cc = content_tag :small, short_pretty_match(entry.match)
               cc << '&nbsp;'.html_safe + entry.character_name
             end
           end.join.html_safe

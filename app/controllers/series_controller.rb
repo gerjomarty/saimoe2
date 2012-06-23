@@ -23,7 +23,7 @@ class SeriesController < ApplicationController
 
     majors = Character.ordered.joins(:character_roles)
                               .where(:character_roles => {role_type: :major, series_id: @series.id}).all
-    cameos = Character.ordered.joins(:character_roles)
+    cameos = Character.ordered.includes(:main_series).joins(:character_roles)
                               .where(:character_roles => {role_type: :cameo, series_id: @series.id}).all
 
     m_size, m_rem = majors.size.divmod 4

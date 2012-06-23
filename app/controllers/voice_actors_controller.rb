@@ -20,7 +20,8 @@ class VoiceActorsController < ApplicationController
       return
     end
 
-    chars = Character.ordered.joins(:character_roles => {:appearances => :voice_actor_roles})
+    chars = Character.ordered.includes(:main_series)
+                     .joins(:character_roles => {:appearances => :voice_actor_roles})
                      .where(:voice_actor_roles => {voice_actor_id: @voice_actor.id}).all.uniq
 
     c_size, c_rem = chars.size.divmod 4
