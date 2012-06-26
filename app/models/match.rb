@@ -1,6 +1,8 @@
 require 'whereize'
 
 class Match < ActiveRecord::Base
+  include Ordering
+
   attr_accessible :date, :group, :match_number, :stage, :tournament
 
   belongs_to :tournament, inverse_of: :matches
@@ -17,9 +19,8 @@ class Match < ActiveRecord::Base
   TOURNAMENT_ORDER = (STAGE_ORDER + [q_column(:group), q_column(:match_number), q_column(:date)]).freeze
   DATE_ORDER = ([q_column(:date)] + STAGE_ORDER + [q_column(:group), q_column(:match_number)]).freeze
 
-  [[:ordered, TOURNAMENT_ORDER], [:ordered_by_date, DATE_ORDER]].each do |scope_name, order|
-    scope scope_name, order.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
-  end
+  order_scope :ordered, TOURNAMENT_ORDER
+  order_scope :ordered_by_date, DATE_ORDER
 
   def group
     (value = read_attribute(:group)) && value.to_sym

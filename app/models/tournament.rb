@@ -1,6 +1,8 @@
 require 'whereize'
 
 class Tournament < ActiveRecord::Base
+  include Ordering
+
   attr_accessible :year, :group_stages, :final_stages
   serialize :group_stages, Array
   serialize :final_stages, Array
@@ -13,7 +15,7 @@ class Tournament < ActiveRecord::Base
   validates :final_stages, presence: true, final_stage: true
 
   ORDER = [q_column(:year)].freeze
-  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+  order_scope :ordered, ORDER
 
   def stages
     group_stages + final_stages

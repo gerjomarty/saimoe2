@@ -1,6 +1,8 @@
 require 'whereize'
 
 class MatchEntry < ActiveRecord::Base
+  include Ordering
+
   attr_accessible :number_of_votes, :position, :match, :previous_match, :appearance
 
   belongs_to :match, inverse_of: :match_entries
@@ -14,9 +16,8 @@ class MatchEntry < ActiveRecord::Base
   POSITION_ORDER = [q_column(:position)].freeze
   VOTE_ORDER = ["#{q_column(:number_of_votes)} DESC", q_column(:position)].freeze
 
-  [[:ordered_by_position, POSITION_ORDER], [:ordered_by_votes, VOTE_ORDER]].each do |scope_name, order|
-    scope scope_name, order.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
-  end
+  order_scope :ordered_by_position, POSITION_ORDER
+  order_scope :ordered_by_votes, VOTE_ORDER
 
   def winner?
     match.winning_match_entries.include? self

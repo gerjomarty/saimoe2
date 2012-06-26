@@ -15,15 +15,15 @@ module ApplicationHelper
   def character_entry character, right_align=false, hide_series=false, series=nil
     content_tag :div, class: "thumbnail character_entry#{' right' if right_align}#{' hide_series' if hide_series}" do
       c = content_tag :div, class: 'character_image' do
-        image_tag character.avatar_url(:thumb), size: '40x40'
+        image_tag character.avatar_url(:thumb), alt: character.full_name, size: '40x40'
       end
       c << content_tag(:div, class: 'character_name') do
-        link_to character.full_name, character_path(character)
+        link_to character.full_name, character_path(character), title: character.full_name
       end
       unless hide_series
         series ||= character.main_series
         c << content_tag(:div, class: 'series_name') do
-          content_tag(:em, link_to(series.name, series_path(series)))
+          content_tag(:em, link_to(series.name, series_path(series), title: series.name))
         end
       end
       c << content_tag(:div, '', class: 'cb')

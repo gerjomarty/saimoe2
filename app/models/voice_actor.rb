@@ -2,6 +2,7 @@ require 'soulmate_search'
 
 class VoiceActor < ActiveRecord::Base
   include SoulmateSearch
+  include Ordering
   extend FriendlyId
 
   attr_accessible :first_name, :last_name
@@ -14,7 +15,7 @@ class VoiceActor < ActiveRecord::Base
   ORDER = ["(#{q_column :last_name} IS NOT NULL)",
            "(#{q_column :last_name} IS NULL)", q_column(:last_name),
            "(#{q_column :first_name} IS NULL)", q_column(:first_name)].freeze
-  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+  order_scope :ordered, ORDER
 
   friendly_id :full_name, use: [:slugged, :history]
 

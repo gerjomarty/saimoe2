@@ -10,15 +10,9 @@
       <h1><%= @character.full_name %></h1>
       <h3><em><%= link_to @character.main_series.name, series_path(@character.main_series) %></em></h3>
       <%= format_other_series_list @character %>
+      <p></p>
+      <%= format_voice_actor_list @character %>
     </div>
-</div>
-
-<p></p>
-
-<div class="row-fluid">
-  <div class="span12">
-    <%= format_voice_actor_list @character %>
-  </div>
 </div>
 
 <!--<div class="page-header">-->

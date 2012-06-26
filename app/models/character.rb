@@ -2,6 +2,7 @@ require 'soulmate_search'
 
 class Character < ActiveRecord::Base
   include SoulmateSearch
+  include Ordering
   extend FriendlyId
 
   attr_accessible :first_name, :given_name, :last_name, :main_series
@@ -10,6 +11,14 @@ class Character < ActiveRecord::Base
 
   belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id
   has_many :character_roles, inverse_of: :character
+
+  has_many :series, through: :character_roles
+  has_many :appearances, through: :character_roles
+  has_many :tournaments, through: :appearances
+  has_many :voice_actor_roles, through: :appearances
+  has_many :match_entries, through: :appearances
+  has_many :voice_actors, through: :voice_actor_roles, uniq: true
+  has_many :matches, through: :match_entries
 
   validates :main_series_id, presence: true
   validates :slug, presence: true, uniqueness: {case_sensitive: false}
@@ -21,7 +30,7 @@ class Character < ActiveRecord::Base
            "(#{q_column :last_name} IS NULL)", q_column(:last_name),
            "(#{q_column :first_name} IS NULL)", q_column(:first_name),
            "(#{q_column :given_name} IS NULL)", q_column(:given_name)].freeze
-  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+  order_scope :ordered, ORDER
 
   scope :ordered_by_main_series, includes(:main_series).merge(Series.ordered).ordered
 
@@ -36,15 +45,7 @@ class Character < ActiveRecord::Base
   end
 
   def other_series
-    Series.joins(:character_roles => :character)
-          .where(:character_roles => {character_id: self.id})
-          .where("#{Series.q_column(:id)} <> ?", self.main_series_id).ordered.uniq
-  end
-
-  def voice_actors
-    VoiceActor.joins(:voice_actor_roles => {:appearance => {:character_role => :character}})
-              .where(:character_roles => {character_id: self.id})
-              .ordered.all.uniq
+    series.where("#{Series.q_column(:id)} <> ?", self.main_series_id).ordered.uniq
   end
 
   def tournament_history

@@ -2,6 +2,7 @@ require 'soulmate_search'
 
 class Series < ActiveRecord::Base
   include SoulmateSearch
+  include Ordering
   extend FriendlyId
 
   attr_accessible :color_code, :name
@@ -16,7 +17,7 @@ class Series < ActiveRecord::Base
   validates :color_code, format: {with: /[\dA-Fa-f]{6}/}, length: {is: 6}, allow_nil: true
 
   ORDER = [q_column(:sortable_name)].freeze
-  scope :ordered, ORDER.inject(nil) {|memo, n| memo ? memo.order(n) : order(n) }
+  order_scope :ordered, ORDER
 
   friendly_id :sortable_name, use: [:slugged, :history]
 
