@@ -17,12 +17,8 @@ class Admin::AdminController < ApplicationController
     character_arr = series_arr = nil
     character_string, series_string = info[:character_csv].read, info[:series_csv].read
 
-    unless character_string.valid_encoding?
-      character_string = character_string.force_encoding('Shift_JIS').encode('UTF-8')
-    end
-    unless series_string.valid_encoding?
-      series_string = series_string.force_encoding('Shift_JIS').encode('UTF-8')
-    end
+    character_string = character_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+    series_string = series_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
 
     begin
       c_done = false
@@ -34,24 +30,35 @@ class Admin::AdminController < ApplicationController
       return
     end
 
-    character_arr.collect! {|i| i.collect {|ii| ii.strip.chomp.strip}}
-    series_arr.collect! {|i| i.collect {|ii| ii.strip.chomp.strip}}
+    character_arr.collect! {|i| i.compact.collect {|ii| ii.try(:strip).try(:chomp).try(:strip)}.compact }
+    series_arr.collect! {|i| i.compact.collect {|ii| ii.try(:strip).try(:chomp).try(:strip)}.compact }
+    character_arr.collect! {|i| i.empty? ? nil : i}
+    series_arr.collect! {|i| i.empty? ? nil : i}
+    character_arr.compact!
+    series_arr.compact!
 
     unless character_arr.all? {|i| i.size == 2} || series_arr.all? {|i| i.size == 2}
       flash[:alert] = "Some lines not in correct format: #{(character_arr + series_arr).select {|i| i.size != 2}.inspect}"
       return
     end
 
-    character_arr.sort_by! {|_, e_name| [(split_name = e_name.split(/ /)).size == 1 ? nil : split_name.last, e_name]}
+    character_arr.sort_by! do |_, e_name|
+      split_name = e_name.try(:split, / /)
+      if split_name.nil? || split_name.size == 1
+        [e_name || '']
+      else
+        [split_name.last, e_name || '']
+      end
+    end
     series_arr.sort_by! {|_, e_series| [e_series]}
 
     if info[:transform] == 'name_list'
 
       name_string = info[:name_csv].read
-      unless name_string.valid_encoding?
-        name_string = name_string.force_encoding('Shift_JIS').encode('UTF-8')
-      end
-      name_arr = name_string.lines.to_a.collect {|l| l.strip.chomp.strip}
+      name_string = name_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+      name_arr = name_string.lines.to_a.collect {|l| l.try(:strip).try(:chomp).try(:strip)}.compact
+      name_arr.collect! {|l| l.empty? ? nil : l}
+      name_arr.compact!
 
       @result = name_arr.collect {|str|
         #/\A<<(.*?)[@\uff20](.*?)>>\Z/.match(str).to_a.collect(&:strip)
@@ -62,11 +69,16 @@ class Admin::AdminController < ApplicationController
         j_name, e_name, j_series, e_series = nil
         j_name, e_name = character_arr[char_index] if char_index
         j_series, e_series = series_arr[series_index] if series_index
-        [j_name, e_name, j_series, e_series]
-      }.sort_by {|_, e_name, _, e_series|
-        [e_series, (split_name = e_name.split(/ /)).size == 1 ? nil : split_name.last, e_name]
-      }.collect {|j_name, e_name, j_series, e_series|
-        "#{e_name || '???'} @ #{e_series || '???'}: <<#{j_name || id_name}\uff20#{j_series || id_series}>>"
+        [id_string, j_name, e_name, j_series, e_series]
+      }.sort_by {|_, _, e_name, _, e_series|
+        split_name = e_name.try(:split, / /)
+        if split_name.nil? || split_name.size == 1
+          [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', e_name || '']
+        else
+          [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', split_name.last, e_name || '']
+        end
+      }.collect {|id_string, j_name, e_name, j_series, e_series|
+        "#{e_name || '???'} @ #{e_series || '???'}: #{j_name && j_series ? %Q|<<#{j_name}\uff20#{j_series}>>| : id_string}"
       }.join("\r\n")
 
       send_data @result, filename: "name_list_#{Time.zone.now}.txt"
@@ -74,9 +86,7 @@ class Admin::AdminController < ApplicationController
     elsif info[:transform] == 'result_list'
 
       result_string = info[:result_csv].read
-      unless result_string.valid_encoding?
-        result_string = result_string.force_encoding('Shift_JIS').encode('UTF-8')
-      end
+      result_string = result_string.force_encoding('Shift_JIS').encode('UTF-8')
       result_arr = result_string.lines.to_a.collect {|l| l.strip.chomp.strip}
 
       total_votes = 0
