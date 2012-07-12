@@ -17,8 +17,16 @@ class Admin::AdminController < ApplicationController
     character_arr = series_arr = nil
     character_string, series_string = info[:character_csv].read, info[:series_csv].read
 
-    character_string = character_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
-    series_string = series_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+    begin
+      character_string = character_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+    rescue Encoding::InvalidByteSequenceError
+      character_string = character_string.force_encoding('UTF-8')
+    end
+    begin
+      series_string = series_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+    rescue Encoding::InvalidByteSequenceError
+      series_string = series_string.force_encoding('UTF-8')
+    end
 
     begin
       c_done = false
@@ -55,7 +63,11 @@ class Admin::AdminController < ApplicationController
     if info[:transform] == 'name_list'
 
       name_string = info[:name_csv].read
-      name_string = name_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+      begin
+        name_string = name_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
+      rescue Encoding::InvalidByteSequenceError
+        name_string = name_string.force_encoding('UTF-8')
+      end
       name_arr = name_string.lines.to_a.collect {|l| l.try(:strip).try(:chomp).try(:strip)}.compact
       name_arr.collect! {|l| l.empty? ? nil : l}
       name_arr.compact!
@@ -81,13 +93,19 @@ class Admin::AdminController < ApplicationController
         "#{e_name || '???'} @ #{e_series || '???'}: #{j_name && j_series ? %Q|<<#{j_name}\uff20#{j_series}>>| : id_string}"
       }.join("\r\n")
 
-      send_data @result, filename: "name_list_#{Time.zone.now}.txt"
+      send_data @result, filename: "name_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
 
     elsif info[:transform] == 'result_list'
 
       result_string = info[:result_csv].read
-      result_string = result_string.force_encoding('Shift_JIS').encode('UTF-8')
-      result_arr = result_string.lines.to_a.collect {|l| l.strip.chomp.strip}
+      begin
+        result_string = result_string.force_encoding('Shift_JIS').encode('UTF-8', undef: :replace)
+      rescue Encoding::InvalidByteSequenceError
+        result_string = result_string.force_encoding('UTF-8')
+      end
+      result_arr = result_string.lines.to_a.collect {|l| l.try(:strip).try(:chomp).try(:strip)}.compact
+      result_arr.collect! {|l| l.empty? ? nil : l}
+      result_arr.compact!
 
       total_votes = 0
       @result = result_arr.collect {|str|
@@ -99,20 +117,25 @@ class Admin::AdminController < ApplicationController
         j_name, e_name = character_arr[char_index] if char_index
         j_series, e_series = series_arr[series_index] if series_index
         total_votes += votes.to_i
-        [place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
-      }.sort_by {|place, votes, _, e_name, _, e_series|
-        [place, -votes, e_series, (split_name = e_name.split(/ /)).size == 1 ? nil : split_name.last, e_name]
-      }.collect {|place, votes, j_name, e_name, j_series, e_series|
+        [res_string, place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
+      }.sort_by {|_, place, votes, _, e_name, _, e_series|
+        split_name = e_name.try(:split, / /)
+        if split_name.nil? || split_name.size == 1
+          [place, -votes, e_series || '', e_name || '']
+        else
+          [place, -votes, e_series || '', split_name.last]
+        end
+      }.collect {|res_string, place, votes, j_name, e_name, j_series, e_series|
         vote_share = votes.to_f / total_votes.to_f
         str = "#{place.ordinalize} #{votes} (#{format_percent(vote_share)}) #{e_name || '???'} @ #{e_series || '???'}"
         if e_name && e_series
           str
         else
-          str << " <<#{j_name}\uff20#{j_series}>>"
+          str << " #{res_string}"
         end
       }.join("\r\n")
 
-      send_data @result, filename: "result_list_#{Time.zone.now}.txt"
+      send_data @result, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
     end
   end
 end
