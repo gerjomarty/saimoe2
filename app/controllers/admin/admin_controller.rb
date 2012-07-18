@@ -97,6 +97,8 @@ class Admin::AdminController < ApplicationController
 
     elsif info[:transform] == 'result_list'
 
+      show_percent = (info[:result_show_percent] == '1')
+
       result_string = info[:result_csv].read
       begin
         result_string = result_string.force_encoding('Shift_JIS').encode('UTF-8', undef: :replace)
@@ -127,7 +129,7 @@ class Admin::AdminController < ApplicationController
         end
       }.collect {|res_string, place, votes, j_name, e_name, j_series, e_series|
         vote_share = votes.to_f / total_votes.to_f
-        str = "#{place.ordinalize} #{votes} (#{format_percent(vote_share)}) #{e_name || '???'} @ #{e_series || '???'}"
+        str = "#{place.ordinalize} #{votes} #{'(' + format_percent(vote_share) + ') ' if show_percent}#{e_name || '???'} @ #{e_series || '???'}"
         if e_name && e_series
           str
         else

@@ -33,6 +33,10 @@
         Convert list of results in format <em>1位　427票　JP Name＠JP Series</em> - one per line
       <% end %>
     </h4>
+    <h4>
+      <%= f.check_box :result_show_percent %>
+      <%= f.label :result_show_percent, 'Show percentages' %>
+    </h4>
     <%= f.file_field :result_csv %>
   </div>
 
