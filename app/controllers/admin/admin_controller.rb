@@ -91,7 +91,7 @@ class Admin::AdminController < ApplicationController
         end
       }.collect {|id_string, j_name, e_name, j_series, e_series|
         "#{e_name || '???'} @ #{e_series || '???'}: #{j_name && j_series ? %Q|<<#{j_name}\uff20#{j_series}>>| : id_string}"
-      }.join("\r\n")
+      }.join("<br />\r\n")
 
       send_data @result, filename: "name_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
 
@@ -135,7 +135,7 @@ class Admin::AdminController < ApplicationController
         else
           str << " #{res_string}"
         end
-      }.join("\r\n")
+      }.join("<br />\r\n")
 
       send_data @result, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
     end
