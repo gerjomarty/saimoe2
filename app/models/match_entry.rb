@@ -1,5 +1,3 @@
-require 'whereize'
-
 class MatchEntry < ActiveRecord::Base
   include Ordering
 
@@ -29,17 +27,5 @@ class MatchEntry < ActiveRecord::Base
 
   def character_name
     appearance.character_display_name || appearance.character_role.character.full_name
-  end
-
-  def self.all_for model
-    join_conds = case model
-                   when Character  then {:appearance => {:character_role => :character}}
-                   when Series     then {:appearance => {:character_role => :series}}
-                   when VoiceActor then {:appearance => {:voice_actor_roles => :voice_actor}}
-                 else
-                   raise ArgumentError, "Invalid model passed to MatchEntry#all_for"
-                 end
-
-    joins(join_conds).where(Whereize.perform(join_conds, model)).ordered_by_votes.uniq
   end
 end

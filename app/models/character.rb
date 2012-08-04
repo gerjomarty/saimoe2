@@ -50,16 +50,16 @@ class Character < ActiveRecord::Base
 
   def tournament_history
     {}.tap do |th|
-      Tournament.all_for(self).each do |t|
-        th[t] ||= {}
-        t.matches.all_for(self).each do |m|
-          th[t][m.stage] ||= {}
-          th[t][m.stage][:match] = m
-          th[t][m.stage][:match_entry] = m.match_entries.all_for(self).first!
-        end
+      match_entries.includes(:match => :tournament).each do |me|
+        match = me.match
+        tournament = match.tournament
+
+        th[tournament] ||= {}
+        th[tournament][match.stage] ||= {}
+        th[tournament][match.stage][:match] = match
+        th[tournament][match.stage][:match_entry] = me
       end
     end
-
   end
 
   # If there are any name clashes, we want the slugs to be appended with their main

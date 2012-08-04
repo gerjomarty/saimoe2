@@ -12,6 +12,14 @@ class Series < ActiveRecord::Base
   has_many :main_characters, class_name: 'Character', inverse_of: :main_series, foreign_key: :main_series_id
   has_many :character_roles, inverse_of: :series
 
+  has_many :characters, through: :character_roles
+  has_many :appearances, through: :character_roles
+  has_many :tournaments, through: :appearances, uniq: true
+  has_many :match_entries, through: :appearances
+  has_many :voice_actor_roles, through: :appearances
+  has_many :matches, through: :match_entries, uniq: true
+  has_many :voice_actors, through: :voice_actor_roles
+
   validates :name, :sortable_name, presence: true
   validates :slug, presence: true, uniqueness: {case_sensitive: false}
   validates :color_code, format: {with: /[\dA-Fa-f]{6}/}, length: {is: 6}, allow_nil: true
@@ -27,12 +35,13 @@ class Series < ActiveRecord::Base
 
   def tournament_history
     {}.tap do |th|
-      Tournament.all_for(self).each do |t|
-        th[t] ||= {}
-        t.matches.all_for(self).each do |m|
-          th[t][m.stage] ||= []
-          th[t][m.stage] += m.match_entries.all_for(self)
-        end
+      match_entries.includes(:match => :tournament).each do |me|
+        match = me.match
+        tournament = match.tournament
+
+        th[tournament] ||= {}
+        th[tournament][match.stage] ||= []
+        th[tournament][match.stage] << me
       end
     end
   end

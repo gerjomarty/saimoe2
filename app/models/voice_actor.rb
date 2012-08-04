@@ -9,6 +9,14 @@ class VoiceActor < ActiveRecord::Base
 
   has_many :voice_actor_roles, inverse_of: :voice_actor
 
+  has_many :appearances, through: :voice_actor_roles
+  has_many :tournaments, through: :appearances, uniq: true
+  has_many :character_roles, through: :appearances
+  has_many :match_entries, through: :appearances
+  has_many :characters, through: :character_roles, uniq: true
+  has_many :series, through: :character_roles, uniq: true
+  has_many :matches, through: :match_entries
+
   validates :slug, presence: true, uniqueness: {case_sensitive: false}
   validate :name_present
 
@@ -29,12 +37,13 @@ class VoiceActor < ActiveRecord::Base
 
   def tournament_history
     {}.tap do |th|
-      Tournament.all_for(self).each do |t|
-        th[t] ||= {}
-        t.matches.all_for(self).each do |m|
-          th[t][m.stage] ||= []
-          th[t][m.stage] += m.match_entries.all_for(self)
-        end
+      match_entries.includes(:match => :tournament).each do |me|
+        match = me.match
+        tournament = match.tournament
+
+        th[tournament] ||= {}
+        th[tournament][match.stage] ||= []
+        th[tournament][match.stage] << me
       end
     end
   end

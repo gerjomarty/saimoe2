@@ -1,5 +1,3 @@
-require 'whereize'
-
 class Match < ActiveRecord::Base
   include Ordering
 
@@ -8,6 +6,13 @@ class Match < ActiveRecord::Base
   belongs_to :tournament, inverse_of: :matches
   has_many :match_entries, inverse_of: :match
   #Possibly link to next_match_entries here (inverse of previous_match in MatchEntry)
+
+  has_many :appearances, through: :match_entries
+  has_many :character_roles, through: :appearances
+  has_many :voice_actor_roles, through: :appearances
+  has_many :characters, through: :character_roles
+  has_many :series, through: :character_roles, uniq: true
+  has_many :voice_actors, through: :voice_actor_roles
 
   validates :group, group: true
   validates :stage, presence: true, stage: true, uniqueness: {scope: [:tournament_id, :group, :match_number]}
@@ -47,7 +52,7 @@ class Match < ActiveRecord::Base
   end
 
   def finished?
-    match_entries.any?(&:number_of_votes)
+    match_entries.any? &:number_of_votes
   end
 
   def number_of_votes
@@ -61,17 +66,5 @@ class Match < ActiveRecord::Base
 
   def draw?
     winning_match_entries.size > 1
-  end
-
-  def self.all_for model
-    join_conds = case model
-                   when Character  then {:match_entries => {:appearance => {:character_role => :character}}}
-                   when Series     then {:match_entries => {:appearance => {:character_role => :series}}}
-                   when VoiceActor then {:match_entries => {:appearance => {:voice_actor_roles => :voice_actor}}}
-                 else
-                   raise ArgumentError, "Invalid model passed to Match#all_for"
-                 end
-
-    joins(join_conds).where(Whereize.perform(join_conds, model)).ordered
   end
 end

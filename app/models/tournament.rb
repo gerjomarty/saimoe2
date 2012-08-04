@@ -1,5 +1,3 @@
-require 'whereize'
-
 class Tournament < ActiveRecord::Base
   include Ordering
 
@@ -9,6 +7,12 @@ class Tournament < ActiveRecord::Base
 
   has_many :appearances, inverse_of: :tournament
   has_many :matches, inverse_of: :tournament
+
+  has_many :character_roles, through: :appearances
+  has_many :voice_actor_roles, through: :appearances
+  has_many :characters, through: :character_roles
+  has_many :series, through: :character_roles
+  has_many :voice_actors, through: :voice_actor_roles
 
   validates :year, presence: true, uniqueness: true, format: {with: /\d{4}/}, length: {is: 4}
   validates :group_stages, presence: true, group_stage: true
@@ -23,17 +27,5 @@ class Tournament < ActiveRecord::Base
 
   def self.fy year
     find_by_year year.to_s
-  end
-
-  def self.all_for model
-    join_conds = case model
-                   when Character  then {:appearances => {:character_role => :character}}
-                   when Series     then {:appearances => {:character_role => :series}}
-                   when VoiceActor then {:appearances => {:voice_actor_roles => :voice_actor}}
-                 else
-                   raise ArgumentError, "Invalid model passed to Tournament#all_for"
-                 end
-
-    joins(join_conds).where(Whereize.perform(join_conds, model)).ordered.uniq
   end
 end
