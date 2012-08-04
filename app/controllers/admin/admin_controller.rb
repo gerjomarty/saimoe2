@@ -62,6 +62,8 @@ class Admin::AdminController < ApplicationController
 
     if info[:transform] == 'name_list'
 
+      order_by_name = (info[:name_order_by_name] == '1')
+
       name_string = info[:name_csv].read
       begin
         name_string = name_string.force_encoding('SHIFT_JIS').encode('UTF-8', undef: :replace)
@@ -82,14 +84,20 @@ class Admin::AdminController < ApplicationController
         j_name, e_name = character_arr[char_index] if char_index
         j_series, e_series = series_arr[series_index] if series_index
         [id_string, j_name, e_name, j_series, e_series]
-      }.sort_by {|_, _, e_name, _, e_series|
-        split_name = e_name.try(:split, / /)
-        if split_name.nil? || split_name.size == 1
-          [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', e_name || '']
-        else
-          [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', split_name.last, e_name || '']
+      }
+
+      if order_by_name
+        @result.sort_by! do |_, _, e_name, _, e_series|
+          split_name = e_name.try(:split, / /)
+          if split_name.nil? || split_name.size == 1
+            [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', e_name || '']
+          else
+            [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', split_name.last, e_name || '']
+          end
         end
-      }.collect {|id_string, j_name, e_name, j_series, e_series|
+      end
+
+      @result = @result.collect {|id_string, j_name, e_name, j_series, e_series|
         "#{e_name || '???'} @ #{e_series || '???'}: #{j_name && j_series ? %Q|<<#{j_name}\uff20#{j_series}>>| : id_string}"
       }.join("<br />\r\n")
 

@@ -24,6 +24,10 @@
         Convert list of names in format <em>一次予選XX組 JP Name＠JP Series</em> - one per line
       <% end %>
     </h4>
+    <h4>
+      <%= f.check_box :name_order_by_name %>
+      <%= f.label :name_order_by_name, 'Order by name' %>
+    </h4>
     <%= f.file_field :name_csv %>
   </div>
   <div class="well">
