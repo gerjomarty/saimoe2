@@ -117,35 +117,50 @@ class Admin::AdminController < ApplicationController
       result_arr.collect! {|l| l.empty? ? nil : l}
       result_arr.compact!
 
-      total_votes = 0
-      @result = result_arr.collect {|str|
-        /\A(\p{Digit}+)\p{Alpha}+\p{Space}+(\p{Digit}+)\p{Alpha}+\p{Space}+(.*?)[@\uff20](.*?)\Z/.match(str).to_a.collect(&:strip)
-      }.collect {|res_string, place, votes, res_name, res_series|
-        char_index = character_arr.index {|j_name, _| j_name == res_name}
-        series_index = series_arr.index {|j_series, _| j_series == res_series}
-        j_name, e_name, j_series, e_series = nil
-        j_name, e_name = character_arr[char_index] if char_index
-        j_series, e_series = series_arr[series_index] if series_index
-        total_votes += votes.to_i
-        [res_string, place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
-      }.sort_by {|_, place, votes, _, e_name, _, e_series|
-        split_name = e_name.try(:split, / /)
-        if split_name.nil? || split_name.size == 1
-          [place, -votes, e_series || '', e_name || '']
-        else
-          [place, -votes, e_series || '', split_name.last]
-        end
-      }.collect {|res_string, place, votes, j_name, e_name, j_series, e_series|
-        vote_share = votes.to_f / total_votes.to_f
-        str = "#{place.ordinalize} #{votes} #{'(' + format_percent(vote_share) + ') ' if show_percent}#{e_name || '???'} @ #{e_series || '???'}"
-        if e_name && e_series
-          str
-        else
-          str << " #{res_string}"
-        end
-      }.join("<br />\r\n")
+      @split_results = [[]].tap do |sr|
+        result_arr.collect {|str|
+          /\A(\p{Digit}+)\p{Alpha}+\p{Space}+(\p{Digit}+)\p{Alpha}+\p{Space}+(.*?)[@\uff20](.*?)\Z/.match(str).to_a.collect(&:strip)
+        }.collect {|res_string, place, votes, res_name, res_series|
+          char_index = character_arr.index {|j_name, _| j_name == res_name}
+          series_index = series_arr.index {|j_series, _| j_series == res_series}
+          j_name, e_name, j_series, e_series = nil
+          j_name, e_name = character_arr[char_index] if char_index
+          j_series, e_series = series_arr[series_index] if series_index
+          [res_string, place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
+        }.each {|result|
+          next unless result[0]
+          if result[1] == 1 && !sr[-1].empty?
+            sr << []
+          end
+          sr[-1] << result
+        }
+      end
 
-      send_data @result, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
+      $stderr.puts "\n\n\n#{@split_results.inspect}\n\n\n"
+
+      @split_results = @split_results.collect {|result|
+        total_votes = 0
+        result.each {|_, _, votes, _, _, _, _| total_votes += votes}
+
+        result.sort_by {|_, place, votes, _, e_name, _, e_series|
+          split_name = e_name.try(:split, / /)
+          if split_name.nil? || split_name.size == 1
+            [place, -votes, e_series || '', e_name || '']
+          else
+            [place, -votes, e_series || '', split_name.last]
+          end
+        }.collect {|res_string, place, votes, j_name, e_name, j_series, e_series|
+          vote_share = votes.to_f / total_votes.to_f
+          str = "#{place.ordinalize} #{votes} #{'(' + format_percent(vote_share) + ') ' if show_percent}#{e_name || '???'} @ #{e_series || '???'}"
+          if e_name && e_series
+            str
+          else
+            str << " #{res_string}"
+          end
+        }.join("<br />\r\n")
+      }.join("<br /><br />\r\n")
+
+      send_data @split_results, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
     end
   end
 end
