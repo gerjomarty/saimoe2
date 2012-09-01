@@ -8,6 +8,14 @@ class Admin::AdminController < ApplicationController
   http_basic_authenticate_with name: USERNAME, password: PASSWORD
   force_ssl
 
+  def clear_cache
+    if Rails.cache.clear
+      render text: "Cache cleared", status: :ok
+    else
+      render text: "Problem when clearing cache", status: :internal_server_error
+    end
+  end
+
   def utilities
     unless (info = params && params[:info])
       render

@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '= 3.2.6'
 gem 'pg'
 gem 'thin'
+gem 'dalli'
 gem 'friendly_id', '~> 4.0.0'
 gem 'soulmate', '~> 0.1.0'
 

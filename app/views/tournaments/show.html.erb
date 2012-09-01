@@ -1,25 +1,31 @@
-<%= render partial: 'shared/final_match', locals: {stage_matches: @final_stage_matches} %>
+<% cache(final_stages_cache_key(@tournament)) do %>
+    <%= render partial: 'shared/final_match', locals: {stage_matches: @final_stage_matches} %>
+<% end %>
 
 <hr />
 
 <% @group_stage_matches.each_slice(2) do |left, right| %>
     <% left_group = left.shift %>
-    <% left.each do |stage_matches| %>
-        <% hierarchy = stage_matches.delete(:hierarchy) %>
-        <%= render partial: 'shared/table_match', locals: {group: left_group,
-                                                           stage_matches: stage_matches,
-                                                           hierarchy: hierarchy,
-                                                           columns: @tournament.group_stages_without_playoffs.size} %>
+    <% cache(group_stages_cache_key(@tournament, left_group)) do %>
+        <% left.each do |stage_matches| %>
+            <% hierarchy = stage_matches.delete(:hierarchy) %>
+            <%= render partial: 'shared/table_match', locals: {group: left_group,
+                                                               stage_matches: stage_matches,
+                                                               hierarchy: hierarchy,
+                                                               columns: @tournament.group_stages_without_playoffs.size} %>
+        <% end %>
     <% end %>
     <% if right %>
         <% right_group = right.shift %>
-        <% right.each do |stage_matches| %>
-            <% hierarchy = stage_matches.delete(:hierarchy) %>
-            <%= render partial: 'shared/table_match', locals: {group: right_group,
-                                                               stage_matches: stage_matches,
-                                                               hierarchy: hierarchy,
-                                                               right_align: true,
-                                                               columns: @tournament.group_stages_without_playoffs.size} %>
+        <% cache(group_stages_cache_key(@tournament, right_group)) do %>
+            <% right.each do |stage_matches| %>
+                <% hierarchy = stage_matches.delete(:hierarchy) %>
+                <%= render partial: 'shared/table_match', locals: {group: right_group,
+                                                                   stage_matches: stage_matches,
+                                                                   hierarchy: hierarchy,
+                                                                   right_align: true,
+                                                                   columns: @tournament.group_stages_without_playoffs.size} %>
+            <% end %>
         <% end %>
     <% end %>
     <div class="cb"></div>
