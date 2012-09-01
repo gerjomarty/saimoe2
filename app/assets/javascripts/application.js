@@ -16,6 +16,7 @@
 //= require twitter/bootstrap/bootstrap-collapse
 //= require twitter/bootstrap/bootstrap-tooltip
 //= require twitter/bootstrap/bootstrap-popover
+//= require twitter/bootstrap/bootstrap-dropdown
 //= require autocomplete_box
 //= require button_popover
 //= require_tree .

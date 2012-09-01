@@ -28,4 +28,8 @@ class MatchEntry < ActiveRecord::Base
   def character_name
     appearance.character_display_name || appearance.character_role.character.full_name
   end
+
+  def series
+    appearance.character_role.series
+  end
 end

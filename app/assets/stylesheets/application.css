@@ -12,5 +12,6 @@
  *= require bootstrap_and_overrides
  *= require admin/admin
  *= require character_entry
+ *= require tournament_table
  *= require jquery.ui.autocomplete
 */

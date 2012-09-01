@@ -1,0 +1,67 @@
+<% raise 'locals not defined' unless defined?(stage_matches) && defined?(group) && defined?(hierarchy) && defined?(columns) %>
+<% right = defined?(right_align) && right_align %>
+
+<div class="tournament_group<%= ' right' if right %>" style="min-width: <%= 240 + columns*86 %>px;">
+  <% not_rendered_names = true %>
+  <% stage_matches.each do |stage, matches| %>
+      <% if not_rendered_names %>
+          <div class="entry_container<%= ' right' if right %>">
+            <div class="group_name<%= ' right' if right %>">
+              <p>
+                <%= pretty_group group %>
+              </p>
+            </div>
+            <div class="cb"></div>
+            <% matches.each do |match| %>
+                <% match.match_entries.ordered_by_position.each do |me| %>
+                    <%= character_entry me, show_color: true, show_votes: false, right_align: right %>
+                <% end %>
+            <% end %>
+          </div>
+          <% not_rendered_names = false %>
+      <% end %>
+      <div class="stage_container<%= ' right' if right %>">
+        <div class="stage_name<%= ' right' if right %>">
+          <p>
+            <%= pretty_stage stage %>
+          </p>
+        </div>
+        <div class="cb"></div>
+        <div class="matches_container<%= ' right' if right %>">
+          <% matches.each do |match| %>
+              <% match.match_entries.ordered_by_position.each do |me| %>
+                  <% vote_height = table_votes_height(me, hierarchy) %>
+                  <div class="match_votes<%= match.finished? ? (me.winner? ? ' winner' : ' loser') : ''%>"
+                       style="height: <%= vote_height %>; line-height: <%= vote_height %>;
+                         <%= " background-color: ##{me.series.color_code};" if me.winner? && me.series.color_code %>">
+                    <p>
+                      <%= me.number_of_votes %>
+                    </p>
+                  </div>
+                  <div class="cb"></div>
+              <% end %>
+          <% end %>
+        </div>
+        <div class="matches_container<%= ' right' if right %>">
+          <% matches.each do |match| %>
+              <% date_height = table_date_height(match, hierarchy) %>
+              <div class="match_votes"
+                   style="height: <%= date_height %>; line-height: <%= date_height %>;
+                     <%= " background-color: ##{match.winning_match_entries.first.series.color_code};" if match.finished? && !match.draw? && match.winning_match_entries.first.series.color_code %>">
+                <p>
+                  <%= match.date.to_s(:month_day) %>
+                </p>
+              </div>
+              <div class="cb"></div>
+          <% end %>
+        </div>
+      </div>
+  <% end %>
+</div>
+
+
+
+
+
+
+

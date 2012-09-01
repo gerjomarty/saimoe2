@@ -5,7 +5,7 @@ class Match < ActiveRecord::Base
 
   belongs_to :tournament, inverse_of: :matches
   has_many :match_entries, inverse_of: :match
-  #Possibly link to next_match_entries here (inverse of previous_match in MatchEntry)
+  has_many :next_match_entries, inverse_of: :previous_match, class_name: 'MatchEntry', foreign_key: :previous_match_id
 
   has_many :appearances, through: :match_entries
   has_many :character_roles, through: :appearances
@@ -26,6 +26,12 @@ class Match < ActiveRecord::Base
 
   order_scope :ordered, TOURNAMENT_ORDER
   order_scope :ordered_by_date, DATE_ORDER
+
+  scope :without_playoffs, where("#{q_column(:stage)} NOT IN (?)", MatchInfo::PLAYOFF_STAGES)
+                           .where("#{q_column(:group)} NOT IN (?)", MatchInfo::PLAYOFF_GROUPS)
+  scope :with_only_playoffs, where(stage: MatchInfo::PLAYOFF_STAGES)
+  scope :group_matches, where(stage: MatchInfo::GROUP_STAGES)
+  scope :final_matches, where(stage: MatchInfo::FINAL_STAGES)
 
   def group
     (value = read_attribute(:group)) && value.to_sym
@@ -51,6 +57,10 @@ class Match < ActiveRecord::Base
     MatchInfo::FINAL_STAGES.include? stage
   end
 
+  def playoff_match?
+    MatchInfo::PLAYOFF_STAGES.include?(stage) || MatchInfo::PLAYOFF_GROUPS.include?(group)
+  end
+
   def finished?
     match_entries.any? &:number_of_votes
   end
@@ -66,5 +76,18 @@ class Match < ActiveRecord::Base
 
   def draw?
     winning_match_entries.size > 1
+  end
+
+  # This method is mostly for working out how tall elements on the tournament show page
+  # need to be. It takes a toll on the database, so don't do it often.
+  def match_hierarchy
+    if (prev_matches = match_entries
+                       .includes(:previous_match => {:match_entries => :previous_match})
+                       .ordered_by_position
+                       .collect(&:previous_match).compact.uniq).empty?
+      {self => self.playoff_match? ? 0 : match_entries.count}
+    else
+      {self => prev_matches.collect(&:match_hierarchy).inject(&:merge)}
+    end
   end
 end

@@ -12,21 +12,76 @@ module ApplicationHelper
   end
 
   # Renders a nice box with avatar, character name, and series
-  def character_entry character, right_align=false, hide_series=false, series=nil
-    content_tag :div, class: "thumbnail character_entry#{' right' if right_align}#{' hide_series' if hide_series}" do
-      c = content_tag :div, class: 'character_image' do
-        image_tag character.avatar_url(:thumb), alt: character.full_name, size: '40x40'
+  def character_entry character, options={}
+    display_name = avatar_url = series = votes = is_winner = nil
+    if character.is_a? MatchEntry
+      app = character.appearance
+      votes = character.number_of_votes
+      is_winner = character.winner?
+      display_name = app.character_display_name
+      avatar_url = app.character_avatar(:thumb) if app.character_avatar?
+      series = app.character_role.series
+      character = app.character_role.character
+    end
+    display_name ||= character.full_name
+    avatar_url ||= character.avatar_url(:thumb)
+    series ||= character.main_series
+
+    options[:right_align] = false if options[:right_align].nil?
+    options[:show_avatar] = true if options[:show_avatar].nil?
+    options[:show_series] = true if options[:show_series].nil?
+    options[:show_color] = false if options[:show_color].nil?
+    options[:show_votes] = !votes.nil? if options[:show_votes].nil?
+    options[:fixed_width] = true if options[:fixed_width].nil?
+
+    color_code = series.color_code
+
+    div_class = "thumbnail character_entry"
+    div_class << " right" if options[:right_align]
+    div_class << " hide_series" unless options[:show_series]
+    div_class << " fixed_width" if options[:fixed_width]
+    div_class << " no_avatar" if options[:fixed_width] && !options[:show_avatar]
+    if options[:show_color] && color_code
+      #div_class << (bright_color(color_code) ? " dark_text" : " light_text")
+      div_class << " dark_text"
+    end
+
+    content_tag :div,
+                class: div_class,
+                style: ("background-color: ##{color_code};" if options[:show_color] && color_code) do
+      c = ""
+      if options[:show_avatar]
+        c << content_tag(:div,
+                         class: 'character_image') do
+          image_tag avatar_url,
+                    alt: display_name,
+                    size: '40x40'
+        end
       end
-      c << content_tag(:div, class: 'character_name') do
-        link_to character.full_name, character_path(character), title: character.full_name
+      if votes && options[:show_votes]
+        c << content_tag(:div,
+                         class: "character_votes#{(is_winner ? ' winner' : ' loser') if options[:show_color]}") do
+
+          content_tag :p, votes.to_s
+        end
       end
-      unless hide_series
-        series ||= character.main_series
-        c << content_tag(:div, class: 'series_name') do
-          content_tag(:em, link_to(series.name, series_path(series), title: series.name))
+      c << content_tag(:div,
+                       class: 'character_name') do
+        link_to display_name,
+                character_path(character),
+                title: display_name
+      end
+      if options[:show_series]
+        c << content_tag(:div,
+                         class: 'series_name') do
+          content_tag(:em,
+                      link_to(series.name,
+                              series_path(series),
+                              title: series.name))
         end
       end
       c << content_tag(:div, '', class: 'cb')
+      c.html_safe
     end
   end
 
@@ -121,6 +176,33 @@ module ApplicationHelper
         end
       end.join.html_safe
     end
+  end
+
+  def bright_color hex_string
+    return nil unless hex_string
+    rgb = hex_string.sub(/\A#/, '').scan(/../).map {|color| color.to_i(16)}
+    (0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2]) > 128
+  end
+
+  def table_date_height match, hierarchy
+    height = hierarchy ? hierarchy.deep_find(match) : 1
+    height = height.sum_leaf_nodes if height.kind_of?(Enumerable)
+    # TODO: Yes, these are magic, but they work for now. Need to work out definite heights.
+    "#{(height*3.462)+((height-1)*0.23)}em"
+  end
+
+  def table_votes_height match_entry, hierarchy
+    if (match = match_entry.previous_match)
+      height = hierarchy ? hierarchy.deep_find(match) : 1
+      height = height.sum_leaf_nodes if height.kind_of?(Enumerable)
+      if match.draw?
+        height = height.to_f / match.winning_match_entries.count.to_f
+      end
+    else
+      height = 1
+    end
+    # TODO: Yes, these are magic, but they work for now. Need to work out definite heights.
+    "#{(height*3.462)+((height-1)*0.23)}em"
   end
 
   private

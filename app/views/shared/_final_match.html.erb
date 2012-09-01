@@ -1,0 +1,79 @@
+<% raise 'locals not defined' unless defined?(stage_matches) %>
+
+<% qf1, qf2, qf3, qf4 = stage_matches[:quarter_final] %>
+<% sf1, sf2 = stage_matches[:semi_final] %>
+<% final = stage_matches[:final].first %>
+<% final_me1, final_me2 = final.match_entries.ordered_by_position %>
+
+<div class="final_tournament_group">
+  <div class="final_match">
+    <% if (path = victory_image_path(final.tournament)) %>
+        <div class="victory_image"><%= image_tag path %></div>
+    <% end %>
+    <div class="final_match_entry_container">
+      <% [[final_me1, :left], [final_me2, :right]].each do |me, align| %>
+          <div class="final_match_entry <%= align %>">
+            <%= character_entry me, show_avatar: false, show_color: true, show_votes: true, right_align: (align == :right) %>
+          </div>
+      <% end %>
+      <div class="final_match_entry date">
+        <p><%= final.date.to_s(:month_day) %><br /><%= pretty_match(final) %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cb"></div>
+
+  <div class="quarter_final_container">
+    <% [qf1, qf2].each do |qf| %>
+        <% qf.match_entries.ordered_by_position.each do |me| %>
+            <%= character_entry me, show_color: true, show_votes: true %>
+        <% end %>
+        <p><%= qf.date.to_s(:month_day) %><br /><%= pretty_match(qf) %></p>
+    <% end %>
+  </div>
+  <div class="semi_final_container">
+    <div class="semi_final_match_entry_container">
+      &nbsp;
+      <% [[sf1, :left], [sf2, :right]].each do |match, align| %>
+          <div class="semi_final_match_entry <%= align %>">
+            <% match.match_entries.ordered_by_position.each do |me| %>
+                <%= character_entry me, show_avatar: false, show_color: true, show_votes: true, right_align: (align == :right) %>
+            <% end %>
+            <p><%= match.date.to_s(:month_day) %><br /><%= pretty_match(match) %></p>
+          </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="quarter_final_container">
+    <% [qf3, qf4].each do |qf| %>
+        <% qf.match_entries.ordered_by_position.each do |me| %>
+            <%= character_entry me, show_color: true, show_votes: true, right_align: true %>
+        <% end %>
+        <p><%= qf.date.to_s(:month_day) %><br /><%= pretty_match(qf) %></p>
+    <% end %>
+  </div>
+</div>
+
+<div class="cb"></div>
+
+<% if stage_matches[:last_16] %>
+    <hr />
+
+    <div class="last_16">
+      <% stage_matches[:last_16].each_slice(2).to_a.collect.with_index {|ms, i|
+        [ms, i.even? ? :left : :right]
+      }.each_with_index do |(ms, align), i| %>
+          <div class="last_16_group <%= i == 0 ? 'left' : (i == 3 ? 'right' : 'center') %>">
+            <% ms.each do |match| %>
+                <% match.match_entries.ordered_by_position.each do |me| %>
+                    <%= character_entry me, show_color: true, show_votes: true, right_align: (align == :right) %>
+                <% end %>
+                <p><%= match.date.to_s(:month_day) %><br /><%= pretty_match(match) %></p>
+            <% end %>
+          </div>
+      <% end %>
+    </div>
+
+    <div class="cb"></div>
+<% end %>

@@ -5,9 +5,14 @@ Saimoe2::Application.routes.draw do
   end
 
   with_options only: [:index, :show] do |m|
+    m.resources(:tournaments)
     m.resources(:characters) { get 'autocomplete', on: :collection }
     m.resources(:series) { get 'autocomplete', on: :collection }
     m.resources(:voice_actors, path: 'voice-actors') { get 'autocomplete', on: :collection }
+  end
+
+  constraints year: /20\d{2}/ do
+    match ':year', to: 'tournaments#show', as: :short_tournament
   end
 
   # The priority is based upon order of creation:

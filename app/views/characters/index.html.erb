@@ -24,7 +24,7 @@
           <h4><%= link_to(series.name, series_path(series)) %></h4>
           <div class="well">
             <% c_data.each do |character| %>
-              <%= character_entry character, false, true %>
+              <%= character_entry character, show_series: false %>
             <% end %>
           </div>
         <% end %>

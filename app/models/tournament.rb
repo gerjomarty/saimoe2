@@ -21,6 +21,12 @@ class Tournament < ActiveRecord::Base
   ORDER = [q_column(:year)].freeze
   order_scope :ordered, ORDER
 
+  def group_stages_without_playoffs
+    group_stages - MatchInfo::PLAYOFF_STAGES
+  end
+
+  # Final stages don't have play off stages at the moment
+
   def stages
     group_stages + final_stages
   end

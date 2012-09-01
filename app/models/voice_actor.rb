@@ -15,7 +15,7 @@ class VoiceActor < ActiveRecord::Base
   has_many :match_entries, through: :appearances
   has_many :characters, through: :character_roles, uniq: true
   has_many :series, through: :character_roles, uniq: true
-  has_many :matches, through: :match_entries
+  has_many :matches, through: :match_entries, uniq: true
 
   validates :slug, presence: true, uniqueness: {case_sensitive: false}
   validate :name_present
@@ -37,7 +37,7 @@ class VoiceActor < ActiveRecord::Base
 
   def tournament_history
     {}.tap do |th|
-      match_entries.includes(:match => :tournament).each do |me|
+      match_entries.includes(:match => :tournament).merge(Tournament.ordered).each do |me|
         match = me.match
         tournament = match.tournament
 

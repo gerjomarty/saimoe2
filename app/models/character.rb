@@ -50,7 +50,7 @@ class Character < ActiveRecord::Base
 
   def tournament_history
     {}.tap do |th|
-      match_entries.includes(:match => :tournament).each do |me|
+      match_entries.includes(:match => :tournament).merge(Tournament.ordered).each do |me|
         match = me.match
         tournament = match.tournament
 

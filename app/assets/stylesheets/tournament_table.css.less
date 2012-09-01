@@ -1,0 +1,192 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+.final_tournament_group {
+    width: 996px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    .final_match {
+        display: block;
+        width: 516px;
+        margin-left: auto;
+        margin-right: auto;
+
+        .victory_image {
+            padding-bottom: 40px;
+            text-align: center;
+        }
+
+        .final_match_entry_container {
+            position: relative;
+            padding-bottom: 80px;
+
+            .final_match_entry {
+                position: absolute;
+
+                &.left {
+                    left: 40px;
+                    top: 0;
+                }
+                &.right {
+                    right: 40px;
+                    top: 0;
+                }
+                &.date {
+                    left: 40px;
+                    right: 40px;
+                    top: 50px;
+
+                    p {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+
+    .quarter_final_container {
+        float: left;
+        width: 240px;
+
+        p {
+            text-align: center;
+        }
+    }
+
+    .semi_final_container {
+        float: left;
+        width: 516px;
+
+        .semi_final_match_entry_container {
+            position: relative;
+
+            .semi_final_match_entry {
+                position: absolute;
+                top: 70px;
+
+                p {
+                    text-align: center;
+                }
+                &.left {
+                    left: 40px;
+                }
+                &.right {
+                    right: 40px;
+                }
+            }
+        }
+    }
+}
+
+.last_16 {
+    margin: 30px auto;
+    display: block;
+    width: 996px;
+
+    .last_16_group {
+        float: left;
+
+        p {
+            text-align: center;
+        }
+        &.left {
+            margin: 0 7px 0 0;
+        }
+        &.center {
+            margin: 0 7px;
+        }
+        &.right {
+            margin: 0 0 0 7px;
+        }
+    }
+}
+
+.tournament_group {
+    float: left;
+    margin: 30px 0;
+
+    &.right {
+        float: right;
+    }
+
+    .match_votes {
+        float: right;
+        margin-left: 1px;
+        margin-bottom: 1px;
+        width: 40px;
+        border: 1px solid #ddd;
+        .border-radius(3px);
+        .box-shadow(0 1px 1px rgba(0,0,0,.075));
+
+        p {
+            position: relative;
+            text-align: center;
+        }
+
+        &.winner {
+            p {
+                font-weight: bold;
+            }
+        }
+        &.loser {
+            background-color: #d3d3d3;
+        }
+    }
+
+    .entry_container {
+        float: left;
+
+        &.right {
+            float: right;
+        }
+    }
+
+    .group_name {
+        float: left;
+        width: 230px;
+        margin: 0 4px;
+
+        p {
+            text-align: center;
+        }
+
+        &.right {
+            float: right;
+        }
+    }
+
+    .stage_name {
+        float: left;
+        width: 80px;
+        margin: 0 3px;
+
+        p {
+            text-align: center;
+        }
+
+        &.right {
+            float: right;
+        }
+    }
+
+    .stage_container {
+        float: left;
+
+        &.right {
+            float: right;
+        }
+    }
+
+    .matches_container {
+        float: left;
+
+        &.right {
+            float: right;
+        }
+    }
+}
+
+
+
