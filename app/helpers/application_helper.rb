@@ -19,7 +19,7 @@ module ApplicationHelper
       votes = character.number_of_votes
       is_winner = character.winner?
       display_name = app.character_display_name
-      avatar_url = app.character_avatar(:thumb) if app.character_avatar?
+      avatar_url = app.character_avatar_url(:thumb) if app.character_avatar?
       series = app.character_role.series
       character = app.character_role.character
     end
