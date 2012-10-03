@@ -1,0 +1,21 @@
+<div class="page-header">
+  <h1>Voice actors <small>Sorted by number of appearances at each stage of Saimoe <%= @tournament.year %></small></h1>
+</div>
+
+<% (@tournament.stages.reverse & @results.keys).each do |stage| %>
+    <% stage_results = @results[stage] %>
+    <div class="page-header">
+      <h3><%= pretty_stage stage %></h3>
+    </div>
+    <table class="table table-condensed table-striped">
+      <tbody>
+      <% stage_results.each do |rank, no_of_match_entries, va| %>
+          <tr>
+            <td><%= rank.ordinalize %></td>
+            <td><%= no_of_match_entries %></td>
+            <td><%= link_to va.full_name, voice_actor_path(va) %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>

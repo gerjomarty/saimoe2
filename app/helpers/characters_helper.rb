@@ -10,7 +10,35 @@ module CharactersHelper
   end
 
   def format_voice_actor_list character
-    va_tags = character.voice_actors.collect {|va| link_to va.full_name, voice_actor_path(va)}
+    v_actors = character.voice_actors.ordered
+    if v_actors.size == 0
+      va_tags = %w{N/A}
+    elsif v_actors.size == 1
+      va_tags = [link_to(v_actors[0].full_name, voice_actor_path(v_actors[0]))]
+    else
+      v_actor_roles = character.voice_actor_roles.scoped
+      multiple_years = (v_actor_roles.collect {|var| var.appearance.tournament}.uniq.size > 1)
+      va_tags = v_actors.collect do |va|
+        c = link_to("#{va.full_name}", voice_actor_path(va))
+        if multiple_years
+          years = v_actor_roles.where(voice_actor_id: va.id).collect {|var| var.appearance.tournament.year}.uniq.sort.join '/'
+          c << " (#{years})"
+        end
+        c
+      end
+    end
+
+
+    #va_roles = character.voice_actor_roles
+    #if va_roles.size == 0
+    #  va_tags = %w{N/A}
+    #elsif va_roles.size == 1
+    #  va_tags = va_roles.collect {|var| link_to var.voice_actor.full_name, voice_actor_path(var.voice_actor)}
+    #else
+    #  va_tags = va_roles.collect do |var|
+    #    link_to(var.voice_actor.full_name, voice_actor_path(var.voice_actor)) << " (#{var.appearance.tournament.year})"
+    #  end
+    #end
     va_string = "Voice actor".pluralize(va_tags.size)
     content_tag :h3 do
       (va_string << ': ' << va_tags.join(', ')).html_safe
@@ -41,6 +69,12 @@ module CharactersHelper
 
   def button_type_for match_entry
     return '' unless match_entry
-    match_entry.winner? ? 'btn-success' : 'btn-danger'
+    if match_entry.is_winner?
+      'btn-success'
+    elsif match_entry.is_finished?
+      'btn-danger'
+    else
+      'btn-warning'
+    end
   end
 end

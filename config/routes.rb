@@ -6,14 +6,36 @@ Saimoe2::Application.routes.draw do
   end
 
   with_options only: [:index, :show] do |m|
-    m.resources(:tournaments)
-    m.resources(:characters) { get 'autocomplete', on: :collection }
-    m.resources(:series) { get 'autocomplete', on: :collection }
-    m.resources(:voice_actors, path: 'voice-actors') { get 'autocomplete', on: :collection }
+    m.resources(:tournaments) do
+      member do
+        get 'characters_by_total_votes'
+        get 'characters_by_average_votes'
+        get 'series_by_total_votes'
+        get 'voice_actors_by_total_votes'
+        get 'rounds_by_total_votes'
+        get 'rounds_by_vote_percentages'
+        get 'rounds_by_series_prevalence'
+        get 'rounds_by_voice_actor_prevalence'
+      end
+    end
+    m.resources(:characters) do
+      get 'autocomplete', on: :collection
+    end
+    m.resources(:series) do
+      get 'autocomplete', on: :collection
+    end
+    m.resources(:voice_actors, path: 'voice-actors') do
+      get 'autocomplete', on: :collection
+    end
   end
 
   constraints year: /20\d{2}/ do
     match ':year', to: 'tournaments#show', as: :short_tournament
+    match ':year/:action', controller: :tournaments, as: :short_tournament_action
+  end
+
+  constraints date: /20\d{6}/ do
+    match ':date', to: 'date#show', as: :date
   end
 
   # The priority is based upon order of creation:

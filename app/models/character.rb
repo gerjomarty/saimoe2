@@ -77,14 +77,17 @@ class Character < ActiveRecord::Base
   end
 
   def self.find_by_name name
+    return nil unless name
     characters_for_name(name).first
   end
 
   def self.find_all_by_name name
+    return [] unless name
     characters_for_name(name).all
   end
 
   def self.find_by_name_and_series name, series
+    return nil unless name && series
     characters_for_name(name).joins(:character_roles)
                              .where(:character_roles => {series_id: series && series.id}).first
   end

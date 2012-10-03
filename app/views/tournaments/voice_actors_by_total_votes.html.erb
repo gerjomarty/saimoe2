@@ -1,0 +1,15 @@
+<div class="page-header">
+  <h1>Voice actors <small>Sorted by total votes gained in Saimoe <%= @tournament.year %></small></h1>
+</div>
+
+<table class="table table-condensed table-striped">
+  <tbody>
+  <% @results.each do |rank, votes, va| %>
+      <tr>
+        <td><%= rank.ordinalize %></td>
+        <td><%= votes %></td>
+        <td><%= link_to va.full_name, voice_actor_path(va) %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

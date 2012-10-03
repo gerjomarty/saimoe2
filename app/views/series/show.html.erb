@@ -4,7 +4,7 @@
   </div>
 </div>
 
-<div class="page-header">
+<div class="page-header"<%= " style=\"border-bottom: 1px solid ##{@series.color_code}\"".html_safe if @series.color_code %>>
   <h2>Characters</h2>
 </div>
 
@@ -23,7 +23,7 @@
 <% end %>
 
 <% unless @cameo_chars.empty? %>
-  <div class="page-header">
+  <div class="page-header"<%= " style=\"border-bottom: 1px solid ##{@series.color_code}\"".html_safe if @series.color_code %>>
     <h4>Characters in a cameo role</h4>
   </div>
 
@@ -40,7 +40,7 @@
   </div>
 <% end %>
 
-<div class="page-header">
+<div class="page-header"<%= " style=\"border-bottom: 1px solid ##{@series.color_code}\"".html_safe if @series.color_code %>>
   <h2>Tournament History</h2>
 </div>
 

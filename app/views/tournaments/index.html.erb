@@ -7,11 +7,7 @@
 
 <% @tournaments.each do |tournament| %>
   <tr>
-    <td><%= link_to 'Show', tournament %></td>
+    <td><%= link_to tournament.year, short_tournament_path(tournament.year) %></td>
   </tr>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New Tournament', new_tournament_path %>

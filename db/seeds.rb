@@ -5,26 +5,39 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
 
   match_hash[:match_entries].each do |me|
     name = me[:actual_name] || me[:name]
-    series = Series.where(name: me[:series]).first!
+    series = Series.where(name: me[:series]).first
     char = Character.find_by_name_and_series(name, series)
-    cr = CharacterRole.where(character_id: char && char.id, series_id: series && series.id).first!
-    app = Appearance.where(tournament_id: t && t.id, character_role_id: cr && cr.id).first_or_create! do |a|
-      a.character_display_name = me[:name] if me[:actual_name]
-    end
-    if me[:image]
-      ActiveRecord::Base.connection.execute "UPDATE appearances SET character_avatar = '#{me[:image]}' WHERE id = #{app.id}"
+    if series && char
+      cr = CharacterRole.where(character_id: char && char.id, series_id: series && series.id).first
+      app = Appearance.where(tournament_id: t && t.id, character_role_id: cr && cr.id).first_or_create! do |a|
+        a.character_display_name = me[:name] if me[:actual_name]
+      end
+      if me[:image]
+        ActiveRecord::Base.connection.execute "UPDATE appearances SET character_avatar = '#{me[:image]}' WHERE id = #{app.id}"
+      end
+    else
+      cr = app = nil
     end
 
-    case va_hash[cr]
-      when Hash, Array # one or more VAs
-        [va_hash[cr]].flatten.each do |va|
-          v_actor = VoiceActor.where(first_name: va[:va_first_name], last_name: va[:va_last_name]).first_or_create!
-          VoiceActorRole.where(appearance_id: app && app.id, voice_actor_id: v_actor && v_actor.id).first_or_create!
-        end
-      when Symbol
-        VoiceActorRole.where(appearance_id: app && app.id).first_or_create! {|var| var.has_no_voice_actor = true }
-      else
-        raise "Character #{char.inspect} didn't have a voice actor defined"
+    if series && char
+      case va_hash[cr]
+        when Hash, Array # one or more VAs
+          [va_hash[cr]].flatten.each do |va|
+            if va[:tournament_years]
+              if va[:tournament_years].include? year.to_i
+                v_actor = VoiceActor.where(first_name: va[:va_first_name], last_name: va[:va_last_name]).first_or_create!
+                VoiceActorRole.where(appearance_id: app && app.id, voice_actor_id: v_actor && v_actor.id).first_or_create!
+              end
+            else
+              v_actor = VoiceActor.where(first_name: va[:va_first_name], last_name: va[:va_last_name]).first_or_create!
+              VoiceActorRole.where(appearance_id: app && app.id, voice_actor_id: v_actor && v_actor.id).first_or_create!
+            end
+          end
+        when Symbol
+          VoiceActorRole.where(appearance_id: app && app.id).first_or_create! {|var| var.has_no_voice_actor = true }
+        else
+          raise "Character #{char.inspect} didn't have a voice actor defined"
+      end
     end
 
     prev_match = me[:previous_match] &&
@@ -37,11 +50,23 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
     end
     MatchEntry.create! me.slice(:number_of_votes, :position).merge(match: m, appearance: app, previous_match: prev_match)
   end
+
+  if (2002..2011).include? year.to_i
+    m.is_finished = true
+    m.save!
+  elsif 2012 == year.to_i
+    if match_hash[:match_entries].collect {|me| me[:number_of_votes]}.all?
+      m.is_finished = true
+    else
+      m.is_finished = false
+    end
+    m.save!
+  end
 end
 
 $stderr.print "Initialising tournaments..."
 
-(2002..2011).each do |year|
+(2002..2012).each do |year|
   t = Tournament.find_or_initialize_by_year year.to_s
   t.group_stages = case year
     when 2002
@@ -50,7 +75,7 @@ $stderr.print "Initialising tournaments..."
       [:round_1, :round_1_playoff, :round_2, :round_3, :group_final]
     when 2004, 2010
       [:round_1, :round_2, :group_final]
-    when 2005..2009, 2011
+    when 2005..2009, 2011..2012
       [:round_1, :round_2, :round_3, :group_final]
     else
       raise "Year #{year} doesn't have stages defined"
@@ -133,7 +158,7 @@ end
 
 $stderr.puts " done!"
 
-(2002..2011).each do |year|
+(2002..2012).each do |year|
   year = year.to_s
   $stderr.print "Loading match data from #{year}..."
 
@@ -143,13 +168,15 @@ $stderr.puts " done!"
   results[:group_stages].values.collect(&:values).flatten.collect(&:values).flatten.collect {|match_h| match_h[:match_entries]}.flatten.collect {|me|
     me.slice(:name, :actual_name, :series)
   }.flatten.uniq.each { |cs|
-    Character.find_by_name_and_series(cs[:actual_name] || cs[:name], Series.where(name: cs[:series]).first!) or raise <<_ERROR
-      #{year}: Problem with #{cs.inspect}. Checking Character, Series and CharacterRole...
-      Character: #{Character.find_by_name(cs[:actual_name] || cs[:name]).inspect}
-      Series: #{Series.find_by_name(cs[:series]).inspect}
-      CharacterRole: #{CharacterRole.where(character_id: (c = Character.find_by_name(cs[:actual_name] || cs[:name])) && c.id,
-                                           series_id: (s = Series.find_by_name(cs[:series])) && s.id).first.inspect}
+    if cs[:actual_name] || cs[:name] || cs[:series]
+      Character.find_by_name_and_series(cs[:actual_name] || cs[:name], Series.where(name: cs[:series]).first) or raise <<_ERROR
+        #{year}: Problem with #{cs.inspect}. Checking Character, Series and CharacterRole...
+        Character: #{Character.find_by_name(cs[:actual_name] || cs[:name]).inspect}
+        Series: #{Series.find_by_name(cs[:series]).inspect}
+        CharacterRole: #{CharacterRole.where(character_id: (c = Character.find_by_name(cs[:actual_name] || cs[:name])) && c.id,
+                                             series_id: (s = Series.find_by_name(cs[:series])) && s.id).first.inspect}
 _ERROR
+    end
   }
 
   $stderr.puts " done!"
@@ -170,6 +197,16 @@ _ERROR
         build_match_details year, stage, nil, match_no, r2, cr_va_mapping
       end
     end
+  end
+
+  if year.to_i == 2002
+    # Saimoe 2002 is a bitch and put a character through a playoff despite there being a draw
+    match = Tournament.fy(2002).matches.where(stage: :round_1_playoff, group: :l, match_number: 7).first!
+    match_entry = match.match_entries.where(character_name: 'Yuka Sugimoto').first!
+    match.is_draw = false
+    match_entry.is_winner = false
+    match.save!
+    match_entry.save!
   end
 
   $stderr.puts " done!"

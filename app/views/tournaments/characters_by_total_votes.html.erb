@@ -1,0 +1,15 @@
+<div class="page-header">
+  <h1>Characters <small>Sorted by total votes gained in Saimoe <%= @tournament.year %></small></h1>
+</div>
+
+<table class="table table-condensed table-striped">
+  <tbody>
+  <% @results.each do |rank, votes, character, series| %>
+      <tr>
+        <td><%= rank.ordinalize %></td>
+        <td><%= votes %></td>
+        <td><%= link_to character.full_name, character_path(character) %> @ <%= link_to series.name, series_path(series) %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

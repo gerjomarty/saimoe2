@@ -19,7 +19,7 @@
   </head>
 
   <body>
-    <div class="navbar">
+    <div class="navbar" style="margin-bottom: 0;">
       <div class="navbar-inner">
           <div class="container-fluid">
           <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
@@ -49,18 +49,22 @@
       </div>
     </div>
 
-    <div class="container-fluid">
+    <% if content_for? :tournament_nav %>
+      <%= yield :tournament_nav %>
+    <% end %>
+
+    <div class="container-fluid" style="margin-top: 18px;">
       <div class="row-fluid">
         <div class="span12">
 
           <% if flash[:alert] %>
-            <div class="alert alert-error">
+            <div class="alert alert-error fade in">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
               <%= flash[:alert] %>
             </div>
           <% end %>
           <% if flash[:notice] %>
-            <div class="alert">
+            <div class="alert fade in">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
               <%= flash[:notice] %>
             </div>

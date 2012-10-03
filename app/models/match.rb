@@ -1,7 +1,7 @@
 class Match < ActiveRecord::Base
   include Ordering
 
-  attr_accessible :date, :group, :match_number, :stage, :tournament
+  attr_accessible :date, :group, :match_number, :stage, :tournament, :is_finished, :is_winner, :number_of_votes, :is_draw, :table_height
 
   belongs_to :tournament, inverse_of: :matches
   has_many :match_entries, inverse_of: :match
@@ -16,8 +16,10 @@ class Match < ActiveRecord::Base
 
   validates :group, group: true
   validates :stage, presence: true, stage: true, uniqueness: {scope: [:tournament_id, :group, :match_number]}
-  validates :match_number, numericality: {only_integer: true}, allow_nil: true
+  validates :match_number, :number_of_votes, numericality: {only_integer: true}, allow_nil: true
   validates :date, :tournament_id, presence: true
+  validates :table_height, numericality: true, allow_nil: true
+  validate :validate_match_entries_finished
 
   STAGE_ORDER = MatchInfo::STAGES.collect {|s| "#{q_column(:stage)} = '#{s}' DESC"}.freeze
 
@@ -61,21 +63,46 @@ class Match < ActiveRecord::Base
     MatchInfo::PLAYOFF_STAGES.include?(stage) || MatchInfo::PLAYOFF_GROUPS.include?(group)
   end
 
-  def finished?
-    match_entries.any? &:number_of_votes
+  def is_finished= finished
+    ret = write_attribute :is_finished, finished
+    if finished
+      self.number_of_votes = self.number_of_votes
+      match_entries.each {|me| me.is_finished = true; me.save!}
+      self.is_draw = self.is_draw
+    else
+      self.number_of_votes = self.is_draw = nil
+      match_entries.each {|me| me.is_finished = false; me.save!}
+    end
+    self.table_height = nil
+    self.table_height = self.table_height
+    ret
   end
 
   def number_of_votes
+    value = read_attribute :number_of_votes
+    return value unless value.nil?
+
     match_entries.sum :number_of_votes
   end
 
   def winning_match_entries
-    return [] unless finished?
-    match_entries.ordered_by_position.where(number_of_votes: match_entries.maximum(:number_of_votes))
+    return [] unless is_finished?
+
+    match_entries.ordered_by_position.where(is_winner: true)
   end
 
-  def draw?
+  def is_draw
+    value = read_attribute :is_draw
+    return value unless value.nil?
+
     winning_match_entries.size > 1
+  end
+
+  def table_height
+    value = read_attribute :table_height
+    return value unless value.nil?
+
+    match_hierarchy.sum_leaf_nodes.to_f
   end
 
   # This method is mostly for working out how tall elements on the tournament show page
@@ -88,6 +115,22 @@ class Match < ActiveRecord::Base
       {self => self.playoff_match? ? 0 : match_entries.count}
     else
       {self => prev_matches.collect(&:match_hierarchy).inject(&:merge)}
+    end
+  end
+
+  def self.date_before date
+    select(q_column :date).uniq.order("#{q_column :date} DESC").where("#{q_column :date} < ?", date).first.try(:date)
+  end
+
+  def self.date_after date
+    select(q_column :date).uniq.order(q_column :date).where("#{q_column :date} > ?", date).first.try(:date)
+  end
+
+  private
+
+  def validate_match_entries_finished
+    if is_finished?
+      errors.add :base, "Not all match entries have vote counts" unless match_entries.all? {|me| me.number_of_votes}
     end
   end
 end

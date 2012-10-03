@@ -1,12 +1,13 @@
 require 'csv'
+require 'digest/sha2'
 
 class Admin::AdminController < ApplicationController
   include ApplicationHelper
-  USERNAME = ENV['APP_USERNAME']
-  PASSWORD = ENV['APP_PASSWORD']
+  REALM = ENV['APP_REALM']
+  USERS = {ENV['APP_USERNAME'] => ENV['APP_PASSWORD_HASH']}
 
-  http_basic_authenticate_with name: USERNAME, password: PASSWORD
   force_ssl
+  before_filter :authenticate
 
   def clear_cache
     if Rails.cache.clear
@@ -170,5 +171,17 @@ class Admin::AdminController < ApplicationController
 
       send_data @split_results, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
     end
+  end
+
+  private
+
+  def authenticate
+    authenticate_or_request_with_http_basic(REALM) do |username, password|
+      USERS[username] && USERS[username] == hash_password(username, password)
+    end
+  end
+
+  def hash_password username, password
+    Digest::SHA2.hexdigest([username, REALM, password].join(':'))
   end
 end

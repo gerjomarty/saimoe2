@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120603122445) do
+ActiveRecord::Schema.define(:version => 20120915130317) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -69,6 +69,11 @@ ActiveRecord::Schema.define(:version => 20120603122445) do
     t.integer  "match_id",          :null => false
     t.integer  "previous_match_id"
     t.integer  "appearance_id"
+    t.boolean  "is_finished"
+    t.boolean  "is_winner"
+    t.float    "vote_share"
+    t.float    "table_height"
+    t.string   "character_name"
   end
 
   add_index "match_entries", ["appearance_id"], :name => "index_match_entries_on_appearance_id"
@@ -76,13 +81,17 @@ ActiveRecord::Schema.define(:version => 20120603122445) do
   add_index "match_entries", ["previous_match_id"], :name => "index_match_entries_on_previous_match_id"
 
   create_table "matches", :force => true do |t|
-    t.string   "group",         :limit => 1
-    t.string   "stage",                      :null => false
-    t.integer  "match_number",  :limit => 2
-    t.date     "date",                       :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
-    t.integer  "tournament_id",              :null => false
+    t.string   "group",           :limit => 1
+    t.string   "stage",                        :null => false
+    t.integer  "match_number",    :limit => 2
+    t.date     "date",                         :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.integer  "tournament_id",                :null => false
+    t.boolean  "is_finished"
+    t.integer  "number_of_votes"
+    t.boolean  "is_draw"
+    t.float    "table_height"
   end
 
   add_index "matches", ["tournament_id"], :name => "index_matches_on_tournament_id"

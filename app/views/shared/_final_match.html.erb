@@ -16,8 +16,8 @@
             <%= character_entry me, show_avatar: false, show_color: true, show_votes: true, right_align: (align == :right) %>
           </div>
       <% end %>
-      <div class="final_match_entry date">
-        <p><%= final.date.to_s(:month_day) %><br /><%= pretty_match(final) %></p>
+      <div class="final_match_entry date dark_text">
+        <p><%= link_to final.date.to_s(:month_day), date_path(final.date.to_s(:number)) %><br /><%= pretty_match(final) %></p>
       </div>
     </div>
   </div>
@@ -29,7 +29,9 @@
         <% qf.match_entries.ordered_by_position.each do |me| %>
             <%= character_entry me, show_color: true, show_votes: true %>
         <% end %>
-        <p><%= qf.date.to_s(:month_day) %><br /><%= pretty_match(qf) %></p>
+        <div class="dark_text">
+          <p><%= link_to qf.date.to_s(:month_day), date_path(qf.date.to_s(:number)) %><br /><%= pretty_match(qf) %></p>
+        </div>
     <% end %>
   </div>
   <div class="semi_final_container">
@@ -40,7 +42,9 @@
             <% match.match_entries.ordered_by_position.each do |me| %>
                 <%= character_entry me, show_avatar: false, show_color: true, show_votes: true, right_align: (align == :right) %>
             <% end %>
-            <p><%= match.date.to_s(:month_day) %><br /><%= pretty_match(match) %></p>
+            <div class="dark_text">
+              <p><%= link_to match.date.to_s(:month_day), date_path(match.date.to_s(:number)) %><br /><%= pretty_match(match) %></p>
+            </div>
           </div>
       <% end %>
     </div>
@@ -50,7 +54,9 @@
         <% qf.match_entries.ordered_by_position.each do |me| %>
             <%= character_entry me, show_color: true, show_votes: true, right_align: true %>
         <% end %>
-        <p><%= qf.date.to_s(:month_day) %><br /><%= pretty_match(qf) %></p>
+        <div class="dark_text">
+          <p><%= link_to qf.date.to_s(:month_day), date_path(qf.date.to_s(:number)) %><br /><%= pretty_match(qf) %></p>
+        </div>
     <% end %>
   </div>
 </div>
@@ -69,7 +75,9 @@
                 <% match.match_entries.ordered_by_position.each do |me| %>
                     <%= character_entry me, show_color: true, show_votes: true, right_align: (align == :right) %>
                 <% end %>
-                <p><%= match.date.to_s(:month_day) %><br /><%= pretty_match(match) %></p>
+                <div class="dark_text">
+                  <p><%= link_to match.date.to_s(:month_day), date_path(match.date.to_s(:number)) %><br /><%= pretty_match(match) %></p>
+                </div>
             <% end %>
           </div>
       <% end %>

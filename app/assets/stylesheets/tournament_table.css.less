@@ -1,6 +1,29 @@
 @import "twitter/bootstrap/variables";
 @import "twitter/bootstrap/mixins";
 
+.light_text {
+    p, div, em {
+        color: #FFFFFF;
+    }
+    a, a:link {
+        color: #FFFFFF;
+    }
+    a:hover {
+        color: darken(#FFFFFF, 15%);
+    }
+}
+.dark_text {
+    p, div, em {
+        color: #000000;
+    }
+    a, a:link {
+        color: #000000;
+    }
+    a:hover {
+        color: lighten(#000000, 15%);
+    }
+}
+
 .final_tournament_group {
     width: 996px;
     display: block;
@@ -132,6 +155,13 @@
         }
         &.loser {
             background-color: #d3d3d3;
+        }
+        &.playoff-loser-votes {
+            background-color: #FF0000;
+            p {
+                color: #D3D3D3;
+                font-style: italic;
+            }
         }
     }
 

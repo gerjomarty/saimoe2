@@ -1,0 +1,54 @@
+<div class="page-header">
+  <h1><%= @date.to_s :long %></h1>
+</div>
+
+<% @matches.each do |match| %>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span6">
+          <table class="table table-condensed match_date">
+            <caption>
+              <h3><%= pretty_match match %> <small>(<%= match.number_of_votes %> votes total)</small></h3>
+            </caption>
+            <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>votes</th>
+              <th>%&nbsp;share</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% match.match_entries.with_rank.ordered_by_votes.collect {|r| [r[:rank].to_i, r]}.each do |rank, me| %>
+                <% first = (rank == 1) %>
+                <tr>
+                  <td><%= image_tag me.avatar.url(:thumb) %></td>
+                  <td<%= " style=\"font-weight: bold;\"".html_safe if first %>><%= rank.ordinalize %></td>
+                  <td<%= " style=\"font-weight: bold;\"".html_safe if first %>><%= me.number_of_votes.to_s %></td>
+                  <td<%= " style=\"font-weight: bold;\"".html_safe if first %>><%= format_percent me.vote_share %></td>
+                  <td<%= " style=\"font-weight: bold;\"".html_safe if first %>><%= "#{link_to me.character_name, character_path(me.character)} @ #{link_to me.series.name, series_path(me.series)}".html_safe %></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="span6">
+          <%# Other stuff about the match here - like graphs %>
+        </div>
+      </div>
+    </div>
+<% end %>
+
+<ul class="pager form-actions">
+  <% if (before = Match.date_before(@date)) %>
+      <li class="previous">
+        <%= link_to "← #{before.to_s(:long)}", date_path(before.to_s(:number)) %>
+      </li>
+  <% end %>
+  <% if (after = Match.date_after(@date)) %>
+      <li class="next">
+        <%= link_to "#{after.to_s(:long)} →", date_path(after.to_s(:number)) %>
+      </li>
+<% end %>
+</ul>

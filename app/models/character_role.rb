@@ -10,6 +10,8 @@ class CharacterRole < ActiveRecord::Base
   validates :role_type, presence: true, inclusion: {in: ROLE_TYPES}
   validates :character_id, :series_id, presence: true
 
+  scope :ordered, joins(:character, :series).merge(Character.ordered).merge(Series.ordered)
+
   def role_type
     (value = read_attribute(:role_type)) && value.to_sym
   end

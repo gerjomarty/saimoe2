@@ -4,22 +4,38 @@
 </button>
 <div class="button-popover-content" style="display: none;">
   <table class="table table-condensed">
-    <thead>
-      <tr>
-        <th></th>
-        <th>votes</th>
-        <th>%&nbsp;share</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% match.match_entries.ordered_by_votes.each do |me| %>
-        <% is_current = (me == current_match_entry) %>
+    <% if match.is_finished? %>
+        <thead>
         <tr>
-          <td><%= content_tag(is_current ? :strong : :p) { me.character_name } %></td>
-          <td><%= content_tag(is_current ? :strong : :p) { me.number_of_votes.to_s } %></td>
-          <td><%= content_tag(is_current ? :strong : :p) { format_percent(me.vote_share) } %></td>
+          <th>votes</th>
+          <th>%&nbsp;share</th>
+          <th></th>
         </tr>
-      <% end %>
-    </tbody>
+        </thead>
+        <tbody>
+        <% match.match_entries.ordered_by_votes.each do |me| %>
+            <% is_current = (me == current_match_entry) %>
+            <tr>
+              <td<%= " style=\"font-weight: bold;\"".html_safe if is_current %>><%= me.number_of_votes %></td>
+              <td<%= " style=\"font-weight: bold;\"".html_safe if is_current %>><%= format_percent me.vote_share %></td>
+              <td<%= " style=\"font-weight: bold;\"".html_safe if is_current %>><%= me.character_name %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    <% else %>
+        <thead>
+        <tr>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% match.match_entries.ordered_by_position.each do |me| %>
+            <% is_current = (me == current_match_entry) %>
+            <tr>
+              <td<%= " style=\"font-weight: bold;\"".html_safe if is_current %>><%= me.character_name %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    <% end %>
   </table>
 </div>

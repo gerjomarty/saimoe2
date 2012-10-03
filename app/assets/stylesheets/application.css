@@ -13,5 +13,6 @@
  *= require admin/admin
  *= require character_entry
  *= require tournament_table
+ *= require date
  *= require jquery.ui.autocomplete
 */

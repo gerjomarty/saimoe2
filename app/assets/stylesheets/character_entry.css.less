@@ -55,6 +55,16 @@
         }
         &.loser {
             background-color: #d3d3d3;
+            // Keep this in sync with &.dark_text
+            p, div, em {
+                color: #000000;
+            }
+            a, a:link {
+                color: #000000;
+            }
+            a:hover {
+                color: lighten(#000000, 15%);
+            }
         }
     }
     &.right {
@@ -78,28 +88,6 @@
         }
         .series_name {
             display: none;
-        }
-    }
-    &.light_text {
-        p, div, em {
-            color: #FFFFFF;
-        }
-        a, a:link {
-            color: #FFFFFF;
-        }
-        a:hover {
-            color: darken(#FFFFFF, 15%);
-        }
-    }
-    &.dark_text {
-        p, div, em {
-            color: #000000;
-        }
-        a, a:link {
-            color: #000000;
-        }
-        a:hover {
-            color: lighten(#000000, 15%);
         }
     }
 }
