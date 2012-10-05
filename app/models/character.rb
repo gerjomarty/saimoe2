@@ -20,7 +20,8 @@ class Character < ActiveRecord::Base
 
   accepts_nested_attributes_for :character_roles, allow_destroy: true
 
-  attr_accessible :first_name, :given_name, :last_name, :main_series, :character_roles_attributes
+  attr_accessible :first_name, :given_name, :last_name, :main_series, :character_roles_attributes,
+      :main_series_id, :avatar_cache, :remote_avatar_url, :remove_avatar, :avatar
 
   validates :main_series_id, presence: true
   validates :slug, presence: true, uniqueness: {case_sensitive: false}

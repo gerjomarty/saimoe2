@@ -5,7 +5,7 @@ class CharacterRole < ActiveRecord::Base
 
   accepts_nested_attributes_for :appearances, allow_destroy: true
 
-  attr_accessible :role_type, :character, :series, :appearances_attributes
+  attr_accessible :role_type, :character, :series, :appearances_attributes, :series_id
 
   ROLE_TYPES = [:major, :cameo].freeze
 

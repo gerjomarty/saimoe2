@@ -1,5 +1,7 @@
 class Appearance < ActiveRecord::Base
-  attr_accessible :character_display_name, :character_role, :tournament
+  attr_accessible :character_display_name, :character_role, :tournament, :tournament_id,
+      :character_avatar_cache, :remote_character_avatar_url, :remove_character_avatar,
+      :character_avatar
 
   mount_uploader :character_avatar, AvatarUploader
 
