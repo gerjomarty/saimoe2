@@ -24,7 +24,13 @@ class Admin::CharactersController < Admin::AdminController
     @series = Series.ordered
     @tournaments = Tournament.ordered
 
-    if @admin_character.save
+    unless @character.main_series_id?
+      if (new_series = params[:character_series][:new_main_series].strip.presence)
+        @character.build_main_series name: new_series
+      end
+    end
+
+    if @character.save
       redirect_to @character, notice: 'Character was successfully created.'
     else
       render action: 'new'
