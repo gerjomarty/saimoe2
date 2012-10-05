@@ -25,7 +25,7 @@ class Admin::CharactersController < Admin::AdminController
     @tournaments = Tournament.ordered
 
     if @admin_character.save
-      redirect_to @admin_character, notice: 'Character was successfully created.'
+      redirect_to @character, notice: 'Character was successfully created.'
     else
       render action: 'new'
     end
@@ -38,7 +38,7 @@ class Admin::CharactersController < Admin::AdminController
     @tournaments = Tournament.ordered
 
     if @character.update_attributes(params[:character])
-      redirect_to @admin_character, notice: 'Character was successfully updated.'
+      redirect_to edit_admin_character_path(@character), notice: 'Character was successfully updated.'
     else
       render action: 'edit'
     end
