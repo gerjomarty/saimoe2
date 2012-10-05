@@ -1,4 +1,4 @@
-class Admin::CharactersController < ApplicationController
+class Admin::CharactersController < Admin::AdminController
   # GET /admin/characters
   def index
     @characters = Character.includes(:main_series).ordered
