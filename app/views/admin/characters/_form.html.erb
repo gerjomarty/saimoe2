@@ -1,4 +1,4 @@
-<%= nested_form_for [:admin, @character], class: 'form-horizontal' do |f| %>
+<%= nested_form_for [:admin, @character], class: 'form-horizontal', html: {multipart: true} do |f| %>
     <div class="well">
       <div class="control-group">
         <%= f.label :first_name, 'First name' %>
