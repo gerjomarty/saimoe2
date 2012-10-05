@@ -3,9 +3,13 @@ source 'https://rubygems.org'
 gem 'rails', '= 3.2.6'
 gem 'pg'
 gem 'thin'
-gem 'dalli'
 gem 'friendly_id', '~> 4.0.0'
 gem 'soulmate', '~> 0.1.0'
+gem 'nested_form', '~> 0.2.0'
+
+# memcache gems
+gem 'dalli'
+gem 'memcachier'
 
 # carrierwave gems
 gem 'carrierwave', '~> 0.6.0'

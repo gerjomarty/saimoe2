@@ -5,8 +5,6 @@ class Character < ActiveRecord::Base
   include Ordering
   extend FriendlyId
 
-  attr_accessible :first_name, :given_name, :last_name, :main_series
-
   mount_uploader :avatar, AvatarUploader
 
   belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id
@@ -19,6 +17,10 @@ class Character < ActiveRecord::Base
   has_many :match_entries, through: :appearances
   has_many :voice_actors, through: :voice_actor_roles, uniq: true
   has_many :matches, through: :match_entries
+
+  accepts_nested_attributes_for :character_roles, allow_destroy: true
+
+  attr_accessible :first_name, :given_name, :last_name, :main_series, :character_roles_attributes
 
   validates :main_series_id, presence: true
   validates :slug, presence: true, uniqueness: {case_sensitive: false}

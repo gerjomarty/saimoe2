@@ -1,0 +1,26 @@
+<div class="well" style="border-color: #000000;">
+  <div class="control-group">
+    <%= f.label :tournament_id, 'Tournament' %>
+    <%= content_tag(:div, class: 'controls') { f.collection_select :tournament_id, @tournaments, :id, :year } %>
+  </div>
+  <div class="control-group">
+    <%= f.label :character_display_name, 'Display name for character, if different' %>
+    <%= content_tag(:div, class: 'controls') { f.text_field :character_display_name } %>
+  </div>
+  <%= image_tag f.object.character_avatar_url %>
+  <div class="control-group">
+    <%= f.label :character_avatar, 'Select an Appearance specific image from file...' %>
+    <%= content_tag(:div, class: 'controls') { f.file_field :character_avatar } %>
+    <%= f.hidden_field :character_avatar_cache %>
+  </div>
+  <div class="control-group">
+    <%= f.label :remote_character_avatar_url, '...or upload one from a URL' %>
+    <%= content_tag(:div, class: 'controls') { f.text_field :remote_character_avatar_url } %>
+  </div>
+  <div class="control-group">
+    <%= f.label :remove_character_avatar, 'Remove current appearance specific image?' %>
+    <%= content_tag(:div, class: 'controls') { f.check_box :remove_character_avatar } %>
+  </div>
+</div>
+<%= f.link_to_remove 'Remove appearance' %>
+<br />

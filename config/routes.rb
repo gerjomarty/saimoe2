@@ -3,6 +3,8 @@ Saimoe2::Application.routes.draw do
   namespace :admin do
     match 'utilities', to: 'admin#utilities', via: [:get, :post]
     match 'clear-cache', to: 'admin#clear_cache', via: :get, as: :clear_cache
+
+    resources :characters, except: :show
   end
 
   with_options only: [:index, :show] do |m|

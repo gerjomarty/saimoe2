@@ -12,7 +12,7 @@ class Match < ActiveRecord::Base
   has_many :voice_actor_roles, through: :appearances
   has_many :characters, through: :character_roles
   has_many :series, through: :character_roles, uniq: true
-  has_many :voice_actors, through: :voice_actor_roles
+  has_many :voice_actors, through: :voice_actor_roles, uniq: true
 
   validates :group, group: true
   validates :stage, presence: true, stage: true, uniqueness: {scope: [:tournament_id, :group, :match_number]}

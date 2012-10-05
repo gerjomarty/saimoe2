@@ -2,6 +2,10 @@
 
 require File.expand_path('../../config/environment', __FILE__)
 
+# Clear the current database
+
+Soulmate.redis.flushall
+
 Dir["#{Rails.root}/app/models/**/*.rb"].each do |file|
   begin
     require file

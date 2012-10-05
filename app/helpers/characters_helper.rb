@@ -10,7 +10,7 @@ module CharactersHelper
   end
 
   def format_voice_actor_list character
-    v_actors = character.voice_actors.ordered
+    v_actors = character.voice_actors.ordered.all
     if v_actors.size == 0
       va_tags = %w{N/A}
     elsif v_actors.size == 1
@@ -27,18 +27,6 @@ module CharactersHelper
         c
       end
     end
-
-
-    #va_roles = character.voice_actor_roles
-    #if va_roles.size == 0
-    #  va_tags = %w{N/A}
-    #elsif va_roles.size == 1
-    #  va_tags = va_roles.collect {|var| link_to var.voice_actor.full_name, voice_actor_path(var.voice_actor)}
-    #else
-    #  va_tags = va_roles.collect do |var|
-    #    link_to(var.voice_actor.full_name, voice_actor_path(var.voice_actor)) << " (#{var.appearance.tournament.year})"
-    #  end
-    #end
     va_string = "Voice actor".pluralize(va_tags.size)
     content_tag :h3 do
       (va_string << ': ' << va_tags.join(', ')).html_safe

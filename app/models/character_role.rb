@@ -1,9 +1,11 @@
 class CharacterRole < ActiveRecord::Base
-  attr_accessible :role_type, :character, :series
-
   belongs_to :character, inverse_of: :character_roles
   belongs_to :series, inverse_of: :character_roles
   has_many :appearances, inverse_of: :character_role
+
+  accepts_nested_attributes_for :appearances, allow_destroy: true
+
+  attr_accessible :role_type, :character, :series, :appearances_attributes
 
   ROLE_TYPES = [:major, :cameo].freeze
 

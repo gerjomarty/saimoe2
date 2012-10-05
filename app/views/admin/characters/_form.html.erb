@@ -1,0 +1,68 @@
+<%= nested_form_for [:admin, @character], class: 'form-horizontal' do |f| %>
+    <div class="well">
+      <div class="control-group">
+        <%= f.label :first_name, 'First name' %>
+        <%= content_tag(:div, class: 'controls') { f.text_field :first_name } %>
+      </div>
+      <div class="control-group">
+        <%= f.label :last_name, 'Last name' %>
+        <%= content_tag(:div, class: 'controls') { f.text_field :last_name } %>
+      </div>
+      <div class="control-group">
+        <%= f.label :first_name, 'Given name' %>
+        <%= content_tag(:div, class: 'controls') { f.text_field :given_name } %>
+      </div>
+    </div>
+    <div class="well">
+      <div class="control-group">
+        <%= f.label :main_series_id, 'Main series' %>
+        <%= content_tag(:div, class: 'controls') { f.collection_select :main_series_id, @series, :id, :name, include_blank: true } %>
+      </div>
+      <div class="control-group">
+        <%= label :character_series, 'or create a new series' %>
+        <%= content_tag(:div, class: 'controls') { text_field :character_series, :new_main_series } %>
+      </div>
+    </div>
+    <div class="well">
+      <%= image_tag @character.avatar_url %>
+      <div class="control-group">
+        <%= f.label :avatar, 'Select an avatar image from file...' %>
+        <%= content_tag(:div, class: 'controls') { f.file_field :avatar } %>
+        <%= f.hidden_field :avatar_cache %>
+      </div>
+      <div class="control-group">
+        <%= f.label :remote_avatar_url, '...or upload one from a URL' %>
+        <%= content_tag(:div, class: 'controls') { f.text_field :remote_avatar_url } %>
+      </div>
+      <div class="control-group">
+        <%= f.label :remove_avatar, 'Remove current image?' %>
+        <%= content_tag(:div, class: 'controls') { f.check_box :remove_avatar } %>
+      </div>
+    </div>
+    <div class="well">
+      <h3>Character Roles</h3>
+      <%= f.fields_for :character_roles %>
+      <%= f.link_to_add 'Add a character role', :character_roles %>
+    </div>
+    <div class="form-actions">
+      <%= f.submit %>
+    </div>
+<% end %>
+
+<%#= form_for(@admin_character) do |f| %>
+  <%# if @admin_character.errors.any? %>
+    <!--<div id="error_explanation">-->
+      <!--<h2><%#= pluralize(@admin_character.errors.count, "error") %> prohibited this admin_character from being saved:</h2>-->
+
+      <!--<ul>-->
+      <%# @admin_character.errors.full_messages.each do |msg| %>
+        <!--<li><%#= msg %></li>-->
+      <%# end %>
+      <!--</ul>-->
+    <!--</div>-->
+  <%# end %>
+
+  <!--<div class="actions">-->
+    <%#= f.submit %>
+  <!--</div>-->
+<%# end %>

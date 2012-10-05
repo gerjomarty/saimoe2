@@ -1,0 +1,17 @@
+<div class="well" style="border-color: #000000;">
+  <div class="control-group">
+    <%= f.label :role_type, 'Role type' %>
+    <%= content_tag(:div, class: 'controls') { f.text_field :role_type, disabled: true } %>
+  </div>
+  <div class="control-group">
+    <%= f.label :series_id, 'Series' %>
+    <%= content_tag(:div, class: 'controls') { f.collection_select :series_id, @series, :id, :name } %>
+  </div>
+  <div class="well">
+    <h4>Appearances</h4>
+    <%= f.fields_for :appearances %>
+    <%= f.link_to_add 'Add an appearance', :appearances %>
+  </div>
+</div>
+<%= f.link_to_remove 'Remove character role' %>
+<br />
