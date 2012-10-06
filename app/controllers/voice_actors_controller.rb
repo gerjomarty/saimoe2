@@ -2,7 +2,7 @@ require 'alphabetical_pagination'
 
 class VoiceActorsController < ApplicationController
   caches_action :index
-  
+
   # GET /voice-actors
   def index
     @ap = AlphabeticalPagination.new
