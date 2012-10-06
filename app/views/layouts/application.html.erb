@@ -30,6 +30,7 @@
           <a class="brand" href="#"><%= image_tag 'saimoe-logo.png' %></a>
           <div class="container-fluid nav-collapse">
             <ul class="nav">
+              <li><%= link_to 'Home', '/' %></li>
               <li class="dropdown">
                 <%= link_to('#', class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do %>
                     Tournaments <b class="caret"></b>
@@ -43,6 +44,9 @@
               <li><%= link_to 'Characters', characters_path %></li>
               <li><%= link_to 'Series', series_index_path %></li>
               <li><%= link_to 'Voice Actors', voice_actors_path %></li>
+              <li class="divider-vertical"></li>
+              <li><%= link_to 'Code Generator', 'http://ast2012.sakura.ne.jp' %></li>
+              <li><%= link_to '2ch Voting Board', 'http://kohada.2ch.net/vote' %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
