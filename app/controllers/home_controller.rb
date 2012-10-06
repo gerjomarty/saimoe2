@@ -1,6 +1,8 @@
 class HomeController < ApplicationController
   layout 'tournaments'
 
+  caches_action :index
+
   def index
     @most_recent = Match.ordered_by_date.where(is_finished: true, date: Match.where(is_finished: true).maximum(:date))
     @todays_matches = Match.ordered_by_date.where("is_finished IS NULL OR is_finished = ?", false).where(date: Match.where("is_finished IS NULL OR is_finished = ?", false).minimum(:date))
