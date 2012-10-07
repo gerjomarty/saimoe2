@@ -75,20 +75,21 @@ class MatchEntry < ActiveRecord::Base
   end
 
   def avatar
-    return appearance.character_avatar if appearance.character_avatar?
-    character.avatar
+    return appearance.character_avatar if appearance && appearance.character_avatar?
+    return character.avatar if character
+    nil
   end
 
   def avatar?
-    return true if appearance.character_avatar?
-    character.avatar?
+    return true if appearance && appearance.character_avatar?
+    character && character.avatar?
   end
 
   def character
-    appearance.character_role.character
+    appearance.try(:character_role).try(:character)
   end
 
   def series
-    appearance.character_role.series
+    appearance.try(:character_role).try(:series)
   end
 end

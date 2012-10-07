@@ -37,7 +37,7 @@ end
 
 if regen_database
   $stdout.puts "Regenerating the database from the base YAML data..."
-  unless system("rake db:drop:all && rake db:create:all && rake db:migrate && rake db:seed")
+  unless system("rake db:drop && rake db:create && rake db:migrate && rake db:seed")
     $stderr.puts "Error when regenerating database: #{$?}"
     exit 1
   end
