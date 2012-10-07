@@ -72,6 +72,7 @@ GEM
       ruby-hmac
     formatador (0.2.3)
     friendly_id (4.0.8)
+    google-analytics-rails (0.0.3)
     heroku (2.30.1)
       heroku-api (~> 0.3.1)
       launchy (>= 0.3.2)
@@ -229,6 +230,7 @@ DEPENDENCIES
   factory_girl_rails (~> 3.5.0)
   fog
   friendly_id (~> 4.0.0)
+  google-analytics-rails
   heroku
   jquery-rails (~> 2.0.0)
   jquery-ui-rails (~> 1.0.0)
