@@ -38,6 +38,7 @@ module ApplicationHelper
     options[:show_color] = false if options[:show_color].nil?
     options[:show_votes] = !votes.nil? if options[:show_votes].nil?
     options[:fixed_width] = true if options[:fixed_width].nil?
+    options[:fade_out] = false if options[:fade_out].nil?
 
     color_code = series.color_code
 
@@ -46,6 +47,7 @@ module ApplicationHelper
     div_class << " hide_series" unless options[:show_series]
     div_class << " fixed_width" if options[:fixed_width]
     div_class << " no_avatar" if options[:fixed_width] && !options[:show_avatar]
+    div_class << " fade_out" if options[:fade_out]
     if options[:show_color] && color_code
       div_class << (bright_color(color_code) ? " dark_text" : " light_text")
       #div_class << " dark_text"

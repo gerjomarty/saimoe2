@@ -11,6 +11,7 @@ class HomeController < ApplicationController
 
     #TODO: Don't just copy this from tournaments/show - actually use same code in a DRY way
 
+    @group_matches_in_progress = false
     @group_stage_matches = {}.tap do |sgm|
       @tournament.matches.group_matches.without_playoffs.ordered
       .includes(:match_entries => [:previous_match, {:appearance => {:character_role => [:character, :series]}}]).each do |match|
@@ -19,6 +20,7 @@ class HomeController < ApplicationController
         sgm[group] ||= {}
         sgm[group][stage] ||= []
         sgm[group][stage] << match
+        @group_matches_in_progress = true unless match.is_finished?
       end
     end
 

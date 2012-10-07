@@ -40,7 +40,7 @@ class Tournament < ActiveRecord::Base
 
   def characters_by_total_votes
     res = Character.joins(:character_roles => [:series, {:appearances => [:tournament, :match_entries]}])
-                   .where(appearances: {tournament_id: self.id})
+                   .where(appearances: {tournament_id: self.id}, match_entries: {is_finished: true})
                    .select("#{Series.q_column :id} AS series_id")
                    .select("SUM(#{MatchEntry.q_column :number_of_votes}) as number_of_votes")
                    .select("rank() OVER (ORDER BY SUM(#{MatchEntry.q_column :number_of_votes}) DESC)")
@@ -53,7 +53,7 @@ class Tournament < ActiveRecord::Base
 
   def characters_by_average_votes
     res = Character.joins(:character_roles => [:series, {:appearances => [:tournament, :match_entries]}])
-                   .where(appearances: {tournament_id: self.id})
+                   .where(appearances: {tournament_id: self.id}, match_entries: {is_finished: true})
                    .select("#{Series.q_column :id} AS series_id")
                    .select("AVG(#{MatchEntry.q_column :number_of_votes}) as average_votes")
                    .select("rank() OVER (ORDER BY AVG(#{MatchEntry.q_column :number_of_votes}) DESC)")
@@ -66,7 +66,7 @@ class Tournament < ActiveRecord::Base
 
   def series_by_total_votes
     Series.joins(:character_roles => {:appearances => [:tournament, :match_entries]})
-          .where(appearances: {tournament_id: self.id})
+          .where(appearances: {tournament_id: self.id}, match_entries: {is_finished: true})
           .select("SUM(#{MatchEntry.q_column :number_of_votes}) as number_of_votes")
           .select("rank() OVER (ORDER BY SUM(#{MatchEntry.q_column :number_of_votes}) DESC)")
           .group(Series.q_column :id)
@@ -77,7 +77,7 @@ class Tournament < ActiveRecord::Base
 
   def voice_actors_by_total_votes
     VoiceActor.joins(:voice_actor_roles => {:appearance => [:tournament, :match_entries]})
-              .where(appearances: {tournament_id: self.id})
+              .where(appearances: {tournament_id: self.id}, match_entries: {is_finished: true})
               .select("SUM(#{MatchEntry.q_column :number_of_votes}) as number_of_votes")
               .select("rank() OVER (ORDER BY SUM(#{MatchEntry.q_column :number_of_votes}) DESC)")
               .group(VoiceActor.q_column :id)
@@ -88,7 +88,7 @@ class Tournament < ActiveRecord::Base
   def stages_by_total_votes
     {}.tap do |stage_hash|
       res = Character.joins(:character_roles => [:series, {:appearances => [:tournament, {:match_entries => :match}]}])
-                     .where(appearances: {tournament_id: self.id})
+                     .where(appearances: {tournament_id: self.id}, match_entries: {is_finished: true})
                      .select("#{Series.q_column :id} AS series_id")
                      .select("#{Match.q_column :stage} AS stage")
                      .select("SUM(#{MatchEntry.q_column :number_of_votes}) as number_of_votes")
@@ -107,7 +107,7 @@ class Tournament < ActiveRecord::Base
   def stages_by_vote_shares
     {}.tap do |stage_hash|
       res = Character.joins(:character_roles => [:series, {:appearances => [:tournament, {:match_entries => :match}]}])
-                     .where(appearances: {tournament_id: self.id})
+                     .where(appearances: {tournament_id: self.id}, match_entries: {is_finished: true})
                      .select("#{Series.q_column :id} AS series_id")
                      .select("#{Match.q_column :stage} AS stage")
                      .select("#{MatchEntry.q_column :vote_share} AS vote_share")

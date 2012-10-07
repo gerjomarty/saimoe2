@@ -10,6 +10,7 @@ class TournamentsController < ApplicationController
 
   # GET /tournaments/1
   def show
+    @group_matches_in_progress = false
     @group_stage_matches = {}.tap do |sgm|
       @tournament.matches.group_matches.without_playoffs.ordered
       .includes(:match_entries => [:previous_match, {:appearance => {:character_role => [:character, :series]}}]).each do |match|
@@ -18,6 +19,7 @@ class TournamentsController < ApplicationController
         sgm[group] ||= {}
         sgm[group][stage] ||= []
         sgm[group][stage] << match
+        @group_matches_in_progress = true unless match.is_finished?
       end
     end
 
