@@ -287,6 +287,7 @@ module ApplicationHelper
   end
 
   def match_date_box match
+    return '' unless match
     date_height = table_date_height match
     if match && match.is_finished? && match.next_match_entries.includes(:match).all? {|me| me.match.playoff_match?}
       # Previous winner went to a playoff - we want to show the winner of that playoff instead
