@@ -287,7 +287,6 @@ module ApplicationHelper
   end
 
   def match_date_box match
-    return '' unless match
     date_height = table_date_height match
     if match && match.is_finished? && match.next_match_entries.includes(:match).all? {|me| me.match.playoff_match?}
       # Previous winner went to a playoff - we want to show the winner of that playoff instead
@@ -312,7 +311,7 @@ module ApplicationHelper
     end
     content_tag :div, class: class_statement, style: div_style do
       content_tag :p do
-        link_to(match.date.to_s(:month_day), date_path(match.date.to_s(:number)))
+        link_to(match.date.to_s(:month_day), date_path(match.date.to_s(:number))) if match
       end
     end
   end
