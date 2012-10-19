@@ -13,7 +13,7 @@
     <% @chars.each do |char_arr| %>
       <div class="span3">
         <% char_arr.each do |character| %>
-          <%= character_entry character %>
+          <%= character_entry character, fixed_width: false %>
         <% end %>
       </div>
     <% end %>

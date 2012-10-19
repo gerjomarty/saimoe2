@@ -14,7 +14,7 @@
       <% @major_chars.each do |char_arr| %>
         <div class="span3">
           <% char_arr.each do |character| %>
-            <%= character_entry character, show_series: false %>
+            <%= character_entry character, show_series: false, fixed_width: false %>
           <% end %>
         </div>
       <% end %>
