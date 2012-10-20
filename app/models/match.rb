@@ -1,7 +1,10 @@
 class Match < ActiveRecord::Base
   include Ordering
 
-  attr_accessible :date, :group, :match_number, :stage, :tournament, :is_finished, :is_winner, :number_of_votes, :is_draw, :table_height
+  mount_uploader :vote_graph, VoteGraphUploader
+
+  attr_accessible :date, :group, :match_number, :stage, :tournament, :is_finished, :is_winner, :number_of_votes,
+                  :is_draw, :table_height, :vote_graph_cache, :remote_vote_graph_url, :remove_vote_graph, :vote_graph
 
   belongs_to :tournament, inverse_of: :matches
   has_many :match_entries, inverse_of: :match

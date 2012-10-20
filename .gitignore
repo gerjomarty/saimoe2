@@ -21,3 +21,5 @@ lib/data/
 coverage
 db/redis/*.pid
 db/redis/*.rdb
+.DS_Store
+

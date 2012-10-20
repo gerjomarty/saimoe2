@@ -3,6 +3,10 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
   m = Match.create! tournament: t, stage: stage, group: group, date: match_hash[:date],
                     match_number: (match_no == 'null' ? nil : match_no)
 
+  if match_hash[:vote_graph]
+    ActiveRecord::Base.connection.execute "UPDATE matches SET vote_graph = '#{match_hash[:vote_graph]}' WHERE id = #{m.id}"
+  end
+
   match_hash[:match_entries].each do |me|
     name = me[:actual_name] || me[:name]
     series = Series.where(name: me[:series]).first

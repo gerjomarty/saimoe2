@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120915130317) do
+ActiveRecord::Schema.define(:version => 20121020150534) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20120915130317) do
     t.integer  "number_of_votes"
     t.boolean  "is_draw"
     t.float    "table_height"
+    t.string   "vote_graph"
   end
 
   add_index "matches", ["tournament_id"], :name => "index_matches_on_tournament_id"
