@@ -24,13 +24,13 @@ module ApplicationHelper
       votes = m_entry.number_of_votes
       is_winner = m_entry.is_winner?
       display_name = m_entry.character_name
-      avatar_url = app.character_avatar_url(:thumb) if app.character_avatar?
+      avatar_url = app.character_avatar_url(:thumb) if app && app.character_avatar?
       series = m_entry.series
       character = m_entry.character
     end
-    display_name ||= character.full_name
-    avatar_url ||= character.avatar_url(:thumb)
-    series ||= character.main_series
+    display_name ||= character && character.full_name
+    avatar_url ||= character && character.avatar_url(:thumb)
+    series ||= character && character.main_series
 
     options[:right_align] = false if options[:right_align].nil?
     options[:show_avatar] = true if options[:show_avatar].nil?
@@ -39,8 +39,9 @@ module ApplicationHelper
     options[:show_votes] = !votes.nil? if options[:show_votes].nil?
     options[:fixed_width] = true if options[:fixed_width].nil?
     options[:fade_out] = false if options[:fade_out].nil?
+    options[:fill_background] = false if options[:fill_background].nil?
 
-    color_code = series.color_code
+    color_code = series && series.color_code
 
     div_class = "thumbnail character_entry"
     div_class << " right" if options[:right_align]
@@ -48,6 +49,7 @@ module ApplicationHelper
     div_class << " fixed_width" if options[:fixed_width]
     div_class << " no_avatar" if options[:fixed_width] && !options[:show_avatar]
     div_class << " fade_out" if options[:fade_out]
+    div_class << " fill_background" if options[:fill_background]
     if options[:show_color] && color_code
       div_class << (bright_color(color_code) ? " dark_text" : " light_text")
       #div_class << " dark_text"
@@ -74,9 +76,9 @@ module ApplicationHelper
       end
       c << content_tag(:div,
                        class: 'character_name') do
-        link_to display_name,
+        link_to(display_name,
                 character_path(character),
-                title: display_name
+                title: display_name) if character
       end
       if options[:show_series]
         c << content_tag(:div,
@@ -84,7 +86,7 @@ module ApplicationHelper
           content_tag(:em,
                       link_to(series.name,
                               series_path(series),
-                              title: series.name))
+                              title: series.name)) if series
         end
       end
       c << content_tag(:div, '', class: 'cb')
