@@ -5,7 +5,6 @@ class HomeController < ApplicationController
 
   def index
     @most_recent = Match.ordered_by_date.where(is_finished: true, date: Match.where(is_finished: true).maximum(:date))
-    @todays_matches = Match.ordered_by_date.where("is_finished IS NULL OR is_finished = ?", false).where(date: Match.where("is_finished IS NULL OR is_finished = ?", false).minimum(:date))
 
     @tournament = @most_recent.try(:first).try(:tournament) || Tournament.fy(Time.zone.now.year)
 

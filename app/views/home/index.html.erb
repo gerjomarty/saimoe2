@@ -33,32 +33,6 @@
     </div>
 <% end %>
 
-<% if @todays_matches %>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2"></div>
-        <div class="span8">
-          <div class="page-header">
-            <% if Time.now.in_time_zone('Asia/Tokyo').to_date == (match_date = @todays_matches.first.try(:date)) %>
-                <h3>Today's Matches</h3>
-            <% else %>
-                <h3><%= match_date ? "Matches for #{match_date.to_s(:long)}" : "Next Matches" %></h3>
-            <% end %>
-            <h5>See <%= link_to 'here', 'http://www.animesaimoe.org/votingformat.html' %> for full details</h5>
-          </div>
-          <div class="well">
-            <% @todays_matches.each do |match| %>
-                <h4><%= pretty_match match %></h4>
-                <%= render partial: 'shared/classified_match', locals: {match: match,
-                                                                        extra_table_classes: %w(match_date)} %>
-            <% end %>
-          </div>
-        </div>
-        <div class="span2"></div>
-      </div>
-    </div>
-<% end %>
-
 <hr />
 
 <%= render template: 'tournaments/show' %>
