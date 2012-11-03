@@ -6,6 +6,7 @@ class Admin::AdminController < ApplicationController
   REALM = ENV['APP_REALM']
   USERS = {ENV['APP_USERNAME'] => ENV['APP_PASSWORD_HASH']}
 
+  skip_before_filter :force_http
   force_ssl
   before_filter :authenticate
 
