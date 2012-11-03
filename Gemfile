@@ -7,6 +7,7 @@ gem 'friendly_id', '~> 4.0.0'
 gem 'soulmate', '~> 0.1.0'
 gem 'nested_form', '~> 0.2.0'
 gem 'google-analytics-rails'
+gem 'rack-canonical-host', '~> 0.0.0'
 
 # memcache gems
 gem 'dalli'
