@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '= 3.2.6'
+gem 'rails', '= 3.2.11'
 gem 'pg'
 gem 'thin'
 gem 'friendly_id', '~> 4.0.0'
@@ -42,7 +42,6 @@ end
 
 group :development do
   gem 'heroku'
-  gem 'ruby-debug19', require: 'ruby-debug'
 end
 
 group :production do
