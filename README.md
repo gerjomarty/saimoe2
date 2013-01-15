@@ -5,6 +5,7 @@ This app is a Ruby on Rails 3.2 app in progress to document/analyse proceedings 
 
 \(It's much the same as [:octocat:gerjomarty/saimoe][oldproject], but built with Twitter Bootstrap and with tests\.\)
 
+
 Licence information
 -------------------
 
