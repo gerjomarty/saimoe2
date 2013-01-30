@@ -5,6 +5,7 @@ describe Tournament do
   it { should have_many(:matches) }
 
   it { should validate_presence_of(:year) }
+  it { should validate_uniqueness_of(:year) }
   it { should allow_value('2046').for(:year) }
   it { should_not allow_value('201').for(:year) }
   it { should_not allow_value('ABCD').for(:year) }
@@ -20,11 +21,6 @@ describe Tournament do
   it { should_not allow_value([:again_not_a_stage, :final]).for(:final_stages) }
   it { should_not allow_value([:quarter_final, :round_3]).for(:final_stages) }
   it { should allow_value([:quarter_final, :semi_final]).for(:final_stages) }
-
-  it "validates uniqueness of year" do
-    create :tournament
-    should validate_uniqueness_of(:year)
-  end
 
   describe "#fy" do
     t = FactoryGirl.create(:tournament)
