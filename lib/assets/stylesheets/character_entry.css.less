@@ -2,24 +2,8 @@
 @import "twitter/bootstrap/mixins";
 
 .character_entry {
-    padding: 3px;
-    height: 40px;
-
-    &.fixed_width {
-        width: 230px;
-        &.no_avatar {
-            width: 190px;
-        }
-    }
-
-    &.fade_out {
-        filter:Alpha(opacity=70);
-        opacity: 0.7;
-    }
-
-    &.fill_background {
-        background-color: #D3D3D3;
-    }
+//    padding: 3px;
+//    height: 40px;
 
     div {
         white-space: nowrap;
@@ -28,43 +12,41 @@
     }
     .character_image {
         float: left;
-        margin-right: 5px;
+    //        margin-right: 5px;
     }
     .character_name, .series_name {
         text-align: left;
         position: relative;
-        height: 15px;
+    //        height: 15px;
     }
     .character_name {
-        top: 0.5em;
+    //        top: 0.5em;
     }
     .series_name {
-        top: 0.7em;
+    //        top: 0.7em;
         font-size: smaller;
     }
     .character_votes {
         float: right;
-        margin-left: 1px;
-        width: 40px;
-        height: 38px;
-        line-height: 38px;
-        border: 1px solid #ddd;
-        .border-radius(3px);
-        .box-shadow(0 1px 1px rgba(0,0,0,.075));
-
+    //        margin-left: 1px;
+    //        width: 40px;
+    //        height: 38px;
+    //        line-height: 38px;
+    //        border: 1px solid #ddd;
+    //        .border-radius(3px);
+    //        .box-shadow(0 1px 1px rgba(0,0,0,.075));
         p {
             position: relative;
             text-align: center;
         }
-
         &.winner {
             p {
                 font-weight: bold;
             }
         }
         &.loser {
-            background-color: #d3d3d3;
-            // Keep this in sync with &.dark_text
+            background-color: #D3D3D3;
+        // Keep this in sync with &.dark_text
             p, div, em {
                 color: #000000;
             }
@@ -76,26 +58,44 @@
             }
         }
     }
+    &.fixed_width {
+//        width: 230px;
+        &.no_avatar {
+//            width: 190px;
+        }
+    }
+    &.transparent {
+        filter:Alpha(opacity=70);
+        opacity: 0.7;
+    }
+    &.fill_background {
+        background-color: #D3D3D3;
+    }
     &.right {
         .character_image {
             float: right;
-            margin-left: 5px;
-            margin-right: 0;
+//            margin-left: 5px;
+//            margin-right: 0;
         }
         .character_name, .series_name {
             text-align: right;
         }
         .character_votes {
             float: left;
-            margin-left: 0;
-            margin-right: 5px;
+//            margin-left: 0;
+//            margin-right: 5px;
         }
     }
     &.hide_series {
         .character_name {
-            top: 1em;
+//            top: 1em;
         }
         .series_name {
+            display: none;
+        }
+    }
+    &.hide_avatar {
+        .character_image {
             display: none;
         }
     }

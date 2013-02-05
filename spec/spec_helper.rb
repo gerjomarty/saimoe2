@@ -46,5 +46,3 @@ RSpec.configure do |config|
   config.include ActsAsFu
   config.include FactoryGirl::Syntax::Methods
 end
-
-require 'mocha/setup'

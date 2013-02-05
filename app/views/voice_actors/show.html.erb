@@ -12,8 +12,8 @@
   <div class="row-fluid">
     <% @chars.each do |char_arr| %>
       <div class="span3">
-        <% char_arr.each do |character| %>
-          <%= character_entry character, fixed_width: false %>
+        <% char_arr.each do |character_entry| %>
+          <%= character_entry.render %>
         <% end %>
       </div>
     <% end %>

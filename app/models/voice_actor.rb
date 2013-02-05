@@ -54,6 +54,14 @@ class VoiceActor < ActiveRecord::Base
     self.full_name
   end
 
+  def self.soulmate_category
+    'Voice Actors'
+  end
+
+  def self.soulmate_target_path
+    Rails.application.routes.url_helpers.voice_actors_path
+  end
+
   private
 
   def name_present

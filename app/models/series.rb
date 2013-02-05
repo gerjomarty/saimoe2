@@ -52,6 +52,14 @@ class Series < ActiveRecord::Base
     self.name
   end
 
+  def self.soulmate_category
+    'Series'
+  end
+
+  def self.soulmate_target_path
+    Rails.application.routes.url_helpers.series_index_path
+  end
+
   private
 
   def generate_sortable_name

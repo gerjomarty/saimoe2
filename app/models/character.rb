@@ -109,6 +109,14 @@ class Character < ActiveRecord::Base
     "#{term} (#{data['s']})"
   end
 
+  def self.soulmate_category
+    'Characters'
+  end
+
+  def self.soulmate_target_path
+    Rails.application.routes.url_helpers.characters_path
+  end
+
   private
 
   def name_present

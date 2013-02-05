@@ -1,7 +1,0 @@
-<% raise ArgumentError, "locals not defined" unless source_path && target_path %>
-<%= text_field_tag 'autocomplete_name',
-                   nil,
-                   class: 'span12 search-query',
-                   style: 'display: none;',
-                   data: {source_path: source_path, target_path: target_path},
-                   placeholder: defined?(placeholder_text) && placeholder_text %>

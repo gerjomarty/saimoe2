@@ -13,9 +13,9 @@ Dir["#{Rails.root}/app/models/**/*.rb"].each do |file|
   end
 end
 
-ActiveRecord::Base.descendants.select do |m|
+ActiveRecord::Base.descendants.select { |m|
   m.respond_to?(:search) && m.method_defined?(:soulmate_term) && m.method_defined?(:soulmate_data)
-end.each do |model|
+}.each do |model|
   begin
     model.find_each(model === Character ? {include: :main_series} : {}) do |record|
       record.load_into_soulmate

@@ -1,9 +1,14 @@
 # Mixin with model
+
 # Instance methods:
 # * soulmate_term - the word to be searched on - required
 # * soulmate_data - any extra data that you want to be available to the soulmate_label
+
 # Class methods:
 # * soulmate_label_for(id, term, data) - label to appear on the autocomplete box
+# * soulmate_category - the category name that appears in the autocomplete box
+# * soulmate_target_path - the path that precedes /:id that leads to the selected entry - required
+
 module SoulmateSearch
   def self.included base
     base.extend ClassMethods
@@ -50,12 +55,24 @@ module SoulmateSearch
       term
     end
 
+    def soulmate_category
+      nil
+    end
+
+    def soulmate_target_path
+      raise NotImplementedError, "soulmate_target_path needs to be overridden by the subclass"
+    end
+
     def search term
       options = {cache: !Rails.env.test?}
       self.matcher.matches_for_term(term, options).collect do |m|
-        {id: m['id'],
-         value: m['term'],
-         label: self.soulmate_label_for(m['id'], m['term'], m['data'])}
+        {
+          id: m['id'],
+          value: m['term'],
+          label: self.soulmate_label_for(m['id'], m['term'], m['data']),
+          target_path: self.soulmate_target_path,
+          category: self.soulmate_category
+        }
       end
     end
   end

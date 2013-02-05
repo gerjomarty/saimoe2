@@ -45,6 +45,10 @@
               <li><%= link_to 'Characters', characters_path %></li>
               <li><%= link_to 'Series', series_index_path %></li>
               <li><%= link_to 'Voice Actors', voice_actors_path %></li>
+              <li class="divider-vertical"></li>
+              <form class="navbar-search">
+                <%= AutocompleteBox.new(autocomplete_path, 'Search').render %>
+              </form>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

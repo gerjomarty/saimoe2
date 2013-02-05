@@ -31,6 +31,8 @@ Saimoe2::Application.routes.draw do
     end
   end
 
+  get 'autocomplete' => 'application#autocomplete', as: :autocomplete
+
   constraints year: /20\d{2}/ do
     match ':year', to: 'tournaments#show', as: :short_tournament
     match ':year/:action', controller: :tournaments, as: :short_tournament_action
