@@ -43,7 +43,7 @@ class GroupMatchesViewModel
           outer_tag << content_tag(:li, link_to('Jump to:', '#'), class: 'disabled')
           groups.each do |group|
             state = 'active' if group == current_group
-            outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group}", class: state))
+            outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group}"), class: state)
           end
         end.html_safe
       end
