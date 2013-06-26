@@ -27,6 +27,10 @@ class Tournament < ActiveRecord::Base
 
   # Final stages don't have play off stages at the moment
 
+  def groups
+    matches.group_matches.without_playoffs.select(Match.q_column :group).uniq.collect(&:group).sort
+  end
+
   def stages
     group_stages + final_stages
   end

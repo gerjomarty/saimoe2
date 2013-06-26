@@ -1,0 +1,82 @@
+// Defaults
+
+@border_color: #DDD;
+
+// Character Entry variables
+
+@ce_box_height: <%= ViewSizing::CE_IMAGE_HEIGHT %>em;
+@ce_padding: <%= ViewSizing::CE_PADDING %>em;
+
+@ce_border_thickness: <%= ViewSizing::CE_BORDER_THICKNESS %>em;
+@ce_border_radius: <%= ViewSizing::CE_BORDER_RADIUS %>em;
+@ce_border_color: @border_color;
+
+@ce_image_width: <%= ViewSizing::CE_IMAGE_WIDTH %>em;
+@ce_image_height: <%= ViewSizing::CE_IMAGE_HEIGHT %>em;
+
+@ce_votes_width: <%= ViewSizing::CE_VOTES_WIDTH %>em;
+@ce_votes_height: <%= ViewSizing::CE_VOTES_HEIGHT %>em;
+
+@ce_fixed_width: <%= ViewSizing::CE_FIXED_WIDTH %>em;
+@ce_fixed_width_without_avatar: <%= ViewSizing::CE_FIXED_WIDTH_WITHOUT_AVATAR %>em;
+
+@ce_fixed_outer_width: <%= ViewSizing::CE_FIXED_OUTER_WIDTH %>em;
+@ce_outer_height: <%= ViewSizing::CE_OUTER_HEIGHT %>em;
+
+@ce_transparency: 0.7;
+
+@ce_loser_color: #D3D3D3;
+@ce_default_color: #FFFFFF;
+
+// Match View Model variables
+
+@mvm_info_width: <%= ViewSizing::MVM_INFO_WIDTH %>em;
+
+@mvm_padding: <%= ViewSizing::MVM_PADDING %>em;
+
+@mvm_border_thickness: <%= ViewSizing::MVM_BORDER_THICKNESS %>em;
+@mvm_border_radius: <%= ViewSizing::MVM_BORDER_RADIUS %>em;
+@mvm_border_color: @border_color;
+
+@mvm_outer_width: <%= ViewSizing::MVM_OUTER_WIDTH %>em;
+
+// Final Matches View Model variables
+
+@fmvm_margin: <%= ViewSizing::FMVM_MARGIN %>em;
+
+@fmvm_semi_final_top_padding: <%= ViewSizing::FMVM_SEMI_FINAL_TOP_PADDING %>em;
+
+@fmvm_outer_width: <%= ViewSizing::FMVM_OUTER_WIDTH %>em;
+
+// Group Matches View Model
+
+@gmvm_outer_width: <%= ViewSizing::GMVM_OUTER_WIDTH %>em;
+
+// Group View Model
+
+@gvm_margin: <%= ViewSizing::GVM_MARGIN %>em;
+
+// Functions
+
+.light_text {
+    p, div, em, span {
+        color: #FFFFFF;
+    }
+    a, a:link {
+        color: #FFFFFF;
+    }
+    a:hover {
+        color: darken(#FFFFFF, 20%);
+    }
+}
+.dark_text {
+    p, div, em, span {
+        color: #000000;
+    }
+    a, a:link {
+        color: #000000;
+    }
+    a:hover {
+        color: lighten(#000000, 20%);
+    }
+}

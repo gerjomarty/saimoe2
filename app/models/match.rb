@@ -108,6 +108,11 @@ class Match < ActiveRecord::Base
     match_hierarchy.sum_leaf_nodes.to_f
   end
 
+  # Returns an array of match entry counts for the matches below this one in the hierarchy
+  def base_match_entry_counts
+    match_hierarchy.leaf_nodes
+  end
+
   # This method is mostly for working out how tall elements on the tournament show page
   # need to be. It takes a toll on the database, so don't do it often.
   def match_hierarchy
@@ -127,6 +132,37 @@ class Match < ActiveRecord::Base
 
   def self.date_after date
     select(q_column :date).uniq.order(q_column :date).where("#{q_column :date} > ?", date).first.try(:date)
+  end
+
+  def pretty length=:long
+    case length
+    when :long
+      case stage
+      when :final                      then 'Grand Final'
+      when :semi_final, :quarter_final then "#{pretty_stage} #{match_number}"
+      when :last_16                    then ('A'..'P').each_slice(2).collect {|g1, g2| "Group #{g1} winner vs Group #{g2} winner" }[match_number - 1]
+      when :group_final                then "#{pretty_group} Final"
+      else                                  "#{pretty_stage} Match #{pretty_group(:short)}#{match_number}"
+      end
+    when :short
+      case stage
+      when :final         then 'Final'
+      when :semi_final    then "SF#{match_number}"
+      when :quarter_final then "QF#{match_number}"
+      when :last_16       then ('A'..'P').each_slice(2).collect {|g1, g2| "#{g1} vs #{g2}" }[match_number - 1]
+      when :group_final   then "#{pretty_group(:short)} Final"
+      else                     "#{pretty_group(:short)}#{match_number}"
+      end
+    end
+  end
+
+  def pretty_stage
+    MatchInfo.pretty_stage stage
+  end
+
+  def pretty_group length=:long
+    return '' unless group
+    MatchInfo.pretty_group group, length
   end
 
   private

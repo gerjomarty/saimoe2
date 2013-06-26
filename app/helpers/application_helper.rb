@@ -16,83 +16,83 @@ module ApplicationHelper
   end
 
   # Renders a nice box with avatar, character name, and series
-  def character_entry character, options={}
-    display_name = avatar_url = series = votes = is_winner = nil
-    if character.is_a? MatchEntry
-      m_entry = character
-      app = m_entry.appearance
-      votes = m_entry.number_of_votes
-      is_winner = m_entry.is_winner?
-      display_name = m_entry.character_name
-      avatar_url = app.character_avatar_url(:thumb) if app && app.character_avatar?
-      series = m_entry.series
-      character = m_entry.character
-    end
-    display_name ||= character && character.full_name
-    avatar_url ||= character && character.avatar_url(:thumb)
-    series ||= character && character.main_series
+  # def character_entry character, options={}
+  #   display_name = avatar_url = series = votes = is_winner = nil
+  #   if character.is_a? MatchEntry
+  #     m_entry = character
+  #     app = m_entry.appearance
+  #     votes = m_entry.number_of_votes
+  #     is_winner = m_entry.is_winner?
+  #     display_name = m_entry.character_name
+  #     avatar_url = app.character_avatar_url(:thumb) if app && app.character_avatar?
+  #     series = m_entry.series
+  #     character = m_entry.character
+  #   end
+  #   display_name ||= character && character.full_name
+  #   avatar_url ||= character && character.avatar_url(:thumb)
+  #   series ||= character && character.main_series
 
-    options[:right_align] = false if options[:right_align].nil?
-    options[:show_avatar] = true if options[:show_avatar].nil?
-    options[:show_series] = true if options[:show_series].nil?
-    options[:show_color] = false if options[:show_color].nil?
-    options[:show_votes] = !votes.nil? if options[:show_votes].nil?
-    options[:fixed_width] = true if options[:fixed_width].nil?
-    options[:fade_out] = false if options[:fade_out].nil?
-    options[:fill_background] = false if options[:fill_background].nil?
+  #   options[:right_align] = false if options[:right_align].nil?
+  #   options[:show_avatar] = true if options[:show_avatar].nil?
+  #   options[:show_series] = true if options[:show_series].nil?
+  #   options[:show_color] = false if options[:show_color].nil?
+  #   options[:show_votes] = !votes.nil? if options[:show_votes].nil?
+  #   options[:fixed_width] = true if options[:fixed_width].nil?
+  #   options[:fade_out] = false if options[:fade_out].nil?
+  #   options[:fill_background] = false if options[:fill_background].nil?
 
-    color_code = series && series.color_code
+  #   color_code = series && series.color_code
 
-    div_class = "thumbnail character_entry"
-    div_class << " right" if options[:right_align]
-    div_class << " hide_series" unless options[:show_series]
-    div_class << " fixed_width" if options[:fixed_width]
-    div_class << " no_avatar" if options[:fixed_width] && !options[:show_avatar]
-    div_class << " fade_out" if options[:fade_out]
-    div_class << " fill_background" if options[:fill_background]
-    if options[:show_color] && color_code
-      div_class << (bright_color(color_code) ? " dark_text" : " light_text")
-      #div_class << " dark_text"
-    end
+  #   div_class = "thumbnail character_entry"
+  #   div_class << " right" if options[:right_align]
+  #   div_class << " hide_series" unless options[:show_series]
+  #   div_class << " fixed_width" if options[:fixed_width]
+  #   div_class << " no_avatar" if options[:fixed_width] && !options[:show_avatar]
+  #   div_class << " fade_out" if options[:fade_out]
+  #   div_class << " fill_background" if options[:fill_background]
+  #   if options[:show_color] && color_code
+  #     div_class << (bright_color(color_code) ? " dark_text" : " light_text")
+  #     #div_class << " dark_text"
+  #   end
 
-    content_tag :div,
-                class: div_class,
-                style: ("background-color: ##{color_code};" if options[:show_color] && color_code) do
-      c = ""
-      if options[:show_avatar]
-        c << content_tag(:div,
-                         class: 'character_image') do
-          image_tag avatar_url,
-                    alt: display_name,
-                    size: '40x40'
-        end
-      end
-      if votes && options[:show_votes]
-        c << content_tag(:div,
-                         class: "character_votes#{(is_winner ? ' winner' : ' loser') if options[:show_color]}") do
+  #   content_tag :div,
+  #               class: div_class,
+  #               style: ("background-color: ##{color_code};" if options[:show_color] && color_code) do
+  #     c = ""
+  #     if options[:show_avatar]
+  #       c << content_tag(:div,
+  #                        class: 'character_image') do
+  #         image_tag avatar_url,
+  #                   alt: display_name,
+  #                   size: '40x40'
+  #       end
+  #     end
+  #     if votes && options[:show_votes]
+  #       c << content_tag(:div,
+  #                        class: "character_votes#{(is_winner ? ' winner' : ' loser') if options[:show_color]}") do
 
-          content_tag :p, votes.to_s
-        end
-      end
-      c << content_tag(:div,
-                       class: 'character_name') do
-        link_to(display_name,
-                character_path(character),
-                title: display_name) if character
-      end
-      if options[:show_series]
-        c << content_tag(:div,
-                         class: 'series_name') do
-          content_tag(:em,
-                      link_to(series.name,
-                              series_path(series),
-                              title: series.name)) if series
-        end
-      end
-      c << content_tag(:div, '', class: 'cb')
-      c.html_safe
-    end
-  end
+  #         content_tag :p, votes.to_s
+  #       end
+  #     end
+  #     c << content_tag(:div,
+  #                      class: 'character_name') do
+  #       link_to(display_name,
+  #               character_path(character),
+  #               title: display_name) if character
+  #     end
+  #     if options[:show_series]
+  #       c << content_tag(:div,
+  #                        class: 'series_name') do
+  #         content_tag(:em,
+  #                     link_to(series.name,
+  #                             series_path(series),
+  #                             title: series.name)) if series
+  #       end
+  #     end
+  #     c << content_tag(:div, '', class: 'cb')
+  #     c.html_safe
+  #   end
+  # end
 
   def pretty_match match
     case match.stage
@@ -281,7 +281,7 @@ module ApplicationHelper
     if match_entry && match_entry.is_finished? && match_entry.is_winner? && playoff_match
       c << content_tag(:div, class: 'button-popover-content', style: 'display: none;') do
         playoff_match.match_entries.ordered_by_position.collect { |p_me|
-          character_entry(p_me, show_color: true, show_votes: true)
+          CharacterEntry.new(p_me).with(show_color: true).render
         }.join.html_safe
       end
     end

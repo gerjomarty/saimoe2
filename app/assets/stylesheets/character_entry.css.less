@@ -1,0 +1,109 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+@import "variables_and_functions";
+
+.character_entry {
+    display: block;
+    padding: @ce_padding;
+    height: @ce_box_height;
+    border: @ce_border_thickness solid @ce_border_color;
+    .border-radius(@ce_border_radius);
+
+    div {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .character_image {
+        float: left;
+        margin: 0 @ce_padding 0 0;
+        img {
+            width: @ce_image_width;
+            height: @ce_image_height;
+        }
+    }
+    &.right {
+        .character_image {
+            float: right;
+            margin: 0 0 0 @ce_padding;
+        }
+    }
+    &.hide_avatar {
+        .character_image {
+            display: none;
+            margin: 0;
+        }
+    }
+
+    .character_name, .series_name {
+        text-align: left;
+        position: relative;
+        height: (@ce_box_height * 0.5);
+    }
+    .character_name {
+        top: (@ce_box_height * 0.1);
+    }
+    .series_name {
+        font-size: smaller;
+    }
+    &.right {
+        .character_name, .series_name {
+            text-align: right;
+        }
+    }
+    &.hide_series {
+        .character_name {
+            top: (@ce_box_height * 0.25);
+        }
+        .series_name {
+            display: none;
+        }
+    }
+
+    .character_votes {
+        display: block;
+        float: right;
+        margin: 0 0 0 @ce_padding;
+        width: @ce_votes_width;
+        height: @ce_votes_height;
+        line-height: @ce_votes_height;
+        border: @ce_border_thickness solid @ce_border_color;
+        .border-radius(@ce_border_radius);
+        p {
+            position: relative;
+            text-align: center;
+        }
+        &.winner {
+            p {
+                font-weight: bold;
+            }
+        }
+        &.loser {
+            background-color: #D3D3D3;
+            .dark_text;
+        }
+    }
+    &.right {
+        .character_votes {
+            float: left;
+            margin: 0 @ce_padding 0 0;
+        }
+    }
+
+    &.fixed_width {
+       width: @ce_fixed_width;
+        &.hide_avatar {
+           width: @ce_fixed_width_without_avatar;
+        }
+    }
+    &.transparent {
+        @filter_transparency: (@ce_transparency * 100);
+        filter:Alpha(opacity=@filter_transparency);
+        opacity: @ce_transparency;
+    }
+    &.grey_background {
+        background-color: @ce_loser_color;
+    }
+}

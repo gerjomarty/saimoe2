@@ -6,7 +6,6 @@ require 'nullify_blank_attributes'
 require 'column_methods'
 require 'ordering'
 require 'autocomplete_box'
-require 'character_entry'
 
 # Initialize the rails application
 Saimoe2::Application.initialize!

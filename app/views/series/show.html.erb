@@ -13,8 +13,8 @@
     <div class="row-fluid">
       <% @major_chars.each do |char_arr| %>
         <div class="span3">
-          <% char_arr.each do |character| %>
-            <%= character_entry character, show_series: false, fixed_width: false %>
+          <% char_arr.each do |character_entry| %>
+            <%= character_entry.render %>
           <% end %>
         </div>
       <% end %>
@@ -31,8 +31,8 @@
     <div class="row-fluid">
       <% @cameo_chars.each do |char_arr| %>
         <div class="span3">
-          <% char_arr.each do |character| %>
-              <%= character_entry character %>
+          <% char_arr.each do |character_entry| %>
+              <%= character_entry.render %>
           <% end %>
         </div>
       <% end %>

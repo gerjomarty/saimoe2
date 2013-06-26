@@ -1,6 +1,20 @@
 @import "twitter/bootstrap/variables";
 @import "twitter/bootstrap/mixins";
 
+@box_height: 3.077em;
+@padding: 0.2em;
+@transparency: 0.7;
+
+@border_thickness: 0.1em;
+@border_radius: 0.3em;
+@border_color: #DDD;
+
+@image_width: @box_height;
+@image_height: @box_height;
+
+@votes_width: (@box_height - @padding);
+@votes_height: (@box_height - @padding);
+
 .light_text {
     p, div, em {
         color: #FFFFFF;
@@ -9,7 +23,7 @@
         color: #FFFFFF;
     }
     a:hover {
-        color: darken(#FFFFFF, 15%);
+        color: darken(#FFFFFF, 20%);
     }
 }
 .dark_text {
@@ -20,7 +34,7 @@
         color: #000000;
     }
     a:hover {
-        color: lighten(#000000, 15%);
+        color: lighten(#000000, 20%);
     }
 }
 
@@ -141,12 +155,19 @@
 
     .match_votes {
         float: right;
-        margin-left: 1px;
-        margin-bottom: 1px;
-        width: 40px;
-        border: 1px solid #ddd;
-        .border-radius(3px);
-        .box-shadow(0 1px 1px rgba(0,0,0,.075));
+        display: block;
+
+        // margin: @padding;
+        width: @votes_width;
+        border: @border_thickness solid @border_color;
+        .border-radius(@border_radius);
+
+        // margin-left: 1px;
+        // margin-bottom: 1px;
+        // width: 40px;
+        // border: 1px solid #ddd;
+        // .border-radius(3px);
+        // .box-shadow(0 1px 1px rgba(0,0,0,.075));
 
         p {
             position: relative;

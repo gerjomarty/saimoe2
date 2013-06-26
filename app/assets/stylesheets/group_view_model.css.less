@@ -1,0 +1,25 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+@import "variables_and_functions";
+
+.group-view-model {
+    .group-view-model-stage {
+        float: left;
+
+        margin: 0 @gvm_margin;
+
+        &:first-child {
+            margin-left: 0;
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+        h4 {
+            text-align: center;
+        }
+        .match-view-model {
+            float: left;
+        }
+    }
+}

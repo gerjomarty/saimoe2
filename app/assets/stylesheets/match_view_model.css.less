@@ -1,0 +1,64 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+@import "variables_and_functions";
+
+.match-view-model {
+    display: block;
+
+    border: @mvm_border_thickness solid @mvm_border_color;
+    .border-radius(@mvm_border_radius);
+
+    padding: @mvm_padding;
+
+    &.info-bottom {
+        width: 2 * @ce_fixed_outer_width;
+        margin: 0 auto;
+    }
+
+    .match-entries {
+        &.info-left {
+            float: right;
+            margin: 0 0 0 @mvm_padding/2;
+        }
+        &.info-right {
+            float: left;
+            margin: 0 @mvm_padding/2 0 0;
+        }
+        &.info-bottom {
+            width: 2 * @ce_fixed_outer_width;
+            margin: 0 auto;
+            .character_entry {
+                float: left;
+            }
+        }
+    }
+
+    .match-date {
+        // The - 1 at the end is because em's sometimes spill over, and we don't actually need the full height
+        // height: (@ce_outer_height * match_entries.size) - 1; // This is implemented in Ruby-land
+        // line-height: (@ce_outer_height * match_entries.size; // This is implemented in Ruby-land
+        text-align: center;
+        width: @mvm_info_width;
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.2em;
+            span {
+                font-size: x-small;
+            }
+        }
+
+        &.info-left {
+            float: right;
+        }
+        &.info-right {
+            float: left;
+        }
+        &.info-bottom {
+            width: auto;
+            text-align: center;
+        }
+    }
+}

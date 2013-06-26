@@ -1,0 +1,82 @@
+// Defaults
+
+@border_color: #DDD;
+
+// Character Entry variables
+
+@ce_box_height: 3.077em;
+@ce_padding: 0.2em;
+
+@ce_border_thickness: 0.1em;
+@ce_border_radius: 0.3em;
+@ce_border_color: @border_color;
+
+@ce_image_width: 3.077em;
+@ce_image_height: 3.077em;
+
+@ce_votes_width: 2.877em;
+@ce_votes_height: 2.877em;
+
+@ce_fixed_width: 18em;
+@ce_fixed_width_without_avatar: 14.723em;
+
+@ce_fixed_outer_width: 18.599999999999998em;
+@ce_outer_height: 3.677em;
+
+@ce_transparency: 0.7;
+
+@ce_loser_color: #D3D3D3;
+@ce_default_color: #FFFFFF;
+
+// Match View Model variables
+
+@mvm_info_width: 2.877em;
+
+@mvm_padding: 0.2em;
+
+@mvm_border_thickness: 0.1em;
+@mvm_border_radius: 0.3em;
+@mvm_border_color: @border_color;
+
+@mvm_outer_width: 22.076999999999995em;
+
+// Final Matches View Model variables
+
+@fmvm_margin: 0.4em;
+
+@fmvm_semi_final_top_padding: 4.277em;
+
+@fmvm_outer_width: 91.10799999999998em;
+
+// Group Matches View Model
+
+@gmvm_outer_width: 91.10799999999998em;
+
+// Group View Model
+
+@gvm_margin: 0.4em;
+
+// Functions
+
+.light_text {
+    p, div, em, span {
+        color: #FFFFFF;
+    }
+    a, a:link {
+        color: #FFFFFF;
+    }
+    a:hover {
+        color: darken(#FFFFFF, 20%);
+    }
+}
+.dark_text {
+    p, div, em, span {
+        color: #000000;
+    }
+    a, a:link {
+        color: #000000;
+    }
+    a:hover {
+        color: lighten(#000000, 20%);
+    }
+}

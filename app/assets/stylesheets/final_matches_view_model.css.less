@@ -1,0 +1,87 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+@import "variables_and_functions";
+
+.final-matches-view-model {
+    width: @fmvm_outer_width;
+    margin: 0 auto;
+
+    .victory-image {
+        text-align: center;
+    }
+
+    .final {
+        margin: 0 0 @fmvm_margin 0;
+    }
+
+    .quarter-final {
+        float: left;
+        margin: @fmvm_margin 0;
+
+        .match-view-model {
+            float: left;
+
+            &:first-child {
+                margin-bottom: @fmvm_margin;
+            }
+            &:last-child {
+                margin-top: @fmvm_margin;
+            }
+        }
+
+        &.left {
+            margin-right: @fmvm_margin;
+        }
+
+        &.right {
+            margin-left: @fmvm_margin;
+        }
+    }
+
+    .semi-final {
+        float: left;
+        margin: @fmvm_margin;
+        padding-top: @fmvm_semi_final_top_padding;
+
+        .match-view-model {
+            float: left;
+        }
+    }
+
+    h3 {
+        text-align: center;
+    }
+
+    .last-16 {
+        .last-16-block {
+            float: left;
+
+            &:first-child {
+                .match-view-model {
+                    margin-left: 0;
+                }
+            }
+            &:last-child {
+                .match-view-model {
+                    margin-right: 0;
+                }
+            }
+
+            .match-view-model {
+                float: left;
+                margin-left: @fmvm_margin;
+                margin-right: @fmvm_margin;
+
+                &:first-child {
+                    margin-bottom: @fmvm_margin;
+                }
+                &:last-child {
+                    margin-top: @fmvm_margin;
+                }
+            }
+
+        }
+        
+    }
+}

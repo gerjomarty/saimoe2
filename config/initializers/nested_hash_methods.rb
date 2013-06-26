@@ -29,4 +29,20 @@ module Enumerable
 
     sum
   end
+
+  def leaf_nodes
+    nodes = []
+    if self.kind_of?(Hash)
+      each_value do |v|
+        if v.kind_of? Hash
+          nodes += v.leaf_nodes
+        else
+          nodes << v
+        end
+      end
+    else
+      nodes << self
+    end
+    nodes
+  end
 end

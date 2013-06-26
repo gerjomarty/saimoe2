@@ -13,7 +13,8 @@
     <div class="final_match_entry_container">
       <% [[final_me1, :left], [final_me2, :right]].each do |me, align| %>
           <div class="final_match_entry <%= align %>">
-            <%= character_entry me, show_avatar: false, fill_background: true, show_color: true, show_votes: true, right_align: (align == :right) %>
+            <%#= character_entry me, show_avatar: false, fill_background: true, show_color: true, show_votes: true, right_align: (align == :right) %>
+            <%= CharacterEntry.new(me).with(show_avatar: false, show_color: true, right_align: align == :right).render %>
           </div>
       <% end %>
       <div class="final_match_entry date dark_text">
@@ -27,7 +28,8 @@
   <div class="quarter_final_container">
     <% [qf1, qf2].each do |qf| %>
         <% qf.match_entries.ordered_by_position.each do |me| %>
-            <%= character_entry me, show_color: true, fill_background: true, show_votes: true %>
+            <%#= character_entry me, show_color: true, fill_background: true, show_votes: true %>
+            <%= CharacterEntry.new(me).with(show_color: true).render %>
         <% end %>
         <div class="dark_text">
           <p><%= link_to qf.date.to_s(:month_day), date_path(qf.date.to_s(:number)) %><br /><%= pretty_match(qf) %></p>
@@ -40,7 +42,8 @@
       <% [[sf1, :left], [sf2, :right]].each do |match, align| %>
           <div class="semi_final_match_entry <%= align %>">
             <% match.match_entries.ordered_by_position.each do |me| %>
-                <%= character_entry me, show_avatar: false, fill_background: true, show_color: true, show_votes: true, right_align: (align == :right) %>
+                <%#= character_entry me, show_avatar: false, fill_background: true, show_color: true, show_votes: true, right_align: (align == :right) %>
+                <%= CharacterEntry.new(me).with(show_avatar: false, show_color: true, right_align: align == :right).render %>
             <% end %>
             <div class="dark_text">
               <p><%= link_to match.date.to_s(:month_day), date_path(match.date.to_s(:number)) %><br /><%= pretty_match(match) %></p>
@@ -52,7 +55,8 @@
   <div class="quarter_final_container">
     <% [qf3, qf4].each do |qf| %>
         <% qf.match_entries.ordered_by_position.each do |me| %>
-            <%= character_entry me, show_color: true, fill_background: true, show_votes: true, right_align: true %>
+            <%#= character_entry me, show_color: true, fill_background: true, show_votes: true, right_align: true %>
+            <%= CharacterEntry.new(me).with(show_color: true, right_align: true).render %>
         <% end %>
         <div class="dark_text">
           <p><%= link_to qf.date.to_s(:month_day), date_path(qf.date.to_s(:number)) %><br /><%= pretty_match(qf) %></p>
@@ -73,7 +77,8 @@
           <div class="last_16_group <%= i == 0 ? 'left' : (i == 3 ? 'right' : 'center') %>">
             <% ms.each do |match| %>
                 <% match.match_entries.ordered_by_position.each do |me| %>
-                    <%= character_entry me, show_color: true, fill_background: true, show_votes: true, right_align: (align == :right) %>
+                    <%#= character_entry me, show_color: true, fill_background: true, show_votes: true, right_align: (align == :right) %>
+                    <%= CharacterEntry.new(me).with(show_color: true, right_align: align == :right).render %>
                 <% end %>
                 <div class="dark_text">
                   <p><%= link_to match.date.to_s(:month_day), date_path(match.date.to_s(:number)) %><br /><%= pretty_match(match) %></p>

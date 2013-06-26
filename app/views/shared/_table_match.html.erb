@@ -14,10 +14,15 @@
             <div class="cb"></div>
             <% matches.each do |match| %>
                 <% match.match_entries.ordered_by_position.each do |me| %>
-                    <%= character_entry me, show_color: true,
+                    <% transparent = @group_matches_in_progress && !me.appearance.match_entries.where(is_finished: true).all?(&:is_winner?) %>
+                    <%#= character_entry me, show_color: true,
                                             show_votes: false,
                                             right_align: right,
                                             fade_out: @group_matches_in_progress && !me.appearance.match_entries.where(is_finished: true).all?(&:is_winner?) %>
+                    <%= CharacterEntry.new(me).with(show_color: true,
+                                                    show_votes: false,
+                                                    right_align: right,
+                                                    transparency: transparent).render %>
                 <% end %>
             <% end %>
           </div>
