@@ -4,10 +4,13 @@
     <% end %>
     <% content_for :tournament_nav do %>
 
-        <%= nav_bar responsive: true do %>
+        <%= nav_bar static: :top, responsive: true do %>
 
           <%= menu_group do %>
-            <%= menu_item "Saimoe #{@tournament.year}", '#', class: 'top-subtitle' %>
+            <%= menu_text "Saimoe #{@tournament.year}", pull: :left, class: 'top-subtitle' %>
+          <% end %>
+
+          <%= menu_group do %>
             <%= menu_item 'Tournament bracket', short_tournament_path(@tournament.year) %>
             <%= drop_down 'Character statistics' do %>
               <%= menu_item 'Characters by total votes', short_tournament_action_path(@tournament.year, :characters_by_total_votes) %>
