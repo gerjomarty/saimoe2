@@ -3,47 +3,30 @@
         Saimoe <%= @tournament.year %>
     <% end %>
     <% content_for :tournament_nav do %>
-        <div class="navbar" style="margin-bottom: 0;">
-          <div class="navbar-inner">
-            <div class="container-fluid">
-              <div class="container-fluid nav-collapse">
-                <ul class="nav">
-                  <li class="top-subtitle"><%= link_to "Saimoe #{@tournament.year}", '#' %></li>
-                  <li><%= link_to 'Tournament bracket', short_tournament_path(@tournament.year) %></li>
-                  <li class="dropdown">
-                    <%= link_to('#', class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do %>
-                        Character statistics <b class="caret"></b>
-                    <% end %>
-                    <ul class="dropdown-menu">
-                      <%= link_to 'Characters by total votes', short_tournament_action_path(@tournament.year, :characters_by_total_votes) %>
-                      <%= link_to 'Characters by average votes', short_tournament_action_path(@tournament.year, :characters_by_average_votes) %>
-                      <%= link_to 'Rounds by total votes', short_tournament_action_path(@tournament.year, :rounds_by_total_votes) %>
-                      <%= link_to 'Rounds by vote percentages', short_tournament_action_path(@tournament.year, :rounds_by_vote_percentages) %>
-                    </ul>
-                  </li>
-                  <li class="dropdown">
-                    <%= link_to('#', class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do %>
-                        Series statistics <b class="caret"></b>
-                    <% end %>
-                    <ul class="dropdown-menu">
-                      <%= link_to 'Series by total votes', short_tournament_action_path(@tournament.year, :series_by_total_votes) %>
-                      <%= link_to 'Rounds by series prevalence', short_tournament_action_path(@tournament.year, :rounds_by_series_prevalence) %>
-                    </ul>
-                  </li>
-                  <li class="dropdown">
-                    <%= link_to('#', class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do %>
-                        Voice actor statistics <b class="caret"></b>
-                    <% end %>
-                    <ul class="dropdown-menu">
-                      <%= link_to 'Voice actors by total votes', short_tournament_action_path(@tournament.year, :voice_actors_by_total_votes) %>
-                      <%= link_to 'Rounds by voice actor prevalence', short_tournament_action_path(@tournament.year, :rounds_by_voice_actor_prevalence) %>
-                    </ul>
-                  </li>
-                </ul>
-              </div><!--/.nav-collapse -->
-            </div>
-          </div>
-        </div>
+
+        <%= nav_bar responsive: true do %>
+
+          <%= menu_group do %>
+            <%= menu_item "Saimoe #{@tournament.year}", '#', class: 'top-subtitle' %>
+            <%= menu_item 'Tournament bracket', short_tournament_path(@tournament.year) %>
+            <%= drop_down 'Character statistics' do %>
+              <%= menu_item 'Characters by total votes', short_tournament_action_path(@tournament.year, :characters_by_total_votes) %>
+              <%= menu_item 'Characters by average votes', short_tournament_action_path(@tournament.year, :characters_by_average_votes) %>
+              <%= menu_item 'Rounds by total votes', short_tournament_action_path(@tournament.year, :rounds_by_total_votes) %>
+              <%= menu_item 'Rounds by vote percentages', short_tournament_action_path(@tournament.year, :rounds_by_vote_percentages) %>
+            <% end %>
+            <%= drop_down 'Series statistics' do %>
+              <%= menu_item 'Series by total votes', short_tournament_action_path(@tournament.year, :series_by_total_votes) %>
+              <%= menu_item 'Rounds by series prevalence', short_tournament_action_path(@tournament.year, :rounds_by_series_prevalence)  %>
+            <% end %>
+            <%= drop_down 'Voice actor statistics' do %>
+              <%= menu_item 'Voice actors by total votes', short_tournament_action_path(@tournament.year, :voice_actors_by_total_votes) %>
+              <%= menu_item 'Rounds by voice actor prevalence', short_tournament_action_path(@tournament.year, :rounds_by_voice_actor_prevalence)  %>
+            <% end %>
+          <% end %>
+
+        <% end %>
+
     <% end %>
 <% end %>
 
