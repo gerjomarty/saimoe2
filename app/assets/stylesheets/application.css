@@ -9,13 +9,5 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require bootstrap_and_overrides
- *= require character_entry
- *= require final_matches_view_model
- *= require group_matches_view_model
- *= require group_view_model
- *= require match_view_model
- *= require tournament_table
- *= require date
- *= require autocomplete_box
+ *= require_tree
 */
