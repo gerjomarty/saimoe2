@@ -49,8 +49,22 @@ div.cb {
     clear: both;
 }
 
+div[rel="html_popover_content"] {
+    display: none;
+}
+
+// Nav bar changes
+
 p.top-subtitle {
     font-weight: bold;
     padding-left: 15px;
     padding-right: 15px;
+}
+
+@media (max-width: @navbarCollapseWidth) {
+    form.navbar-form {
+        .search-query {
+            width: 95%;
+        }
+    }
 }

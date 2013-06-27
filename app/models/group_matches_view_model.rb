@@ -32,7 +32,7 @@ class GroupMatchesViewModel
 
   def group_title current_group
     content_tag :h3 do
-      content_tag :a, MatchInfo.pretty_group(current_group), name: current_group, class: 'anchor'
+      content_tag :a, MatchInfo.pretty_group(current_group), name: current_group.upcase, class: 'anchor'
     end
   end
 
@@ -43,7 +43,7 @@ class GroupMatchesViewModel
           outer_tag << content_tag(:li, link_to('Jump to:', '#'), class: 'disabled')
           groups.each do |group|
             state = 'active' if group == current_group
-            outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group}"), class: state)
+            outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group.upcase}"), class: state)
           end
         end.html_safe
       end

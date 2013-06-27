@@ -83,8 +83,12 @@ class MatchViewModel
 
   def playoff_content
     if next_match_playoff
-      link_to(date_path(next_match_playoff.date.to_s(:number))) do
+      link_to(date_path(next_match_playoff.date.to_s(:number)),
+        rel: :html_popover, data: {trigger: :hover, placement: :bottom}) do
         (next_match_playoff.date.to_s(:month_day) + tag(:br) + "playoff").html_safe
+      end +
+      content_tag(:div, rel: :html_popover_content) do
+        MatchViewModel.new(next_match_playoff).render
       end
     end
   end
