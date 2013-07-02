@@ -59,36 +59,6 @@ module ApplicationHelper
     "group #{group}".titleize
   end
 
-  def format_history_tournament_buttons tournament, m_hash
-    stages = m_hash.keys
-
-    content_tag :div, class: 'btn-group' do
-      tournament.stages.collect do |stage|
-        if stages.include? stage
-          render(partial: 'shared/history_popover_button',
-                 locals: {stage: stage,
-                          match_entries: m_hash[stage].uniq})
-        else
-          # Didn't make it this far in the tournament - show disabled button
-          unless MatchInfo::PLAYOFF_STAGES.include?(stage)
-            content_tag(:button, class: 'btn', disabled: true) { pretty_stage stage }
-          end
-        end
-      end.join.html_safe
-    end
-  end
-
-  def history_button_type_for match_entries
-    return '' unless match_entries
-    if match_entries.any?(&:is_winner?)
-      'btn-success'
-    elsif match_entries.all?(&:is_finished?)
-      'btn-danger'
-    else
-      'btn-warning'
-    end
-  end
-
   def popover_content_for match_entries
     return '' unless match_entries
     winners = match_entries.select(&:is_winner?)

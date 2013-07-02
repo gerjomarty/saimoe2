@@ -32,37 +32,4 @@ module CharactersHelper
       (va_string << ': ' << va_tags.join(', ')).html_safe
     end
   end
-
-  def format_character_tournament_buttons tournament, m_hash
-    stages = m_hash.keys
-
-    content_tag :div, class: 'btn-group' do
-      tournament.stages.collect do |stage|
-
-        if stages.include? stage
-          render(partial: 'shared/match_popover_button',
-                 locals: {stage: stage,
-                          match: m_hash[stage][:match],
-                          current_match_entry: m_hash[stage][:match_entry]})
-        else
-          # Didn't make it this far in the tournament - show disabled button
-          unless MatchInfo::PLAYOFF_STAGES.include?(stage)
-            content_tag(:button, class: 'btn', disabled: true) { pretty_stage stage }
-          end
-        end
-
-      end.join.html_safe
-    end
-  end
-
-  def button_type_for match_entry
-    return '' unless match_entry
-    if match_entry.is_winner?
-      'btn-success'
-    elsif match_entry.is_finished?
-      'btn-danger'
-    else
-      'btn-warning'
-    end
-  end
 end

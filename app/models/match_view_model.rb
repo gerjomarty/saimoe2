@@ -1,5 +1,5 @@
 class MatchViewModel
-	include Sprockets::Helpers::RailsHelper
+  include Sprockets::Helpers::RailsHelper
   include Sprockets::Helpers::IsolatedHelper
   include ActionView::Context
   include ActionView::Helpers::TagHelper

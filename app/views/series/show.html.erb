@@ -44,16 +44,7 @@
   <h2>Tournament History</h2>
 </div>
 
-<dl class="dl-horizontal">
-  <% @series.tournament_history.each do |t, th| %>
-    <dt>
-      <h3><%= t.year %></h3>
-    </dt>
-    <dd>
-      <%= format_history_tournament_buttons t, th %>
-    </dd>
-  <% end %>
-</dl>
+<%= @tournament_history_view_model.render %>
 
 <div class="form-actions">
   <%= link_to 'Series index', series_index_path, class: 'btn' %>

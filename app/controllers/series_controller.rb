@@ -17,6 +17,7 @@ class SeriesController < ApplicationController
   # GET /series/1
   def show
     @series = Series.find(params[:id])
+    @tournament_history_view_model = TournamentHistoryViewModel.new(@series)
 
     if request.path != series_path(@series)
       redirect_to series_url(@series), status: :moved_permanently

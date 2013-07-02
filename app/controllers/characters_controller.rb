@@ -18,6 +18,7 @@ class CharactersController < ApplicationController
   # GET /characters/1
   def show
     @character = Character.find(params[:id])
+    @tournament_history_view_model = TournamentHistoryViewModel.new(@character)
 
     if request.path != character_path(@character)
       redirect_to character_url(@character), status: :moved_permanently

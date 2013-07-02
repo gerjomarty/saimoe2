@@ -3,8 +3,8 @@ class ApplicationController < ActionController::Base
 
   # GET /autocomplete
   def autocomplete
-    render json: [Character, Series, VoiceActor].collect { |model|
+    render json: [Character, Series, VoiceActor].collect do |model|
       model.search(params[:term])
-    }.inject(:+)
+    end.inject(:+)
   end
 end
