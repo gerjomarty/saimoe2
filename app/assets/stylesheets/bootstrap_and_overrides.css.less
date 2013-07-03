@@ -41,16 +41,24 @@ a.anchor, a:hover.anchor {
     text-decoration: none;
 }
 
+// Change default well color
 .well {
     background-color: #E9E9FF;
 }
 
+// Sentinel div for dropping new content below floated divs
 div.cb {
     clear: both;
 }
 
-div[rel="html_popover_content"] {
+// HTML Popover content is hidden and copied using JavaScript
+[rel="html_popover_content"], [rel^="html_named_popover_"][rel$="_content"] {
     display: none;
+}
+
+// Make popover be able to handle a match view model inside it
+.popover {
+    max-width: @mvm_outer_width + 2.5em;
 }
 
 // Nav bar changes
