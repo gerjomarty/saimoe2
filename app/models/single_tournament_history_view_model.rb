@@ -60,13 +60,15 @@ class SingleTournamentHistoryViewModel
   end
 
   def single_match_popover_content stage
-    match = entry_information[stage][0] && entry_information[stage][0][0]
+    match = entry_information[stage].values.flatten.first[:match]
     return nil unless match
-    MatchViewModel.new(match).render
+    MatchViewModel.new(match, show_percentages: true).render
   end
 
   def multiple_matches_popover_content stage
-    #TODO
+    WinnersLosersPopoverViewModel.new(entry_information[stage][:winner],
+                                      entry_information[stage][:loser],
+                                      entry_information[stage][:unfinished]).render
   end
 
   # Common to tournament
@@ -84,8 +86,9 @@ class SingleTournamentHistoryViewModel
   def entry_information
     @entry_information ||= {}.tap do |hash|
       entity.match_entries.includes(:match => :match_entries).merge(Match.ordered).where(matches: {tournament_id: tournament}).each do |me|
-        hash[me.match.stage] ||= []
-        hash[me.match.stage] << [me.match, me, entry_state(me)]
+        hash[me.match.stage] ||= {}
+        hash[me.match.stage][entry_state(me)] ||= []
+        hash[me.match.stage][entry_state(me)] << {match: me.match, match_entry: me}
       end
     end
   end
@@ -111,15 +114,15 @@ class SingleTournamentHistoryViewModel
   end
 
   def winning_stages
-    @winning_stages ||= entry_information.select {|stage, info| info.any? {|_, _, state| state == :winner } }.keys
+    @winning_stages ||= entry_information.select {|stage, info| info[:winner] && info[:winner].any? }.keys
   end
 
   def losing_stages
-    @losing_stages ||= entry_information.select {|stage, info| info.all? {|_, _, state| state == :loser } }.keys
+    @losing_stages ||= entry_information.select {|stage, info| info[:loser] && info[:loser].all? }.keys
   end
 
   def unfinished_stages
-    @unfinished_stages ||= entry_information.select {|stage, info| info.any? {|_, _, state| state == :unfinished } }.keys
+    @unfinished_stages ||= entry_information.select {|stage, info| info[:unfinished] && info[:unfinished].any? }.keys
   end
 
   def visible_stages

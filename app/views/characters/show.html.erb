@@ -2,17 +2,16 @@
 
 <div class="row-fluid">
   <% if @character.avatar? %>
-    <div class="span2" style="text-align: center;">
+    <div class="span2" style="text-align: center; margin: 10px 0;">
       <%= image_tag @character.avatar_url, size: '100x100' %>
     </div>
-    <div class="span9 offset1">
+    <div class="span10">
   <% else %>
     <div class="span12">
   <% end %>
-      <h1><%= @character.full_name %></h1>
-      <h3><em><%= link_to @character.main_series.name, series_path(@character.main_series) %></em></h3>
+      <h2><%= @character.full_name %></h2>
+      <h4><em><%= link_to @character.main_series.name, series_path(@character.main_series) %></em></h4>
       <%= format_other_series_list @character %>
-      <p></p>
       <%= format_voice_actor_list @character %>
     </div>
 </div>

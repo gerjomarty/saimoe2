@@ -37,17 +37,33 @@ class ViewSizing
 
     entrant_counts.collect do |count|
       count * CE_OUTER_HEIGHT + 2 * MVM_BORDER_THICKNESS + 2 * MVM_PADDING
-    end.reduce(:+)
-
-    # height = entrant_counts.collect do |count|
-    #   count * CE_OUTER_HEIGHT + 2 * MVM_BORDER_THICKNESS + 2 * MVM_PADDING
-    # end.reduce(:+)
+    end.reduce(:+) 
   end
 
   # We use top/bottom margins to place each MatchViewModels properly on the tournament page
   def self.match_tournament_margin match_entrant_count, base_entrant_counts
     (self.mvm_outer_height(base_entrant_counts) - self.mvm_outer_height(match_entrant_count) -
       ([base_entrant_counts.size - 3, 0].max) * MVM_BORDER_THICKNESS) / 2.0
+
+    margin = self.mvm_outer_height(base_entrant_counts) - self.mvm_outer_height(match_entrant_count)
+
+    # margin -= (1.1 ** base_entrant_counts.size) + 1.1
+    # margin -= 0 if base_entrant_counts.size == 1
+    # margin -= 0 if base_entrant_counts.size == 2
+    # margin -= 0.05 if base_entrant_counts.size == 3
+    # margin -= 0 if base_entrant_counts.size == 4
+    # margin -= 0 if base_entrant_counts.size == 5
+    # margin -= 0.55 if base_entrant_counts.size == 6
+    # margin -= 0 if base_entrant_counts.size == 7
+    # margin -= 0 if base_entrant_counts.size == 8
+    # margin -= 0 if base_entrant_counts.size == 9
+    # margin -= 0 if base_entrant_counts.size == 10
+    # margin -= 0 if base_entrant_counts.size == 11
+    # margin -= 1.6 if base_entrant_counts.size == 12
+
+    margin = self.mvm_outer_height(base_entrant_counts)
+
+    (margin / 2.0) - (self.mvm_outer_height(match_entrant_count) / 2.0)
   end
 
   # FinalMatchesViewModel

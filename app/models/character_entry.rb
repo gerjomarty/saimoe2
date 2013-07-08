@@ -7,10 +7,12 @@ class CharacterEntry
   include ActionView::Helpers::UrlHelper
   include Rails.application.routes.url_helpers
 
-  attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
-  attr_accessor :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :fixed_width, :transparency, :grey_background
+  include ApplicationHelper
 
-  def initialize character_or_match_entry
+  attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
+  attr_accessor :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :transparency, :grey_background
+
+  def initialize character_or_match_entry, options={}
     if character_or_match_entry.is_a? Character
       @character = character_or_match_entry
     elsif character_or_match_entry.is_a? MatchEntry
@@ -19,10 +21,6 @@ class CharacterEntry
     else
       raise ArgumentError, 'character_or_match_entry must either be a Character or a MatchEntry'
     end
-    self
-  end
-
-  def with options={}
     options.each {|key, value| self.send "#{key}=".to_sym, value }
     self
   end
@@ -42,6 +40,9 @@ class CharacterEntry
   def show_votes
     @show_votes.nil? ? true : @show_votes
   end
+  def show_percentage
+    @show_percentage.nil? ? false : @show_percentage
+  end
   def fixed_width
     @fixed_width.nil? ? true : @fixed_width
   end
@@ -58,17 +59,15 @@ class CharacterEntry
   end
 
   def render
-    # content_tag :div, class: extra_class, style: extra_style do
-      content_tag :div, class: main_div_class, style: main_div_style do
-        ''.tap do |tag|
-          tag << avatar_div if show_avatar
-          tag << votes_div if show_votes && votes
-          tag << character_div
-          tag << series_div if show_series
-          tag << content_tag(:div, '', class: 'cb')
-        end.html_safe
-      end
-    # end
+    content_tag :div, class: main_div_class, style: main_div_style do
+      ''.tap do |tag|
+        tag << avatar_div if show_avatar
+        tag << stats_div if (show_votes && votes) || (show_percentage && percentage)
+        tag << character_div
+        tag << series_div if show_series
+        tag << content_tag(:div, '', class: 'cb')
+      end.html_safe
+    end
   end
 
   private
@@ -93,6 +92,11 @@ class CharacterEntry
   def votes
     return nil unless show_votes
     @votes ||= @match_entry.number_of_votes if @match_entry
+  end
+
+  def percentage
+    return nil unless show_percentage
+    @percentage ||= format_percent(@match_entry.vote_share) if @match_entry
   end
 
   def winner?
@@ -133,11 +137,31 @@ class CharacterEntry
     end
   end
 
-  def votes_div
+  def stats_div
     votes_div_class = 'character_votes'
     votes_div_class << (winner? ? ' winner' : ' loser') if show_color
     content_tag :div, class: votes_div_class do
+      content_tag :span do
+        content_tag :p
+      end
       content_tag :p, votes.to_s
+    end
+  end
+
+  def stats_div
+    content = [votes, percentage].compact
+    div_class = 'character_votes'
+    div_class << (winner? ? ' winner' : ' loser') if show_color
+    content_tag :div, class: div_class do
+      content_tag :span, class: ('two-lines' if content.size == 2) do
+        ''.tap do |span_tag|
+          span_tag << content_tag(:p, content[0])
+          if content[1]
+            span_tag << tag(:br)
+            span_tag << content_tag(:span, content[1])
+          end
+        end.html_safe
+      end
     end
   end
 

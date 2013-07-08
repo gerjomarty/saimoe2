@@ -26,7 +26,7 @@ class VoiceActorsController < ApplicationController
     chars = Character.ordered.includes(:main_series)
                      .joins(:character_roles => {:appearances => :voice_actor_roles})
                      .where(:voice_actor_roles => {voice_actor_id: @voice_actor.id}).all.uniq.collect do |c|
-                      CharacterEntry.new(c).with show_color: true, fixed_width: false
+                      CharacterEntry.new c, show_color: true, fixed_width: false
                      end
 
     c_size, c_rem = chars.size.divmod 4

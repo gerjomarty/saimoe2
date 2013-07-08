@@ -71,14 +71,20 @@
         line-height: @ce_votes_height;
         border: @ce_border_thickness solid @ce_border_color;
         .border-radius(@ce_border_radius);
-        p {
-            position: relative;
-            text-align: center;
+        text-align: center;
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            &.two-lines {
+                line-height: 0;
+            }
+            span {
+                font-weight: normal;
+                font-size: x-small;
+            }
         }
         &.winner {
-            p {
-                font-weight: bold;
-            }
+            font-weight: bold;
         }
         &.loser {
             background-color: #D3D3D3;

@@ -28,7 +28,7 @@ module CharactersHelper
       end
     end
     va_string = "Voice actor".pluralize(va_tags.size)
-    content_tag :h3 do
+    content_tag :h4 do
       (va_string << ': ' << va_tags.join(', ')).html_safe
     end
   end

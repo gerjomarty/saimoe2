@@ -8,7 +8,7 @@ class MatchViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :match
-  attr_accessor :match_name, :info_position, :table_margins
+  attr_accessor :match_name, :info_position, :table_margins, :show_percentages
 
   def initialize match, options={}
   	@match = match
@@ -45,6 +45,9 @@ class MatchViewModel
   end
   def table_margins
     @table_margins.nil? ? false : @table_margins
+  end
+  def show_percentages
+    @show_percentages.nil? ? false : @show_percentages
   end
 
   private
@@ -120,7 +123,7 @@ class MatchViewModel
     content_tag :div, class: "match-entries #{info_position_class}" do
       ''.tap do |mes_tag|
         match_entries.each.with_index do |me, i|
-          mes_tag << CharacterEntry.new(me).with(show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align).render
+          mes_tag << CharacterEntry.new(me, show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages).render
           mes_tag << content_tag(:div, '', class: 'cb') if info_position == :bottom && i.odd?
         end
       end.html_safe
@@ -199,7 +202,9 @@ class MatchViewModel
   def table_margins_style
     if table_margins
       margin = ViewSizing.match_tournament_margin match_entries.size, match.base_match_entry_counts
-      "margin-top: #{margin}em; margin-bottom: #{margin}em;"
+      height = ViewSizing.mvm_outer_height match.base_match_entry_counts
+      # "padding-top: #{margin}em; padding-bottom: #{margin}em;"
+      "height: #{height - margin - 1}em; padding-top: #{margin}em;"
     end
   end
 
