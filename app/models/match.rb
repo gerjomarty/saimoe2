@@ -110,7 +110,7 @@ class Match < ActiveRecord::Base
 
   # Returns an array of match entry counts for the matches below this one in the hierarchy
   def base_match_entry_counts
-    match_hierarchy.leaf_nodes
+    match_hierarchy.leaf_nodes.reject(&:zero?)
   end
 
   # This method is mostly for working out how tall elements on the tournament show page

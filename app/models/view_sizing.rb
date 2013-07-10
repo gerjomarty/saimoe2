@@ -47,23 +47,17 @@ class ViewSizing
 
     margin = self.mvm_outer_height(base_entrant_counts) - self.mvm_outer_height(match_entrant_count)
 
-    # margin -= (1.1 ** base_entrant_counts.size) + 1.1
-    # margin -= 0 if base_entrant_counts.size == 1
-    # margin -= 0 if base_entrant_counts.size == 2
-    # margin -= 0.05 if base_entrant_counts.size == 3
-    # margin -= 0 if base_entrant_counts.size == 4
-    # margin -= 0 if base_entrant_counts.size == 5
-    # margin -= 0.55 if base_entrant_counts.size == 6
-    # margin -= 0 if base_entrant_counts.size == 7
-    # margin -= 0 if base_entrant_counts.size == 8
-    # margin -= 0 if base_entrant_counts.size == 9
-    # margin -= 0 if base_entrant_counts.size == 10
-    # margin -= 0 if base_entrant_counts.size == 11
-    # margin -= 1.6 if base_entrant_counts.size == 12
+    # Magic numbers that make the tournament layout work.
+    # Dear god would I like to find something better than this
+    margin += 0.17 if base_entrant_counts.size == 2
+    margin -= 0 if base_entrant_counts.size == 3
+    margin -= 0.25 if base_entrant_counts.size == 4
+    margin -= 0.59 if base_entrant_counts.size == 6
+    margin -= 1 if base_entrant_counts.size == 8
+    margin -= 1.49 if base_entrant_counts.size == 9
+    margin -= 1.69 if base_entrant_counts.size == 12
 
-    margin = self.mvm_outer_height(base_entrant_counts)
-
-    (margin / 2.0) - (self.mvm_outer_height(match_entrant_count) / 2.0)
+    (margin / 2.0)
   end
 
   # FinalMatchesViewModel

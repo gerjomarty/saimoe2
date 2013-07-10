@@ -204,7 +204,7 @@ class MatchViewModel
       margin = ViewSizing.match_tournament_margin match_entries.size, match.base_match_entry_counts
       height = ViewSizing.mvm_outer_height match.base_match_entry_counts
       # "padding-top: #{margin}em; padding-bottom: #{margin}em;"
-      "height: #{height - margin - 1}em; padding-top: #{margin}em;"
+      "padding-bottom: #{margin}em; padding-top: #{margin}em;"
     end
   end
 
