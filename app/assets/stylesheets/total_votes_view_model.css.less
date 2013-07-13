@@ -1,0 +1,30 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+@import "variables_and_functions";
+
+.total-votes-view-model {
+    td.current {
+        font-weight: bold;
+    }
+    td.indicator {
+        text-align: right;
+    }
+
+    .new {
+        color: @yellow;
+    }
+    .down {
+        color: @red;
+    }
+    .up {
+        color: @green;
+    }
+    .nonmover {
+        color: @ce_loser_color;
+    }
+
+    .delta-explanation {
+        color: @ce_loser_color;
+    }
+}

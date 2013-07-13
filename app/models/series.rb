@@ -29,6 +29,10 @@ class Series < ActiveRecord::Base
 
   friendly_id :sortable_name, use: [:slugged, :history]
 
+  def to_s
+    name
+  end
+
   def color_code= code
     write_attribute(:color_code, code && code.to_s.upcase)
   end

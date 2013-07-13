@@ -35,6 +35,10 @@ class VoiceActor < ActiveRecord::Base
     end
   end
 
+  def to_s
+    full_name
+  end
+
   def tournament_history
     {}.tap do |th|
       match_entries.includes(:match => :tournament).merge(Tournament.ordered).each do |me|

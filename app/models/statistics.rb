@@ -5,14 +5,14 @@
 ## Statistics.new(Character).get_statistic(:total_votes).fetch_results
 ## => Returns ranked list of characters with total votes across all tournaments
 ##
-## Statistics.new(Series).get_statistics(:total_votes).for_tournament(Tournament.fy(2012)).fetch_results
+## Statistics.new(Series).get_statistic(:total_votes).for_tournament(Tournament.fy(2012)).fetch_results
 ## => Returns ranked list of series with total votes in the 2012 tournament only
 ##
-## Statistics.new(VoiceActor).get_statistics(:match_appearances).for_tournament(Tournament.fy(2012)).in_stages.fetch_results
+## Statistics.new(VoiceActor).get_statistic(:match_appearances).for_tournament(Tournament.fy(2012)).in_stages.fetch_results
 ## => Returns Hash mapping tournament stages to ranked lists of voice actors with no. of appearances in those tournament stages
 ## (Note that #in_stages only really makes sense for one tournament at a time for the moment)
 ##
-## Statistics.new(Character).get_statistics(:total_votes).for_entity(Character.find_by_name('Akari Mizunashi')).fetch_results
+## Statistics.new(Character).get_statistic(:total_votes).for_entity(Character.find_by_name('Akari Mizunashi')).fetch_results
 ## => Returns ranked list of characters with total votes across all tournaments, focusing around the given character
 class Statistics
   attr_reader :model_class
@@ -41,6 +41,8 @@ class Statistics
       get_vote_share
     when :match_appearances
       get_match_appearances
+    when :unique_entrants
+      get_unique_entrants
     else
       raise ArgumentError, 'Invalid statistic type passed'
     end
@@ -70,9 +72,17 @@ class Statistics
     self
   end
 
+  def before_date date
+    date = date.to_date
+
+    @scope = @scope.where("#{Match.q_column :date} < ?", date).scoped
+
+    self
+  end
+
   alias_method :for_tournament, :for_tournaments
 
-  def for_entity entity, before_context=2, after_context=2
+  def for_entity entity, should_cut_off_same_rank=false, before_context=2, after_context=2
     unless ALLOWED_MODEL_CLASSES.any? {|model_class| entity.is_a? model_class }
       raise ArgumentError, "entity must be an instance of one of #{ALLOWED_MODEL_CLASSES.inspect}"
     end
@@ -85,6 +95,7 @@ class Statistics
     end
 
     @entity = entity
+    @should_cut_off_same_rank = should_cut_off_same_rank
     @before_context = before_context
     @after_context = after_context
 
@@ -172,6 +183,16 @@ class Statistics
                    .scoped
   end
 
+  def get_unique_entrants
+    @stat_name = :number_of_characters
+    @normalization_function = lambda {|chars| chars.to_i }
+
+    @rank_order = "COUNT(DISTINCT #{Character.star}) DESC"
+
+    @scope = @scope.select("COUNT(DISTINCT #{Character.star}) AS #@stat_name")
+                   .scoped
+  end
+
   def character?; model_class == Character; end
   def series?; model_class == Series; end
   def voice_actor?; model_class == VoiceActor; end
@@ -195,6 +216,8 @@ class Statistics
     higher_index = @before_context == :all ? 0 : [entity_index - @before_context, 0].max
     lower_index = @after_context == :all ? results.size - 1 : [entity_index + @after_context, results.size - 1].min
 
+    return results[higher_index..lower_index] if @should_cut_off_same_rank
+
     entity_rank = results[entity_index][0]
     higher_rank = results[higher_index][0]
     lower_rank = results[lower_index][0]
@@ -213,11 +236,11 @@ class Statistics
                        .group(Character.q_column :id).group(Series.q_column :id)
                        .scoped
             elsif model_class == Series
-              Series.joins(:character_roles => {:appearances => [:tournament, {:match_entries => :match}]})
+              Series.joins(:character_roles => [:character, {:appearances => [:tournament, {:match_entries => :match}]}])
                     .group(Series.q_column :id)
                     .scoped
             elsif model_class == VoiceActor
-              VoiceActor.joins(:voice_actor_roles => {:appearance => [:tournament, {:match_entries => :match}]})
+              VoiceActor.joins(:voice_actor_roles => {:appearance => [:tournament, {:match_entries => :match}, {:character_role => :character}]})
                         .group(VoiceActor.q_column :id)
                         .scoped
             end

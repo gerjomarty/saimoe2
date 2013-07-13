@@ -47,6 +47,10 @@ class Character < ActiveRecord::Base
     end
   end
 
+  def to_s
+    full_name
+  end
+
   def other_series
     series.where("#{Series.q_column(:id)} <> ?", self.main_series_id).ordered.uniq
   end

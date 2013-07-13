@@ -22,18 +22,7 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <table class="table table-condensed">
-      <caption>Total number of votes across all tournaments</caption>
-      <tbody>
-        <% @total_votes_statistics.each do |rank, votes, character, series| %>
-          <tr <%= "style=\"font-weight: bold;\"".html_safe if character == @character %>>
-            <td><%= rank.ordinalize %></td>
-            <td><%= votes %></td>
-            <td><%= link_to(character.full_name, character_path(character)) %> @ <%= link_to(series.name, series_path(series)) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= @total_votes_view_model.render %>
   </div>
 </div>
 

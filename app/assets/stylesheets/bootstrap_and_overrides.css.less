@@ -61,6 +61,15 @@ div.cb {
     max-width: @mvm_outer_width + 2.5em;
 }
 
+// Don't show top border on first table entry
+table.table {
+    tr:first-child {
+        td {
+            border-top: 0;
+        }
+    }
+}
+
 // Nav bar changes
 
 p.top-subtitle {

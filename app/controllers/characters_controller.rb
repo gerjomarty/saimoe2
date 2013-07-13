@@ -19,7 +19,8 @@ class CharactersController < ApplicationController
   def show
     @character = Character.find(params[:id])
     @tournament_history_view_model = TournamentHistoryViewModel.new(@character)
-    @total_votes_statistics = Statistics.new(Character).get_statistic(:total_votes).for_entity(@character).fetch_results
+    # @total_votes_statistics = Statistics.new(Character).get_statistic(:total_votes).for_entity(@character).fetch_results
+    @total_votes_view_model = TotalVotesViewModel.new(@character)
 
     if request.path != character_path(@character)
       redirect_to character_url(@character), status: :moved_permanently
