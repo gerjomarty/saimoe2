@@ -2,27 +2,8 @@
   <h1><%= @date.to_s :long %></h1>
 </div>
 
-<% @matches.each do |match| %>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span5">
-          <% caption = content_tag(:h3) do %>
-              <%= pretty_match match %>
-              <% if match.is_finished? %>
-                  <small>
-                    (<%= match.number_of_votes %> votes total)
-                  </small>
-              <% end %>
-          <% end %>
-          <%= render partial: 'shared/classified_match', locals: {match: match,
-                                                                  extra_table_classes: %w(match_date),
-                                                                  caption: caption} %>
-        </div>
-        <div class="span7">
-          <%= image_tag match.vote_graph_url if match.vote_graph? %>
-        </div>
-      </div>
-    </div>
+<% @date_match_view_models.each do |dmvm| %>
+  <%= dmvm.render %>
 <% end %>
 
 <ul class="pager form-actions">

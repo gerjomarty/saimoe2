@@ -102,6 +102,7 @@
        width: @ce_fixed_width;
         &.hide_avatar {
            width: @ce_fixed_width_without_avatar;
+           min-width: @ce_fixed_width_without_avatar;
         }
     }
     &.transparent {
@@ -111,5 +112,8 @@
     }
     &.grey_background {
         background-color: @ce_loser_color;
+    }
+    &.percentage_width {
+        min-width: @ce_fixed_width;
     }
 }

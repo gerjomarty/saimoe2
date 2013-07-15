@@ -10,13 +10,15 @@ class DateController < ApplicationController
       return
     end
 
-    @matches = Match.find_all_by_date @date
+    @date_match_view_models = Match.find_all_by_date(@date).collect do |m|
+      DateMatchViewModel.new(m)
+    end
 
-    if @matches.empty?
+    if @date_match_view_models.empty?
       redirect_to tournaments_path, notice: "No matches found for that date"
       return
     end
 
-    @tournament = @matches.first.tournament
+    @tournament = @date_match_view_models.first.match.tournament
   end
 end

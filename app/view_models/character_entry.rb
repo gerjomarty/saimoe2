@@ -10,7 +10,7 @@ class CharacterEntry
   include ApplicationHelper
 
   attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
-  attr_accessor :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :transparency, :grey_background
+  attr_accessor :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background
 
   def initialize character_or_match_entry, options={}
     if character_or_match_entry.is_a? Character
@@ -46,6 +46,9 @@ class CharacterEntry
   def fixed_width
     @fixed_width.nil? ? true : @fixed_width
   end
+  def use_percentage_width
+    @use_percentage_width.nil? ? false : @use_percentage_width
+  end
   def transparency
     @transparency.nil? ? false : @transparency
   end
@@ -62,7 +65,7 @@ class CharacterEntry
     content_tag :div, class: main_div_class, style: main_div_style do
       ''.tap do |tag|
         tag << avatar_div if show_avatar
-        tag << stats_div if (show_votes && votes) || (show_percentage && percentage)
+        tag << stats_div if (show_votes && votes) || (show_percentage && formatted_percentage)
         tag << character_div
         tag << series_div if show_series
         tag << content_tag(:div, '', class: 'cb')
@@ -94,9 +97,18 @@ class CharacterEntry
     @votes ||= @match_entry.number_of_votes if @match_entry
   end
 
-  def percentage
+  def vote_share
+    @vote_share ||= @match_entry.vote_share if @match_entry
+  end
+
+  def formatted_percentage
     return nil unless show_percentage
-    @percentage ||= format_percent(@match_entry.vote_share) if @match_entry
+    @formatted_percentage ||= format_percent(vote_share) if vote_share
+  end
+
+  def percentage_width
+    return nil unless use_percentage_width
+    @percentage_width ||= ([100 * vote_share + 50, 100].min) if vote_share
   end
 
   def winner?
@@ -123,12 +135,16 @@ class CharacterEntry
       div_class << ' grey_background' if grey_background
       div_class << ' hide_series' unless show_series && series
       div_class << ' hide_avatar' unless show_avatar
+      div_class << ' percentage_width' if percentage_width
       div_class << (bright_color(series_color) ? ' dark_text' : ' light_text') if series_color
     end
   end
 
   def main_div_style
-    "background-color: ##{series_color};" if series_color
+    [].tap do |style|
+      style << "background-color: ##{series_color};" if series_color
+      style << "width: #{percentage_width}%;" if percentage_width
+    end.join(' ')
   end
 
   def avatar_div
@@ -149,7 +165,7 @@ class CharacterEntry
   end
 
   def stats_div
-    content = [votes, percentage].compact
+    content = [votes, formatted_percentage].compact
     div_class = 'character_votes'
     div_class << (winner? ? ' winner' : ' loser') if show_color
     content_tag :div, class: div_class do

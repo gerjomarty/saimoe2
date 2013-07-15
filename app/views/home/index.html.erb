@@ -1,37 +1,41 @@
 <div class="hero-unit">
   <p>
-    This site aims to bring together facts and figures about the current and previous iterations of the <em>Anime
-    Saimoe Tournament</em>&mdash;a competition to find the most moe character of the year, organised by users of
-    Japanese message board <%= link_to '2ch', 'http://www.2ch.net' %>.
+    This site aims to bring together facts and figures about the current and previous iterations of the <em>Anime Saimoe Tournament</em>&mdash;a competition to find the most moe character of the year, organised by users of Japanese message board <%= link_to '2ch', 'http://www.2ch.net' %>.
   </p>
   <p>
-    This is not the official Saimoe site, and is not responsible for the running of the tournament. The official Saimoe
-    2012 site is <%= link_to 'here', 'http://ast2012.saimoe.me' %>, but is in Japanese only. Many thanks to Anonymous
-    of the <%= link_to 'unofficial English Saimoe site', 'http://www.animesaimoe.org' %>, from which all of the data on
-    this site is collected.
+    This is not the official Saimoe site, and is not responsible for the running of the tournament. The official Saimoe 2012 site is <%= link_to 'here', 'http://ast2012.saimoe.me' %>, but is in Japanese only. Many thanks to Anonymous of the <%= link_to 'unofficial English Saimoe site', 'http://www.animesaimoe.org' %>, from which all of the data on this site is collected.
   </p>
 </div>
 
-<% if @most_recent %>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2"></div>
-        <div class="span8">
-          <div class="page-header">
-            <h3>Most Recent Results</h3>
-          </div>
-          <div class="well">
-            <% @most_recent.each do |match| %>
-                <h4><%= pretty_match match %></h4>
-                <%= render partial: 'shared/classified_match', locals: {match: match,
-                                                                        extra_table_classes: %w(match_date)} %>
-            <% end %>
-          </div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span6 home-match-container">
+      <% if @most_recent_view_models.any? %>
+        <div class="page-header">
+          <h3>Most Recent <%= 'Result'.pluralize(@most_recent_view_models.size) %></h3>
         </div>
-        <div class="span2"></div>
-      </div>
+        <% @most_recent_view_models.each do |mvm| %>
+          <%= mvm.render %>
+        <% end %>
+      <% end %>
     </div>
-<% end %>
+    <div class="span6 home-match-container">
+      <% if @todays_match_view_models.any? %>
+        <div class="page-header">
+          <h3>Today's <%= 'Match'.pluralize(@todays_match_view_models.size) %></h3>
+        </div>
+        <% @todays_match_view_models.each do |mvm| %>
+          <%= mvm.render %>
+        <% end %>
+      <% elsif @next_match_date %>
+        <div class="page-header">
+          <h3>Coming Up</h3>
+        </div>
+        <p>Next match on <%= @next_match_date.to_s(:short) %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <hr />
 
