@@ -32,7 +32,7 @@ class DateMatchViewModel
   end
 
   def render_title
-    votes = if match.is_finished?
+    votes = if match.number_of_votes
               content_tag(:small, "(#{pluralize(match.number_of_votes, 'vote')} total)")
             else
               ''

@@ -67,7 +67,7 @@ class CharacterEntry
         tag << avatar_div if show_avatar
         tag << stats_div if (show_votes && votes) || (show_percentage && formatted_percentage)
         tag << character_div
-        tag << series_div if show_series
+        tag << series_div if show_series && series
         tag << content_tag(:div, '', class: 'cb')
       end.html_safe
     end
@@ -76,15 +76,35 @@ class CharacterEntry
   private
 
   def appearance
-    @appearance ||= @match_entry.appearance if @match_entry
+    @appearance ||= match_entry.appearance if match_entry
+  end
+
+  def previous_match
+    @previous_match ||= match_entry.previous_match if match_entry
   end
 
   def character_display_name
-    @character_display_name ||= (@match_entry ? @match_entry.character_name : @character.full_name)
+    return @character_display_name if @character_display_name
+
+    if match_entry && match_entry.character_name
+      @character_display_name = match_entry.character_name
+    elsif character
+      @character_display_name = character.full_name
+    else
+      @character_display_name = nil
+    end
   end
 
   def series
-    @series ||= (@match_entry ? @match_entry.series : @character.main_series)
+    return @series if @series
+
+    if match_entry && match_entry.series
+      @series = match_entry.series
+    elsif character
+      @series = character.main_series
+    else
+      @series = nil
+    end
   end
 
   def series_color
@@ -94,11 +114,11 @@ class CharacterEntry
 
   def votes
     return nil unless show_votes
-    @votes ||= @match_entry.number_of_votes if @match_entry
+    @votes ||= match_entry.number_of_votes if match_entry
   end
 
   def vote_share
-    @vote_share ||= @match_entry.vote_share if @match_entry
+    @vote_share ||= match_entry.vote_share if match_entry
   end
 
   def formatted_percentage
@@ -112,11 +132,19 @@ class CharacterEntry
   end
 
   def winner?
-    @winner ||= @match_entry.is_winner? if @match_entry
+    @winner ||= match_entry.is_winner? if match_entry
   end
 
   def avatar_url
-    @avatar_url ||= (appearance.try(:character_avatar?) ? appearance.character_avatar_url(:thumb) : @character.avatar_url(:thumb))
+    return @avatar_url if @avatar_url
+
+    if appearance && appearance.character_avatar?
+      @avatar_url = appearance.character_avatar_url(:thumb)
+    elsif character
+      @avatar_url = character.avatar_url(:thumb)
+    else
+      @avatar_url = image_path('avatar-defaults/default-thumb.png')
+    end
   end
 
   # Rendering
@@ -149,7 +177,7 @@ class CharacterEntry
 
   def avatar_div
     content_tag :div, class: 'character_image' do
-      image_tag avatar_url, alt: character_display_name
+      image_tag avatar_url, title: character_display_name
     end
   end
 
@@ -183,7 +211,11 @@ class CharacterEntry
 
   def character_div
     content_tag :div, class: 'character_name' do
-      link_to character_display_name, character_path(character), title: character_display_name
+      if character && character_display_name
+        link_to character_display_name, character_path(character), title: character_display_name
+      else
+        "Winner of #{previous_match.pretty}"
+      end
     end
   end
 
