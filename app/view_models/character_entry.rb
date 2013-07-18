@@ -221,7 +221,7 @@ class CharacterEntry
 
   def series_div
     content_tag :div, class: 'series_name' do
-      content_tag :em, link_to(series.name, series_path(series), title: series.name)
+      content_tag(:em, link_to(series.name, series_path(series), title: series.name)) if series
     end
   end
 

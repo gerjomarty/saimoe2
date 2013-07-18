@@ -88,10 +88,10 @@ class MatchViewModel
     if next_match_playoff
       link_to(date_path(next_match_playoff.date.to_s(:number)),
         rel: :html_popover, data: {trigger: :hover, placement: :bottom, container: :body}) do
-        (next_match_playoff.date.to_s(:month_day) + tag(:br) + "playoff").html_safe
+        "went to playoff"
       end +
       content_tag(:div, rel: :html_popover_content) do
-        MatchViewModel.new(next_match_playoff).render
+        MatchViewModel.new(next_match_playoff, match_name: :short).render
       end
     end
   end
@@ -201,9 +201,8 @@ class MatchViewModel
 
   def table_margins_style
     if table_margins
-      margin = ViewSizing.match_tournament_margin match_entries.size, match.base_match_entry_counts
-      height = ViewSizing.mvm_outer_height match.base_match_entry_counts
-      # "padding-top: #{margin}em; padding-bottom: #{margin}em;"
+      margin = ViewSizing.match_tournament_margin match_entries.size, match.base_match_entry_counts(match.playoff_group?)
+      height = ViewSizing.mvm_outer_height match.base_match_entry_counts(match.playoff_group?)
       "padding-bottom: #{margin}em; padding-top: #{margin}em;"
     end
   end

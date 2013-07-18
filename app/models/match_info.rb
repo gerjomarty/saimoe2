@@ -3,6 +3,7 @@ class MatchInfo
   FINAL_STAGES = %w{last_16 quarter_final semi_final final}.collect(&:to_sym).freeze
   PLAYOFF_STAGES = %w{round_1_playoff round_2_playoff}.collect(&:to_sym).freeze
   PLAYOFF_GROUPS = %w{y z}.collect(&:to_sym).freeze
+  PLAYOFF_GROUP_STAGES = %w{round_1 round_2}.collect(&:to_sym).freeze
   STAGES = (GROUP_STAGES + FINAL_STAGES).freeze
 
   def self.pretty_stage stage

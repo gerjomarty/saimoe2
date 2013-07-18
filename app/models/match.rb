@@ -63,7 +63,11 @@ class Match < ActiveRecord::Base
   end
 
   def playoff_match?
-    MatchInfo::PLAYOFF_STAGES.include?(stage) || MatchInfo::PLAYOFF_GROUPS.include?(group)
+    MatchInfo::PLAYOFF_STAGES.include? stage
+  end
+
+  def playoff_group?
+    MatchInfo::PLAYOFF_GROUPS.include? group
   end
 
   def is_finished= finished
@@ -109,20 +113,24 @@ class Match < ActiveRecord::Base
   end
 
   # Returns an array of match entry counts for the matches below this one in the hierarchy
-  def base_match_entry_counts
-    match_hierarchy.leaf_nodes.reject(&:zero?)
+  def base_match_entry_counts allow_playoff_groups=false
+    match_hierarchy(allow_playoff_groups).leaf_nodes.reject(&:zero?)
   end
 
   # This method is mostly for working out how tall elements on the tournament show page
   # need to be. It takes a toll on the database, so don't do it often.
-  def match_hierarchy
+  def match_hierarchy allow_playoff_groups=false
     if (prev_matches = match_entries
                        .includes(:previous_match => {:match_entries => :previous_match})
                        .ordered_by_position
                        .collect(&:previous_match).compact.uniq).empty?
-      {self => self.playoff_match? ? 0 : match_entries.count}
+      if allow_playoff_groups
+        {self => self.playoff_match? ? 0 : match_entries.count}
+      else
+        {self => self.playoff_match? || self.playoff_group? ? 0 : match_entries.count}
+      end
     else
-      {self => prev_matches.collect(&:match_hierarchy).inject(&:merge)}
+      {self => prev_matches.collect {|m| m.match_hierarchy(allow_playoff_groups) }.inject(&:merge)}
     end
   end
 
@@ -132,6 +140,10 @@ class Match < ActiveRecord::Base
 
   def self.date_after date
     select(q_column :date).uniq.order(q_column :date).where("#{q_column :date} > ?", date).first.try(:date)
+  end
+
+  def self.most_recent_finish_date
+    where(is_finished: true).maximum(q_column :date).to_date
   end
 
   def pretty length=:long

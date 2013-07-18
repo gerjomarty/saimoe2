@@ -17,7 +17,9 @@ class VoiceActorsController < ApplicationController
   def show
     @voice_actor = VoiceActor.find(params[:id])
     @tournament_history_view_model = TournamentHistoryViewModel.new(@voice_actor)
-    @total_votes_view_model = TotalVotesViewModel.new(@voice_actor)
+    @statistics_list_view_model = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:total_votes).for_entity(@voice_actor, true),
+                                    comparison_statistics: Statistics.new(VoiceActor).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
+                                    entities_to_bold: @voice_actor)
 
     if request.path != voice_actor_path(@voice_actor)
       redirect_to voice_actor_url(@voice_actor), status: :moved_permanently

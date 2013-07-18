@@ -42,6 +42,9 @@ class GroupMatchesViewModel
         ''.tap do |outer_tag|
           outer_tag << content_tag(:li, link_to('Jump to:', '#'), class: 'disabled')
           groups.each do |group|
+            if MatchInfo::PLAYOFF_GROUPS.first == group
+              outer_tag << content_tag(:li, link_to('Playoff groups:', '#'), class: 'disabled')
+            end
             state = 'active' if group == current_group
             outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group.upcase}"), class: state)
           end

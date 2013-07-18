@@ -24,7 +24,7 @@ class GroupViewModel
               stage_tag << content_tag(:h4, MatchInfo.pretty_stage(stage))
               stage_tag << content_tag(:div, '', class: 'cb')
               matches_for(stage).each do |match|
-                stage_tag << MatchViewModel.new(match, table_margins: index > 0).render
+                stage_tag << MatchViewModel.new(match, table_margins: index > 0, match_name: :short).render
                 stage_tag << content_tag(:div, '', class: 'cb')
               end
             end.html_safe
@@ -37,14 +37,15 @@ class GroupViewModel
   private
 
   def stages
-    @stages ||= tournament.group_stages_without_playoffs
+    @stages ||= MatchInfo::PLAYOFF_GROUPS.include?(group) ? MatchInfo::PLAYOFF_GROUP_STAGES : tournament.group_stages_without_playoffs
   end
 
   def matches_for stage
     @matches ||=
       tournament
         .matches
-        .group_matches.without_playoffs.where(group: group)
+        .group_matches
+        .where(group: group)
         .ordered
         .includes(:match_entries => [:previous_match, {:appearance => {:character_role => [:character, :series]}}])
     @stage_matches ||= {}
