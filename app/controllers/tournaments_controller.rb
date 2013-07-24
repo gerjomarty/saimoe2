@@ -44,15 +44,21 @@ class TournamentsController < ApplicationController
   end
 
   def rounds_by_vote_percentages
-    @results = @tournament.stages_by_vote_shares
+    stats = Statistics.new(Character).get_statistic(:vote_share).for_tournament(@tournament).in_stages
+    comparison = Statistics.new(Character).get_statistic(:vote_share).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_series_prevalence
-    @results = @tournament.stages_by_series_prevalence
+    stats = Statistics.new(Series).get_statistic(:match_appearances).for_tournament(@tournament).in_stages
+    comparison = Statistics.new(Series).get_statistic(:match_appearances).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_voice_actor_prevalence
-    @results = @tournament.stages_by_voice_actor_prevalence
+    stats = Statistics.new(VoiceActor).get_statistic(:match_appearances).for_tournament(@tournament).in_stages
+    comparison = Statistics.new(VoiceActor).get_statistic(:match_appearances).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   private

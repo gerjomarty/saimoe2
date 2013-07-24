@@ -37,7 +37,7 @@ class StatisticsListViewModel
           end
         end
       end
-    end.inject(:+) +
+    end.inject(:+).html_safe +
     render_comparison_explanation
   end
 
@@ -116,7 +116,7 @@ class StatisticsListViewModel
     if results.is_a? Hash
       @statistics_results = results.to_a
     else
-      @statistics_results = [nil, results]
+      @statistics_results = [[nil, results]]
     end
   end
 
