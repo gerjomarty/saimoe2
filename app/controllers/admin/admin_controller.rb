@@ -6,6 +6,8 @@ class Admin::AdminController < ApplicationController
   REALM = ENV['APP_REALM']
   USERS = {ENV['APP_USERNAME'] => ENV['APP_PASSWORD_HASH']}
 
+  USE_CHARACTER_ARR_SERIES_REGEXP = /Pretty Cure/
+
   force_ssl
   before_filter :authenticate
 
@@ -59,7 +61,19 @@ class Admin::AdminController < ApplicationController
       return
     end
 
-    character_arr.sort_by! do |_, e_name|
+    # Add SERIES on to the end of character
+    curr_series = nil
+    character_arr.collect! do |i|
+      if i[0] == 'SERIES'
+        curr_series = i[1]
+        nil
+      else
+        i + [curr_series]
+      end
+    end
+    character_arr.compact!
+
+    character_arr.sort_by! do |_, e_name, _|
       split_name = e_name.try(:split, / /)
       if split_name.nil? || split_name.size == 1
         [e_name || '']
@@ -84,14 +98,16 @@ class Admin::AdminController < ApplicationController
       name_arr.compact!
 
       @result = name_arr.collect {|str|
-        #/\A<<(.*?)[@\uff20](.*?)>>\Z/.match(str).to_a.collect(&:strip)
         /\A[^\p{Space}]+\p{Space}(.*?)[@\uff20](.*?)\Z/.match(str).to_a.collect(&:strip)
       }.collect {|id_string, id_name, id_series|
-        char_index = character_arr.index {|j_name, _| j_name == id_name}
+        char_index = character_arr.index {|j_name, _, _| j_name == id_name}
         series_index = series_arr.index {|j_series, _| j_series == id_series}
         j_name, e_name, j_series, e_series = nil
-        j_name, e_name = character_arr[char_index] if char_index
+        j_name, e_name, _ = character_arr[char_index] if char_index
         j_series, e_series = series_arr[series_index] if series_index
+        if e_series =~ USE_CHARACTER_ARR_SERIES_REGEXP && char_index
+          e_series = character_arr[char_index][2]
+        end
         [id_string, j_name, e_name, j_series, e_series]
       }
 
@@ -130,11 +146,14 @@ class Admin::AdminController < ApplicationController
         result_arr.collect {|str|
           /\A(\p{Digit}+)\p{Alpha}+\p{Space}+(\p{Digit}+)\p{Alpha}+\p{Space}+(.*?)[@\uff20](.*?)\Z/.match(str).to_a.collect(&:strip)
         }.collect {|res_string, place, votes, res_name, res_series|
-          char_index = character_arr.index {|j_name, _| j_name == res_name}
+          char_index = character_arr.index {|j_name, _, _| j_name == res_name}
           series_index = series_arr.index {|j_series, _| j_series == res_series}
           j_name, e_name, j_series, e_series = nil
-          j_name, e_name = character_arr[char_index] if char_index
+          j_name, e_name, _ = character_arr[char_index] if char_index
           j_series, e_series = series_arr[series_index] if series_index
+          if e_series =~ USE_CHARACTER_ARR_SERIES_REGEXP && char_index
+            e_series = character_arr[char_index][2]
+          end
           [res_string, place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
         }.each {|result|
           next unless result[0]
