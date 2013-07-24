@@ -2,20 +2,4 @@
   <h1>Characters <small>Sorted by votes gained at each stage of Saimoe <%= @tournament.year %></small></h1>
 </div>
 
-<% (@tournament.stages.reverse & @results.keys).each do |stage| %>
-    <% stage_results = @results[stage] %>
-    <div class="page-header">
-      <h3><%= pretty_stage stage %></h3>
-    </div>
-    <table class="table table-condensed table-striped">
-      <tbody>
-      <% stage_results.each do |rank, votes, character, series| %>
-          <tr>
-            <td><%= rank.ordinalize %></td>
-            <td><%= votes %></td>
-            <td><%= link_to character.full_name, character_path(character) %> @ <%= link_to series.name, series_path(series) %></td>
-          </tr>
-      <% end %>
-      </tbody>
-    </table>
-<% end %>
+<%= @view_model.render %>

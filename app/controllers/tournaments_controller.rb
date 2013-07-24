@@ -14,23 +14,33 @@ class TournamentsController < ApplicationController
   end
 
   def characters_by_total_votes
-    @results = @tournament.characters_by_total_votes
+    stats = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament)
+    comparison = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def characters_by_average_votes
-    @results = @tournament.characters_by_average_votes
+    stats = Statistics.new(Character).get_statistic(:average_votes).for_tournament(@tournament)
+    comparison = Statistics.new(Character).get_statistic(:average_votes).for_tournament(@tournament).before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def series_by_total_votes
-    @results = @tournament.series_by_total_votes
+    stats = Statistics.new(Series).get_statistic(:total_votes).for_tournament(@tournament)
+    comparison = Statistics.new(Series).get_statistic(:total_votes).for_tournament(@tournament).before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def voice_actors_by_total_votes
-    @results = @tournament.voice_actors_by_total_votes
+    stats = Statistics.new(VoiceActor).get_statistic(:total_votes).for_tournament(@tournament)
+    comparison = Statistics.new(VoiceActor).get_statistic(:total_votes).for_tournament(@tournament).before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_total_votes
-    @results = @tournament.stages_by_total_votes
+    stats = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).in_stages
+    comparison = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
+    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_vote_percentages

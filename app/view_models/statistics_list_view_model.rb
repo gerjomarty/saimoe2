@@ -17,7 +17,7 @@ class StatisticsListViewModel
   end
 
   def comparison_statistics= cs
-    raise ArgumentError, 'comparison_statistics must be an instance of Statistics' unless cs.is_a? Statistics
+    raise ArgumentError, 'comparison_statistics must be an instance of Statistics' unless cs.nil? or cs.is_a? Statistics
     @comparison_statistics = cs
     self
   end
@@ -28,38 +28,45 @@ class StatisticsListViewModel
   end
 
   def render
-    content_tag(:div, class: 'statistics-list-view-model') do
-      content_tag(:table, class: 'table table-condensed') do
-        content_tag(:tbody) do
-          render_table_rows
+    statistics_results.collect do |stage_name, results|
+      (stage_name ? content_tag(:h4, MatchInfo.pretty_stage(stage_name)) : '') +
+      content_tag(:div, class: 'statistics-list-view-model') do
+        content_tag(:table, class: 'table table-condensed') do
+          content_tag(:tbody) do
+            render_table_rows(stage_name, results)
+          end
         end
-      end +
-      render_comparison_explanation
-    end
+      end
+    end.inject(:+) +
+    render_comparison_explanation
   end
 
   private
 
-  def render_table_rows
-    statistics_results.collect do |result|
-      content_tag(:tr) { render_table_row *result }
+  def render_table_rows stage_name, results
+    results.collect do |result|
+      content_tag(:tr) { render_table_row stage_name, *result }
     end.inject(:+)
   end
 
-  def render_table_row rank, stat, entity, series
-    render_comparison(rank, entity) +
+  def render_table_row stage_name, rank, stat, entity, series
+    (render_comparison(stage_name, rank, entity) +
     render_rank(rank, entity) +
     render_stat(stat, entity) +
-    render_name(entity, series)
+    render_name(entity, series)).html_safe
   end
 
-  def render_comparison rank, entity
+  def render_comparison stage_name, rank, entity
     return '' unless show_comparison?
-    previous_rank = comparison_results.select {|_, _, e, _| entity == e }[0].try(:first)
+    if comparison_results.is_a? Hash
+      previous_rank = comparison_results[stage_name] && comparison_results[stage_name].select {|_, _, e, _| entity == e }[0].try(:first)
+    else
+      previous_rank = comparison_results.select {|_, _, e, _| entity == e }[0].try(:first)
+    end
 
     span_class, icon, title, extra =
       if previous_rank.nil?
-        [:new, 'star', 'New', nil]
+        [:new, 'star', 'New', '(New)']
       elsif rank < previous_rank
         [:up, 'arrow-up', "Up #{previous_rank - rank}", "(#{previous_rank - rank})"]
       elsif rank > previous_rank
@@ -85,13 +92,15 @@ class StatisticsListViewModel
 
   def render_stat stat, entity
     content_tag(:td, class: (:emphasize if should_bold_entity?(entity))) do
-      stat
+      statistics.render_function.call(stat)
     end
   end
 
   def render_name entity, series
     content_tag(:td, class: (:emphasize if should_bold_entity?(entity))) do
-      series ? "#{entity} @ #{series}" : entity.to_s
+      tag = link_to(entity.to_s, polymorphic_path(entity))
+      tag += (' @ ' + link_to(series.to_s, polymorphic_path(series))).html_safe if series
+      tag
     end
   end
 
@@ -101,7 +110,14 @@ class StatisticsListViewModel
   end
 
   def statistics_results
-    @statistics_results ||= statistics.fetch_results
+    return @statistics_results if @statistics_results
+
+    results = statistics.fetch_results
+    if results.is_a? Hash
+      @statistics_results = results.to_a
+    else
+      @statistics_results = [nil, results]
+    end
   end
 
   def comparison_results

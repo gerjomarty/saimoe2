@@ -15,7 +15,9 @@
 ## Statistics.new(Character).get_statistic(:total_votes).for_entity(Character.find_by_name('Akari Mizunashi')).fetch_results
 ## => Returns ranked list of characters with total votes across all tournaments, focusing around the given character
 class Statistics
-  attr_reader :model_class
+  include ApplicationHelper
+
+  attr_reader :model_class, :render_function
 
   ALLOWED_MODEL_CLASSES = [Character, Series, VoiceActor]
 
@@ -53,6 +55,7 @@ class Statistics
   end
 
   def in_stages
+    @sort_in_stages = true
     @rank_partition = Match.q_column(:stage)
     
     @scope = @scope.select("#{Match.q_column :stage} AS stage")
@@ -72,6 +75,8 @@ class Statistics
     self
   end
 
+  alias_method :for_tournament, :for_tournaments
+
   def before_date date
     date = date.to_date
 
@@ -79,8 +84,6 @@ class Statistics
 
     self
   end
-
-  alias_method :for_tournament, :for_tournaments
 
   def for_entity entity, should_cut_off_same_rank=false, before_context=2, after_context=2
     unless ALLOWED_MODEL_CLASSES.any? {|model_class| entity.is_a? model_class }
@@ -102,6 +105,11 @@ class Statistics
     self
   end
 
+  def render_function
+    return lambda {|stat| stat.to_s } unless @render_function
+    @render_function
+  end
+
   def fetch_results
     raise 'Must specify statistic to get' unless @statistic_defined
 
@@ -117,11 +125,11 @@ class Statistics
 
     if results.any? {|_, stage, _, _, _| stage }
       results = {}.tap do |stage_hash|
+        MatchInfo::STAGES.reverse.each {|s| stage_hash[s] = [] }
         results.each do |r|
-          stage_hash[r[1].to_sym] ||= []
           stage_hash[r[1].to_sym] << r.values_at(0, 2..-1)
         end
-      end
+      end.reject {|_, r| r.empty? }
     else
       results.collect! {|r| r.values_at(0, 2..-1) }
     end
@@ -155,6 +163,7 @@ class Statistics
   def get_average_votes
     @stat_name = :average_votes
     @normalization_function = lambda {|votes| votes.to_f }
+    @render_function = lambda {|votes| format_float(votes) }
 
     @rank_order = "AVG(#{MatchEntry.q_column :number_of_votes}) DESC"
 
@@ -165,6 +174,7 @@ class Statistics
   def get_vote_share
     @stat_name = :vote_share
     @normalization_function = lambda {|votes| votes.to_f }
+    @render_function = lambda {|votes| format_percent(votes) }
 
     @rank_order = "#{MatchEntry.q_column :vote_share} DESC"
 

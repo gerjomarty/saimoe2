@@ -6,6 +6,7 @@ module ApplicationHelper
   end
 
   def format_float number
+    number = number.to_f
     if fewer_decimal_places_than number, 1
       "%.0f" % number
     elsif fewer_decimal_places_than number, 2

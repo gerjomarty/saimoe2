@@ -2,14 +2,4 @@
   <h1>Series <small>Sorted by total votes gained in Saimoe <%= @tournament.year %></small></h1>
 </div>
 
-<table class="table table-condensed table-striped">
-  <tbody>
-  <% @results.each do |rank, votes, series| %>
-      <tr>
-        <td><%= rank.ordinalize %></td>
-        <td><%= votes %></td>
-        <td><%= link_to series.name, series_path(series) %></td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
+<%= @view_model.render %>

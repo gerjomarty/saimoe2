@@ -43,6 +43,14 @@ class Tournament < ActiveRecord::Base
     find_by_year year.to_s
   end
 
+  def currently_on?
+    matches.any? {|m| !m.is_finished? }
+  end
+
+  def most_recent_match_date
+    matches.where(is_finished: true).maximum(Match.q_column :date).to_date
+  end
+
   # Statistics
   # TODO: Break these out into a separate object, DRY up the code and make them run across all tournaments.
 
