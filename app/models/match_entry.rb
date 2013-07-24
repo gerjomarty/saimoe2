@@ -1,7 +1,7 @@
 class MatchEntry < ActiveRecord::Base
   include Ordering
 
-  attr_accessible :number_of_votes, :position, :match, :previous_match, :appearance, :is_finished, :is_winner, :vote_share, :table_height, :character_name
+  attr_accessible :number_of_votes, :position, :match, :previous_match, :appearance, :is_finished, :is_winner, :vote_share, :character_name
 
   belongs_to :match, inverse_of: :match_entries
   belongs_to :previous_match, class_name: 'Match', foreign_key: :previous_match_id, inverse_of: :next_match_entries
@@ -11,7 +11,6 @@ class MatchEntry < ActiveRecord::Base
   validates :position, presence: true, numericality: {only_integer: true}
   validates :number_of_votes, numericality: {only_integer: true}, allow_nil: true
   validates :vote_share, numericality: {greater_than_or_equal_to: 0.0, less_than_or_equal_to: 1.0}, allow_nil: true
-  validates :table_height, numericality: true, allow_nil: true
 
   POSITION_ORDER = [q_column(:position)].freeze
   VOTE_ORDER = ["#{q_column(:number_of_votes)} DESC", q_column(:position)].freeze
@@ -30,8 +29,6 @@ class MatchEntry < ActiveRecord::Base
     else
       self.is_winner = self.vote_share = nil
     end
-    self.table_height = nil
-    self.table_height = self.table_height
     self.character_name = nil
     self.character_name = self.character_name
   end
@@ -50,21 +47,6 @@ class MatchEntry < ActiveRecord::Base
 
     return nil unless is_finished?
     self.number_of_votes.to_f / match.number_of_votes.to_f
-  end
-
-  def table_height
-    value = read_attribute :table_height
-    return value unless value.nil?
-
-    if previous_match
-      height = previous_match.match_hierarchy.sum_leaf_nodes.to_f
-      if previous_match.is_finished? && previous_match.is_draw? && !previous_match.playoff_match?
-        height = height / previous_match.winning_match_entries.count.to_f
-      end
-      height
-    else
-      1.0
-    end
   end
 
   def character_name

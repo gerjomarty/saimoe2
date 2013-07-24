@@ -39,19 +39,6 @@ class VoiceActor < ActiveRecord::Base
     full_name
   end
 
-  def tournament_history
-    {}.tap do |th|
-      match_entries.includes(:match => :tournament).merge(Tournament.ordered).each do |me|
-        match = me.match
-        tournament = match.tournament
-
-        th[tournament] ||= {}
-        th[tournament][match.stage] ||= []
-        th[tournament][match.stage] << me
-      end
-    end
-  end
-
   # Soulmate methods
 
   def soulmate_term

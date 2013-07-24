@@ -55,20 +55,6 @@ class Character < ActiveRecord::Base
     series.where("#{Series.q_column(:id)} <> ?", self.main_series_id).ordered.uniq
   end
 
-  def tournament_history
-    {}.tap do |th|
-      match_entries.includes(:match => :tournament).merge(Tournament.ordered).each do |me|
-        match = me.match
-        tournament = match.tournament
-
-        th[tournament] ||= {}
-        th[tournament][match.stage] ||= {}
-        th[tournament][match.stage][:match] = match
-        th[tournament][match.stage][:match_entry] = me
-      end
-    end
-  end
-
   # If there are any name clashes, we want the slugs to be appended with their main
   # series name rather than just a number sequence.
   # This assumes there won't be any characters that have the same name *and* series.

@@ -4,7 +4,7 @@ class Match < ActiveRecord::Base
   mount_uploader :vote_graph, VoteGraphUploader
 
   attr_accessible :date, :group, :match_number, :stage, :tournament, :is_finished, :is_winner, :number_of_votes,
-                  :is_draw, :table_height, :vote_graph_cache, :remote_vote_graph_url, :remove_vote_graph, :vote_graph
+                  :is_draw, :vote_graph_cache, :remote_vote_graph_url, :remove_vote_graph, :vote_graph
 
   belongs_to :tournament, inverse_of: :matches
   has_many :match_entries, inverse_of: :match
@@ -21,7 +21,6 @@ class Match < ActiveRecord::Base
   validates :stage, presence: true, stage: true, uniqueness: {scope: [:tournament_id, :group, :match_number]}
   validates :match_number, :number_of_votes, numericality: {only_integer: true}, allow_nil: true
   validates :date, :tournament_id, presence: true
-  validates :table_height, numericality: true, allow_nil: true
   validate :validate_match_entries_finished
 
   STAGE_ORDER = MatchInfo::STAGES.collect {|s| "#{q_column(:stage)} = '#{s}' DESC"}.freeze
@@ -80,8 +79,6 @@ class Match < ActiveRecord::Base
       self.number_of_votes = self.is_draw = nil
       match_entries.each {|me| me.is_finished = false; me.save!}
     end
-    self.table_height = nil
-    self.table_height = self.table_height
     ret
   end
 
@@ -103,13 +100,6 @@ class Match < ActiveRecord::Base
     return value unless value.nil?
 
     winning_match_entries.size > 1
-  end
-
-  def table_height
-    value = read_attribute :table_height
-    return value unless value.nil?
-
-    match_hierarchy.sum_leaf_nodes.to_f
   end
 
   # Returns an array of match entry counts for the matches below this one in the hierarchy

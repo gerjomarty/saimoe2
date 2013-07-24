@@ -37,19 +37,6 @@ class Series < ActiveRecord::Base
     write_attribute(:color_code, code && code.to_s.upcase)
   end
 
-  def tournament_history
-    {}.tap do |th|
-      match_entries.includes(:match => :tournament).merge(Tournament.ordered).each do |me|
-        match = me.match
-        tournament = match.tournament
-
-        th[tournament] ||= {}
-        th[tournament][match.stage] ||= []
-        th[tournament][match.stage] << me
-      end
-    end
-  end
-
   # Soulmate methods
 
   def soulmate_term

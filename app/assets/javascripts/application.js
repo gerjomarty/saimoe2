@@ -20,5 +20,4 @@
 //= require twitter/bootstrap/bootstrap-dropdown
 //= require twitter/bootstrap/bootstrap-alert
 //= require autocomplete_box
-//= require button_popover
 //= require_tree .
