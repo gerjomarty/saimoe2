@@ -98,7 +98,7 @@ class Admin::AdminController < ApplicationController
       name_arr.compact!
 
       @result = name_arr.collect {|str|
-        /\A[^\p{Space}]+\p{Space}(.*?)[@\uff20](.*?)\Z/.match(str).to_a.collect(&:strip)
+        /\A[^\p{Space}]+\p{Space}(.*?)\uff20(.*?)\Z/.match(str).to_a.collect(&:strip)
       }.collect {|id_string, id_name, id_series|
         char_index = character_arr.index {|j_name, _, _| j_name == id_name}
         series_index = series_arr.index {|j_series, _| j_series == id_series}
@@ -144,7 +144,7 @@ class Admin::AdminController < ApplicationController
 
       @split_results = [[]].tap do |sr|
         result_arr.collect {|str|
-          /\A(\p{Digit}+)\p{Alpha}+\p{Space}+(\p{Digit}+)\p{Alpha}+\p{Space}+(.*?)[@\uff20](.*?)\Z/.match(str).to_a.collect(&:strip)
+          /\A(\p{Digit}+)\p{Alpha}+\p{Space}+(\p{Digit}+)\p{Alpha}+\p{Space}+(.*?)\uff20(.*?)\Z/.match(str).to_a.collect(&:strip)
         }.collect {|res_string, place, votes, res_name, res_series|
           char_index = character_arr.index {|j_name, _, _| j_name == res_name}
           series_index = series_arr.index {|j_series, _| j_series == res_series}
