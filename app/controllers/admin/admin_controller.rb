@@ -1,6 +1,13 @@
 require 'csv'
 require 'digest/sha2'
 require 'erb'
+require 'ostruct'
+
+class Template < OpenStruct
+  def render template
+    ERB.new(template).result(binding)
+  end
+end
 
 class Admin::AdminController < ApplicationController
   include ApplicationHelper
@@ -164,9 +171,6 @@ class Admin::AdminController < ApplicationController
           end
         }
       }.collect {|result|
-        total_votes = 0
-        result.each {|_, _, votes, _, _, _, _| total_votes += votes}
-
         result.sort_by {|_, place, votes, _, e_name, _, e_series|
           split_name = e_name.try(:split, / /)
           if split_name.nil? || split_name.size == 1
@@ -174,7 +178,14 @@ class Admin::AdminController < ApplicationController
           else
             [place, -votes, e_series || '', split_name.last]
           end
-        }.collect {|res_string, place, votes, j_name, e_name, j_series, e_series|
+        }
+      }
+
+      result_list = @split_results.collect do |r|
+        total_votes = 0
+        r.each {|_, _, votes, _, _, _, _| total_votes += votes}
+
+        r.collect {|res_string, place, votes, j_name, e_name, j_series, e_series|
           vote_share = votes.to_f / total_votes.to_f
           str = "#{place.ordinalize} #{votes} #{'(' + format_percent(vote_share) + ') ' if show_percent}#{e_name || '???'} @ #{e_series || '???'}"
           if e_name && e_series
@@ -182,20 +193,25 @@ class Admin::AdminController < ApplicationController
           else
             str << " #{res_string}"
           end
-        }
-      }
+        }.join("&lt;br /&gt;<br />\r\n")
+      end.join("&lt;br /&gt;&lt;br /&gt;<br /><br />\r\n\r\n")
 
-      result_list = @split_results.collect {|r| r.join("<br />\r\n") }.collect {|r| r.join("<br /><br />\r\n") }
-      send_data result_list, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
+      template_list = @split_results[0].collect do |_, place, votes, j_name, e_name, j_series, e_series|
+        {ranking: place.ordinalize, vote_count: votes, name: e_name || j_name, series: e_series || j_series}
+      end
 
       if info[:result_first_prelim] == '1'
-        template_list = @split_results[0].collect do |_, place, votes, j_name, e_name, j_series, e_series|
-          {ranking: place.ordinalize, vote_count: votes, name: e_name || j_name, series: e_series || j_series}
-        end
-
-        send_data ERB.new(File.read(Rails.root.join('lib', 'prelim_template.html.erb'))).result(binding),
-                  filename: "html_template_#{Time.zone.now.to_s.gsub(/ /, '_')}.html"
+        template = Template.new(results: template_list, result_list: result_list)
+                           .render(File.read(Rails.root.join('lib', 'first_prelim_template.html.erb')))
+      elsif info[:result_second_prelim] == '1'
+        template = Template.new(results: template_list, result_list: result_list)
+                           .render(File.read(Rails.root.join('lib', 'second_prelim_template.html.erb')))
+      else
+        template = Template.new(result_list: result_list)
+                           .render(File.read(Rails.root.join('lib', 'result_list_template.html.erb')))
       end
+
+      send_data template, filename: "html_template_#{Time.zone.now.to_s.gsub(/ /, '_')}.html"
     end
   end
 
