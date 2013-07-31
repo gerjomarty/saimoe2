@@ -34,13 +34,18 @@
     <h4>
       <%= f.radio_button :transform, :result_list %>
       <%= f.label :transform_result_list do %>
-        Convert list of results in format <em>1位　427票　JP Name＠JP Series</em> - one per line
+        Convert list of results in format <em>1位　427票　JP Name＠JP Series</em> - one per line<br />
+        <small>(Non-matching lines will be treated as match delimiters.)</small>
       <% end %>
     </h4>
     <h4>
       <%= f.check_box :result_show_percent %>
       <%= f.label :result_show_percent, 'Show percentages' %>
     </h4>
+    <div class="well">
+      <%= f.check_box :result_first_prelim %>
+      <%= f.label :result_first_prelim, 'Generate first prelim template as well' %>
+    </div>
     <%= f.file_field :result_csv %>
   </div>
 
