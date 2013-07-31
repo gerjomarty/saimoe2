@@ -40,12 +40,16 @@
     </h4>
     <h4>
       <%= f.check_box :result_show_percent %>
-      <%= f.label :result_show_percent, 'Show percentages' %>
+      <%= f.label :result_show_percent, 'Show percentages in list output' %>
     </h4>
-    <div class="well">
+    <h4>
       <%= f.check_box :result_first_prelim %>
-      <%= f.label :result_first_prelim, 'Generate first prelim template as well' %>
-    </div>
+      <%= f.label :result_first_prelim, 'Generate first prelim template' %>
+    </h4>
+    <h4>
+      <%= f.check_box :result_second_prelim %>
+      <%= f.label :result_second_prelim, 'Generate second prelim template' %>
+    </h4>
     <%= f.file_field :result_csv %>
   </div>
 

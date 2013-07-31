@@ -1,0 +1,81 @@
+<html>
+
+<head>
+<style type="text/css">
+
+table.layout { }
+td.layout { padding: 20 }
+table.bracket { background-color: #ffffff }
+
+td.ranking { padding: 1; text-align: center; width: 35 }
+td.votes { padding: 1; text-align: center; width: 30 }
+td.topcontestant { padding: 1; text-align: left; max-height: 40; width: 250 }
+td.contestant { padding: 1; text-align: left; max-height: 40; width: 280 }
+td.lowercontestant { padding: 1; text-align: left; max-height: 40; width: 354 }
+td.pic { height: 70; width: 70; padding: 0 }
+
+.position { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.votecount { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.lowerposition { font-size: 14; font-family: Chaparral Pro }
+.lowervotecount { font-size: 14; font-family: Chaparral Pro }
+.topcontestantname { font-size: 30; font-family: Chaparral Pro }
+.contestantname { font-size: 24; font-family: Chaparral Pro }
+.topseriesname { font-size: 20; font-style: italic; font-family: Chaparral Pro }
+.seriesname { font-size: 15; font-style: italic; font-family: Chaparral Pro }
+.topvoiceactor { font-size: 16; font-family: Chaparral Pro }
+.voiceactor { font-size: 14; font-family: Chaparral Pro }
+
+.lowercontestantname { font-size: 14; font-family: Chaparral Pro }
+.lowerseriesname { font-size: 14; font-style: italic; font-family: Chaparral Pro }
+
+</style>
+</head>
+
+<body bgcolor="#ffff99">
+
+<% if results %>
+    <% cut_off_index = results.rindex {|r| r[:ranking] == results[15][:ranking] } %>
+    <% colours = %w(#e04241 #e7552f #f67a0f #fd8c00 #fec528 #ffe13d #ebf567 #d7ed7d #aedda9 #8bc9bf #44a1ea #218cff #6fa0f4 #96abee #dcafd4 #fba9c1) %>
+
+    <% winners_half_way_point = (cut_off_index / 2.0).ceil %>
+    <% [results[0...half_way_point], results[half_way_point..cut_off_index].each do |r| %>
+        <table class="bracket" border="1">
+            <% r.each do |rr| %>
+                <tr>
+                    <% colour = colours.shift %>
+                    <td bgcolor="<%= colour %>" class="ranking"><div class="position"><%= rr[:ranking] %></div></td>
+                    <td bgcolor="<%= colour %>" class="votes"><div class="votecount"><%= rr[:vote_count] %></div></td>
+                    <td bgcolor="<%= colour %>" class="contestant">
+                        <div class="contestantname"><%= rr[:name] %></div><div class="seriesname"><%= rr[:series] %></div><div class="voiceactor">Voice Actor: </div>
+                    </td>
+                    <td class="pic"><img src="Prelim Chart Icons/<%= rr[:name] %>.jpg" /></td>
+                </tr>
+            <% end %>
+        </table>
+    <% end %>
+
+    <br>
+
+    <% losers_half_way_point = ((results.size - (cut_off_index+1)) / 2.0).ceil + cut_off_index %>
+    <% [results[(cut_off_index + 1)...losers_half_way_point], results[losers_half_way_point..-1]].each do |r| %>
+        <table class="bracket" border="1">
+            <% r.each do |rr| %>
+                <tr>
+                    <td bgcolor="#cccccc" class="ranking"><div class="lowerposition"><%= rr[:ranking] %></div></td>
+                    <td bgcolor="#cccccc" class="votes"><div class="lowervotecount"><%= rr[:vote_count] %></div></td>
+                    <td bgcolor="#cccccc" class="lowercontestant"><div class="lowercontestantname"><%= rr[:name] %></div><div class="lowerseriesname"><%= rr[:series] %></div></td>
+                </tr>
+            <% end %>
+        </table>
+    <% end %>
+
+<% end %>
+
+<br /><br /><br />
+
+<% if result_list %>
+    <%= result_list %>
+<% end %>
+
+</body>
+</html>
