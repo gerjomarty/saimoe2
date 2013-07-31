@@ -1,5 +1,6 @@
 require 'csv'
 require 'digest/sha2'
+require 'erb'
 
 class Admin::AdminController < ApplicationController
   include ApplicationHelper
@@ -142,7 +143,7 @@ class Admin::AdminController < ApplicationController
       result_arr.collect! {|l| l.empty? ? nil : l}
       result_arr.compact!
 
-      @split_results = [[]].tap do |sr|
+      @split_results = [[]].tap { |sr|
         result_arr.collect {|str|
           /\A(\p{Digit}+)\p{Alpha}+\p{Space}+(\p{Digit}+)\p{Alpha}+\p{Space}+(.*?)\uff20(.*?)\Z/.match(str).to_a.collect(&:strip)
         }.collect {|res_string, place, votes, res_name, res_series|
@@ -156,17 +157,13 @@ class Admin::AdminController < ApplicationController
           end
           [res_string, place.to_i, votes.to_i, j_name, e_name, j_series, e_series]
         }.each {|result|
-          next unless result[0]
-          if result[1] == 1 && !sr[-1].empty?
-            sr << []
+          if result[0]
+            sr[-1] << result
+          else
+            sr << [] unless sr[-1].empty?
           end
-          sr[-1] << result
         }
-      end
-
-      $stderr.puts "\n\n\n#{@split_results.inspect}\n\n\n"
-
-      @split_results = @split_results.collect {|result|
+      }.collect {|result|
         total_votes = 0
         result.each {|_, _, votes, _, _, _, _| total_votes += votes}
 
@@ -185,10 +182,20 @@ class Admin::AdminController < ApplicationController
           else
             str << " #{res_string}"
           end
-        }.join("<br />\r\n")
-      }.join("<br /><br />\r\n")
+        }
+      }
 
-      send_data @split_results, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
+      result_list = @split_results.collect {|r| r.join("<br />\r\n") }.collect {|r| r.join("<br /><br />\r\n") }
+      send_data result_list, filename: "result_list_#{Time.zone.now.to_s.gsub(/ /, '_')}.txt"
+
+      if info[:result_first_prelim] == '1'
+        template_list = @split_results[0].collect do |_, place, votes, j_name, e_name, j_series, e_series|
+          {ranking: place.ordinalize, vote_count: votes, name: e_name || j_name, series: e_series || j_series}
+        end
+
+        send_data ERB.new(File.read(Rails.root.join('lib', 'prelim_template.html.erb'))).result(binding),
+                  filename: "html_template_#{Time.zone.now.to_s.gsub(/ /, '_')}.html"
+      end
     end
   end
 
