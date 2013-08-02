@@ -193,8 +193,8 @@ class Admin::AdminController < ApplicationController
           else
             str << " #{res_string}"
           end
-        }.join("&lt;br /&gt;<br />\r\n")
-      end.join("&lt;br /&gt;&lt;br /&gt;<br /><br />\r\n\r\n")
+        }.join("<br />\r\n")
+      end.join("<br /><br />\r\n\r\n")
 
       template_list = @split_results[0].collect do |_, place, votes, j_name, e_name, j_series, e_series|
         {ranking: place.ordinalize, vote_count: votes, name: e_name || j_name, series: e_series || j_series}
