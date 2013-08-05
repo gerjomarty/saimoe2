@@ -2,9 +2,7 @@
   <h1><%= @date.to_s :long %></h1>
 </div>
 
-<% @date_match_view_models.each do |dmvm| %>
-  <%= dmvm.render %>
-<% end %>
+<%= render partial: @date_match_view_models, as: :vm %>
 
 <ul class="pager form-actions">
   <% if (before = Match.date_before(@date)) %>

@@ -18,7 +18,7 @@
           <h4><%= link_to(series.name, series_path(series)) %></h4>
           <div class="well">
             <% c_data.each do |character| %>
-              <%= CharacterEntry.new(character, show_series: false, fixed_width: false).render %>
+              <%= render partial: CharacterEntry.new(character, show_series: false, fixed_width: false), as: :vm %>
             <% end %>
           </div>
         <% end %>

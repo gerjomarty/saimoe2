@@ -9,35 +9,20 @@ class TournamentViewModel
 
   attr_reader :tournament
 
+  def to_partial_path
+    'view_models/tournament'
+  end
+
   def initialize tournament
     @tournament = tournament
     self
   end
 
-  def render
-    content_tag :div, class: 'tournament-view-model' do
-      ''.tap do |outer_tag|
-        if final_matches_div
-          outer_tag << final_matches_div
-          outer_tag << content_tag(:div, '', class: 'cb')
-          outer_tag << tag(:hr)
-        end
-        outer_tag << group_matches_div
-      end.html_safe
-    end
+  def final_matches_view_model
+    FinalMatchesViewModel.new(tournament)
   end
 
-  private
-
-  def final_matches_div
-    if (fmvm = FinalMatchesViewModel.new(tournament)).visible?
-      fmvm.render
-    else
-      nil
-    end
-  end
-
-  def group_matches_div
-    GroupMatchesViewModel.new(tournament).render
+  def group_matches_view_model
+    GroupMatchesViewModel.new(tournament)
   end
 end

@@ -13,9 +13,7 @@
     <div class="row-fluid">
       <% @major_chars.each do |char_arr| %>
         <div class="span3">
-          <% char_arr.each do |character_entry| %>
-            <%= character_entry.render %>
-          <% end %>
+          <%= render partial: char_arr, as: :vm %>
         </div>
       <% end %>
     </div>
@@ -31,9 +29,7 @@
     <div class="row-fluid">
       <% @cameo_chars.each do |char_arr| %>
         <div class="span3">
-          <% char_arr.each do |character_entry| %>
-              <%= character_entry.render %>
-          <% end %>
+          <%= render partial: char_arr, as: :vm %>
         </div>
       <% end %>
     </div>
@@ -46,7 +42,7 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <%= @statistics_list_view_model.render %>
+    <%= render partial: @statistics_list_view_model, as: :vm %>
   </div>
 </div>
 
@@ -54,7 +50,7 @@
   <h2>Tournament History</h2>
 </div>
 
-<%= @tournament_history_view_model.render %>
+<%= render partial: @tournament_history_view_model, as: :vm %>
 
 <div class="form-actions">
   <%= link_to 'Series index', series_index_path, class: 'btn' %>

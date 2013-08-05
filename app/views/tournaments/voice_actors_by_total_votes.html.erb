@@ -2,4 +2,4 @@
   <h1>Voice actors <small>Sorted by total votes gained in Saimoe <%= @tournament.year %></small></h1>
 </div>
 
-<%= @view_model.render %>
+<%= render partial: @view_model, as: :vm %>

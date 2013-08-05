@@ -14,9 +14,7 @@
         <div class="page-header">
           <h3>Most Recent <%= 'Result'.pluralize(@most_recent_view_models.size) %></h3>
         </div>
-        <% @most_recent_view_models.each do |mvm| %>
-          <%= mvm.render %>
-        <% end %>
+        <%= render partial: @most_recent_view_models, as: :vm %>
       <% end %>
     </div>
     <div class="span6 home-match-container">
@@ -24,9 +22,7 @@
         <div class="page-header">
           <h3>Today's <%= 'Match'.pluralize(@todays_match_view_models.size) %></h3>
         </div>
-        <% @todays_match_view_models.each do |mvm| %>
-          <%= mvm.render %>
-        <% end %>
+        <%= render partial: @todays_match_view_models, as: :vm %>
       <% elsif @next_match_date %>
         <div class="page-header">
           <h3>Coming Up</h3>
@@ -37,6 +33,10 @@
   </div>
 </div>
 
+<div class="cb"></div>
+
 <hr />
 
-<%= @tournament_view_model.render if @tournament_view_model %>
+<% if @tournament_view_model %>
+  <%= render partial: @tournament_view_model, as: :vm %>
+<% end %>

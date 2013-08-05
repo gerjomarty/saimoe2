@@ -5,10 +5,15 @@ class MatchViewModel
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::RenderingHelper
   include Rails.application.routes.url_helpers
 
   attr_reader :match
   attr_accessor :match_name, :info_position, :table_margins, :show_percentages
+
+  def to_partial_path
+    'view_models/match'
+  end
 
   def initialize match, options={}
   	@match = match
@@ -16,14 +21,28 @@ class MatchViewModel
   	self
   end
 
-  def render
-  	content_tag :div, class: "match-view-model #{info_position_class}", style: style do
-      ''.tap do |outer_tag|
-        outer_tag << match_entries_div
-        outer_tag << content_tag(:div, '', class: 'cb') if info_position == :bottom
-        outer_tag << match_info_div
-        outer_tag << content_tag(:div, '', class: 'cb')
-      end.html_safe
+  def info_position_class
+    case info_position
+    when :left   then 'info-left'
+    when :right  then 'info-right'
+    when :bottom then 'info-bottom'
+    end
+  end
+
+  def style
+    [background_style, table_margins_style].compact.join(' ')
+  end
+
+  def character_entries
+    match_entries.collect do |me|
+      CharacterEntry.new(me, show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages)
+    end
+  end
+
+  def match_info_div
+    style = "height: #{(3.657 * match_entries.size) - 1}em; line-height: #{3.657 * match_entries.size}em;" unless info_position == :bottom
+    content_tag :div, class: "match-date #{text_color_class} #{info_position_class}", style: style do
+      match_info_content
     end
   end
 
@@ -89,10 +108,12 @@ class MatchViewModel
       link_to(date_path(next_match_playoff.date.to_s(:number)),
         rel: :html_popover, data: {trigger: :hover, placement: :bottom, container: :body}) do
         "went to playoff"
-      end +
-      content_tag(:div, rel: :html_popover_content) do
-        MatchViewModel.new(next_match_playoff, match_name: :short).render
       end
+      # TODO: Factor all view code to the partial to make this render partial work
+      # end +
+      # content_tag(:div, rel: :html_popover_content) do
+      #   render_to_string partial: MatchViewModel.new(next_match_playoff, match_name: :short), as: :vm
+      # end
     end
   end
 
@@ -107,34 +128,6 @@ class MatchViewModel
       else
         false
       end
-  end
-
-  # Rendering
-
-  def info_position_class
-    case info_position
-    when :left   then 'info-left'
-    when :right  then 'info-right'
-    when :bottom then 'info-bottom'
-    end
-  end
-
-  def match_entries_div
-    content_tag :div, class: "match-entries #{info_position_class}" do
-      ''.tap do |mes_tag|
-        match_entries.each.with_index do |me, i|
-          mes_tag << CharacterEntry.new(me, show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages).render
-          mes_tag << content_tag(:div, '', class: 'cb') if info_position == :bottom && i.odd?
-        end
-      end.html_safe
-    end
-  end
-
-  def match_info_div
-    style = "height: #{(3.657 * match_entries.size) - 1}em; line-height: #{3.657 * match_entries.size}em;" unless info_position == :bottom
-    content_tag :div, class: "match-date #{text_color_class} #{info_position_class}", style: style do
-      match_info_content
-    end
   end
 
   # Style
@@ -180,10 +173,6 @@ class MatchViewModel
     else
       'light_text'
     end
-  end
-
-  def style
-    [background_style, table_margins_style].compact.join(' ')
   end
 
   def background_style

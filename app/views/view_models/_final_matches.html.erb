@@ -1,0 +1,49 @@
+<% cache vm do %>
+    <div class="final-matches-view-model">
+        <% if vm.victory_image_tag %>
+            <div class="victory-image">
+                <%= vm.victory_image_tag %>
+            </div>
+            <hr />
+        <% end %>
+
+        <div class="final">
+            <%= render partial: vm.grand_final_view_model, as: :vm %>
+        </div>
+
+        <div class="cb"></div>
+
+        <div class="quarter-final left">
+            <%= render partial: vm.left_quarter_final_view_models[0], as: :vm %>
+            <div class="cb"></div>
+            <%= render partial: vm.left_quarter_final_view_models[1], as: :vm %>
+        </div>
+        <div class="semi-final left">
+            <%= render partial: vm.left_semi_final_view_model, as: :vm %>
+        </div>
+        <div class="semi-final right">
+            <%= render partial: vm.right_semi_final_view_model, as: :vm %>
+        </div>
+        <div class="quarter-final right">
+            <%= render partial: vm.right_quarter_final_view_models[0], as: :vm %>
+            <div class="cb"></div>
+            <%= render partial: vm.right_quarter_final_view_models[1], as: :vm %>
+        </div>
+
+        <div class="cb"></div>
+
+        <% if vm.last_16_view_models.any? %>
+            <hr />
+            <h3><%= MatchInfo.pretty_stage(:last_16) %></h3>
+            <div class="last-16">
+                <% vm.last_16_view_models.each do |matches_block| %>
+                    <div class="last-16-block">
+                        <%= render partial: matches_block[0], as: :vm %>
+                        <div class="cb"></div>
+                        <%= render partial: matches_block[1], as: :vm %>
+                    </div>
+                <% end %>
+            </div>
+        <% end %>
+    </div>
+<% end %>

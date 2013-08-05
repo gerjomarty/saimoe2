@@ -1,0 +1,17 @@
+<% cache vm do %>
+    <% vm.statistics_results.each do |stage_name, results| %>
+        <% if stage_name %>
+            <h4><%= stage_name %></h4>
+        <% end %>
+        <div class="statistics-list-view-model">
+            <table class="table table-condensed">
+                <tbody>
+                    <%= vm.render_table_rows(stage_name, results) %>
+                </tbody>
+            </table>
+        </div>
+    <% end %>
+    <% if vm.show_comparison? %>
+        <small class="delta-explanation">(Icons indicate change from previous match day's results.)</small>
+    <% end %>
+<% end %>

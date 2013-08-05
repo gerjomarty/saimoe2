@@ -9,6 +9,10 @@ class WinnersLosersPopoverViewModel
 
   attr_reader :winners, :losers, :unfinished
 
+  def to_partial_path
+    'view_models/winners_losers_popover'
+  end
+
   def initialize winners, losers, unfinished
     @winners = winners || []
     @losers = losers || []
@@ -21,8 +25,6 @@ class WinnersLosersPopoverViewModel
       (yet_to_play_div + winners_losers_div).html_safe
     end
   end
-
-  private
 
   def yet_to_play_div
     return '' if unfinished.none?
@@ -39,6 +41,8 @@ class WinnersLosersPopoverViewModel
       (winners_div + losers_div).html_safe
     end
   end
+
+  private
 
   def winners_div
     return '' if winners.none?

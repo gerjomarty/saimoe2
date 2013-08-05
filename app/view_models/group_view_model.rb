@@ -9,28 +9,22 @@ class GroupViewModel
 
   attr_reader :tournament, :group
 
+  def to_partial_path
+    'view_models/group'
+  end
+
   def initialize tournament, group
     @tournament = tournament
     @group = group
     self
   end
 
-  def render
-    content_tag(:div, class: 'group-view-model') do
-      ''.tap do |outer_tag|
-        stages.each.with_index do |stage, index|
-          outer_tag << content_tag(:div, class: 'group-view-model-stage') do
-            ''.tap do |stage_tag|
-              stage_tag << content_tag(:h4, MatchInfo.pretty_stage(stage))
-              stage_tag << content_tag(:div, '', class: 'cb')
-              matches_for(stage).each do |match|
-                stage_tag << MatchViewModel.new(match, table_margins: index > 0, match_name: :short).render
-                stage_tag << content_tag(:div, '', class: 'cb')
-              end
-            end.html_safe
-          end
-        end
-      end.html_safe
+  def render_group_stages
+    stages.collect.with_index do |stage, index|
+      {stage: MatchInfo.pretty_stage(stage),
+       match_view_models: matches_for(stage).collect do |match|
+         MatchViewModel.new(match, table_margins: index > 0, match_name: :short)
+       end}
     end
   end
 

@@ -1,0 +1,26 @@
+<% cache vm do %>
+    <div class="single-tournament-history-view-model">
+        <dt>
+            <%= vm.tournament.year %>
+        </dt>
+        <dd>
+            <%= vm.render_stage_buttons %>
+
+            <div class="btn-group">
+                <% vm.visible_stages.each do |stage| %>
+                    <button class="btn <%= vm.button_class(stage) %>"
+                        rel="html_named_popover_<%= vm.tournament.year %>_<%= stage %>"
+                        data-trigger="hover click"
+                        data-placement="top">
+                        <%= MatchInfo.pretty_stage(stage) %>
+                    </button>
+                <% end %>
+                <% vm.participated_stages.each do |stage| %>
+                    <div rel="html_named_popover_<%= vm.tournament.year %>_<%= stage %>_content">
+                        <%= render partial: vm.popover_view_model, as: :vm %>
+                    </div>
+                <% end %>
+            </div>
+        </dd>
+    </div>
+<% end %>

@@ -145,22 +145,6 @@ Character.find_each do |char|
   char.save!
 end
 
-# DON'T DO THIS NOW THAT WE'RE LIVE TO THE WORLD
-#Character.find_each do |char|
-#  # Now correct the slug history table so the incorrect ones never existed
-#  ActiveRecord::Base.connection.select_values(%Q|SELECT id
-#                                                 FROM friendly_id_slugs
-#                                                 WHERE sluggable_type = 'Character'
-#                                                 AND sluggable_id = #{char.id}
-#                                                 ORDER BY id;|)[1..-1].each do |id|
-#    ActiveRecord::Base.connection.execute "DELETE FROM friendly_id_slugs WHERE id = #{id};"
-#  end
-#  ActiveRecord::Base.connection.execute %Q|UPDATE friendly_id_slugs
-#                                           SET slug = '#{char.slug}'
-#                                           WHERE sluggable_type = 'Character'
-#                                           AND sluggable_id = #{char.id};|
-#end
-
 $stderr.puts " done!"
 
 (2002..2012).each do |year|

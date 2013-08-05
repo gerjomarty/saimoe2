@@ -9,22 +9,15 @@ class SingleTournamentHistoryViewModel
 
   attr_reader :entity, :tournament
 
+  def to_partial_path
+    'view_models/single_tournament_history'
+  end
+
   def initialize entity, tournament
     @entity = entity
     @tournament = tournament
     self
   end
-
-  def render
-    content_tag :div, class: 'single-tournament-history-view-model' do
-      content_tag(:dt) { tournament.year } +
-      content_tag(:dd) { render_stage_buttons }
-    end
-  end
-
-  private
-
-  # Rendering
 
   def render_stage_buttons
     content_tag(:div, class: 'btn-group') do
@@ -51,24 +44,34 @@ class SingleTournamentHistoryViewModel
     end
   end
 
-  def popover_content stage
+  def popover_view_model stage
     if entity.is_a? Character
-      single_match_popover_content stage
+      single_match_popover_view_model stage
     else
-      multiple_matches_popover_content stage
+      multiple_matches_popover_view_model stage
     end
   end
 
-  def single_match_popover_content stage
-    match = entry_information[stage].values.flatten.first[:match]
-    return nil unless match
-    MatchViewModel.new(match, show_percentages: true).render
+  def participated_stages
+    @participated_stages ||= entry_information.keys
   end
 
-  def multiple_matches_popover_content stage
+  def visible_stages
+    @visible_stages ||= all_stages & (participated_stages | default_visible_stages)
+  end
+
+  private
+
+  def single_match_popover_view_model stage
+    match = entry_information[stage].values.flatten.first[:match]
+    return nil unless match
+    MatchViewModel.new(match, show_percentages: true)
+  end
+
+  def multiple_matches_popover_view_model stage
     WinnersLosersPopoverViewModel.new(entry_information[stage][:winner],
                                       entry_information[stage][:loser],
-                                      entry_information[stage][:unfinished]).render
+                                      entry_information[stage][:unfinished])
   end
 
   # Common to tournament
@@ -109,10 +112,6 @@ class SingleTournamentHistoryViewModel
   # However, these methods only apply to button state when there are multiple match entries per stage
   # Therefore, don't rely on these methods to decide logic for individual matches in this case
 
-  def participated_stages
-    @participated_stages ||= entry_information.keys
-  end
-
   def winning_stages
     @winning_stages ||= entry_information.select {|stage, info| info[:winner] && info[:winner].any? }.keys
   end
@@ -123,9 +122,5 @@ class SingleTournamentHistoryViewModel
 
   def unfinished_stages
     @unfinished_stages ||= entry_information.select {|stage, info| info[:unfinished] && info[:unfinished].any? }.keys
-  end
-
-  def visible_stages
-    @visible_stages ||= all_stages & (participated_stages | default_visible_stages)
   end
 end

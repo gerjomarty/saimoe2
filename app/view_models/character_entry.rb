@@ -12,6 +12,10 @@ class CharacterEntry
   attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
   attr_accessor :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background
 
+  def to_partial_path
+    'view_models/character_entry'
+  end
+
   def initialize character_or_match_entry, options={}
     if character_or_match_entry.is_a? Character
       @character = character_or_match_entry
@@ -61,15 +65,65 @@ class CharacterEntry
     @grey_background.nil? ? false : @grey_background
   end
 
-  def render
-    content_tag :div, class: main_div_class, style: main_div_style do
-      ''.tap do |tag|
-        tag << avatar_div if show_avatar
-        tag << stats_div if (show_votes && votes) || (show_percentage && formatted_percentage)
-        tag << character_div
-        tag << series_div if show_series && series
-        tag << content_tag(:div, '', class: 'cb')
-      end.html_safe
+  def main_div_class
+    'character_entry'.tap do |div_class|
+      div_class << ' right' if right_align
+      div_class << ' fixed_width' if fixed_width
+      div_class << ' transparent' if should_make_transparent?
+      div_class << ' grey_background' if grey_background
+      div_class << ' hide_series' unless show_series && series
+      div_class << ' hide_avatar' unless show_avatar
+      div_class << ' percentage_width' if percentage_width
+      div_class << (bright_color(series_color) ? ' dark_text' : ' light_text') if series_color
+    end
+  end
+
+  def main_div_style
+    [].tap do |style|
+      style << "background-color: ##{series_color};" if series_color
+      style << "width: #{percentage_width}%;" if percentage_width
+    end.join(' ')
+  end
+
+  def avatar_div
+    return '' unless show_avatar
+    content_tag :div, class: 'character_image' do
+      image_tag avatar_url, title: character_display_name
+    end
+  end
+
+  def stats_div
+    return '' unless (show_votes && votes) || (show_percentage && formatted_percentage)
+    content = [votes, formatted_percentage].compact
+    div_class = 'character_votes'
+    div_class << (winner? ? ' winner' : ' loser') if show_color
+    content_tag :div, class: div_class do
+      content_tag :span, class: ('two-lines' if content.size == 2) do
+        ''.tap do |span_tag|
+          span_tag << content_tag(:p, content[0])
+          if content[1]
+            span_tag << tag(:br)
+            span_tag << content_tag(:span, content[1])
+          end
+        end.html_safe
+      end
+    end
+  end
+
+  def character_div
+    content_tag :div, class: 'character_name' do
+      if character && character_display_name
+        link_to character_display_name, character_path(character), title: character_display_name
+      else
+        "Winner of #{previous_match.pretty}"
+      end
+    end
+  end
+
+  def series_div
+    return '' unless show_series && series
+    content_tag :div, class: 'series_name' do
+      content_tag(:em, link_to(series.name, series_path(series), title: series.name)) if series
     end
   end
 
@@ -148,82 +202,6 @@ class CharacterEntry
   end
 
   # Rendering
-
-  def bright_color hex_string
-    return nil unless hex_string
-    red, green, blue = hex_string.sub(/\A#/, '').scan(/../).map {|color| color.to_i(16)}
-    (0.299*red + 0.587*green + 0.114*blue) > 100
-  end
-
-  def main_div_class
-    'character_entry'.tap do |div_class|
-      div_class << ' right' if right_align
-      div_class << ' fixed_width' if fixed_width
-      div_class << ' transparent' if should_make_transparent?
-      div_class << ' grey_background' if grey_background
-      div_class << ' hide_series' unless show_series && series
-      div_class << ' hide_avatar' unless show_avatar
-      div_class << ' percentage_width' if percentage_width
-      div_class << (bright_color(series_color) ? ' dark_text' : ' light_text') if series_color
-    end
-  end
-
-  def main_div_style
-    [].tap do |style|
-      style << "background-color: ##{series_color};" if series_color
-      style << "width: #{percentage_width}%;" if percentage_width
-    end.join(' ')
-  end
-
-  def avatar_div
-    content_tag :div, class: 'character_image' do
-      image_tag avatar_url, title: character_display_name
-    end
-  end
-
-  def stats_div
-    votes_div_class = 'character_votes'
-    votes_div_class << (winner? ? ' winner' : ' loser') if show_color
-    content_tag :div, class: votes_div_class do
-      content_tag :span do
-        content_tag :p
-      end
-      content_tag :p, votes.to_s
-    end
-  end
-
-  def stats_div
-    content = [votes, formatted_percentage].compact
-    div_class = 'character_votes'
-    div_class << (winner? ? ' winner' : ' loser') if show_color
-    content_tag :div, class: div_class do
-      content_tag :span, class: ('two-lines' if content.size == 2) do
-        ''.tap do |span_tag|
-          span_tag << content_tag(:p, content[0])
-          if content[1]
-            span_tag << tag(:br)
-            span_tag << content_tag(:span, content[1])
-          end
-        end.html_safe
-      end
-    end
-  end
-
-  def character_div
-    content_tag :div, class: 'character_name' do
-      if character && character_display_name
-        link_to character_display_name, character_path(character), title: character_display_name
-      else
-        "Winner of #{previous_match.pretty}"
-      end
-    end
-  end
-
-  def series_div
-    content_tag :div, class: 'series_name' do
-      content_tag(:em, link_to(series.name, series_path(series), title: series.name)) if series
-    end
-  end
 
   def should_make_transparent?
     if transparency == :all_but_winner

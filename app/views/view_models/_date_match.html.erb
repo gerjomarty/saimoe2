@@ -1,0 +1,18 @@
+<% cache vm do %>
+    <div class="date-match-view-model container-fluid">
+        <div class="row-fluid">
+            <div class="span-5">
+                <%= vm.render_title %>
+                <div class="match-view">
+                    <%= render partial: @character_entries, as: :vm %>
+                </div>
+                <%= vm.render_match_view %>
+            </div>
+            <div class="span-7">
+                <% if vm.match.vote_graph? %>
+                    <%= image_tag vm.match.vote_graph_url %>
+                <% end %>
+            </div>
+        </div>
+    </div>
+<% end %>

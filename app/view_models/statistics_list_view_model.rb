@@ -9,6 +9,10 @@ class StatisticsListViewModel
 
   attr_reader :statistics, :comparison_statistics, :entities_to_bold
 
+  def to_partial_path
+    'view_models/statistics_list'
+  end
+
   def initialize statistics, options={}
     raise ArgumentError, 'statistics must be an instance of Statistics' unless statistics.is_a? Statistics
     @statistics = statistics
@@ -27,27 +31,28 @@ class StatisticsListViewModel
     self
   end
 
-  def render
-    statistics_results.collect do |stage_name, results|
-      (stage_name ? content_tag(:h4, MatchInfo.pretty_stage(stage_name)) : '') +
-      content_tag(:div, class: 'statistics-list-view-model') do
-        content_tag(:table, class: 'table table-condensed') do
-          content_tag(:tbody) do
-            render_table_rows(stage_name, results)
-          end
-        end
-      end
-    end.inject(:+).html_safe +
-    render_comparison_explanation
+  def show_comparison?
+    !comparison_statistics.nil?
   end
-
-  private
 
   def render_table_rows stage_name, results
     results.collect do |result|
       content_tag(:tr) { render_table_row stage_name, *result }
     end.inject(:+)
   end
+
+  def statistics_results
+    return @statistics_results if @statistics_results
+
+    results = statistics.fetch_results
+    if results.is_a? Hash
+      @statistics_results = results.collect {|r| [MatchInfo.pretty_stage(r[0]), r[1]]}
+    else
+      @statistics_results = [[nil, results]]
+    end
+  end
+
+  private
 
   def render_table_row stage_name, rank, stat, entity, series
     (render_comparison(stage_name, rank, entity) +
@@ -104,28 +109,14 @@ class StatisticsListViewModel
     end
   end
 
-  def render_comparison_explanation
-    return '' unless show_comparison?
-    content_tag(:small, "(Icons indicate change from previous match day's results.)", class: 'delta-explanation')
-  end
-
-  def statistics_results
-    return @statistics_results if @statistics_results
-
-    results = statistics.fetch_results
-    if results.is_a? Hash
-      @statistics_results = results.to_a
-    else
-      @statistics_results = [[nil, results]]
-    end
-  end
-
   def comparison_results
-    @comparison_results ||= comparison_statistics && comparison_statistics.fetch_results
-  end
+    return @comparison_results if @comparison_results
 
-  def show_comparison?
-    !comparison_statistics.nil?
+    results = comparison_statistics.fetch_results
+    if results.is_a? Hash
+      results.keys.each {|k| results[MatchInfo.pretty_stage(k)] = results.delete(k) }
+    end
+    @comparison_results = results
   end
 
   def should_bold_entity? e

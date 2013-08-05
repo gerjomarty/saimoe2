@@ -9,39 +9,48 @@ class FinalMatchesViewModel
 
   attr_reader :tournament
 
+  def to_partial_path
+    'view_models/final_matches'
+  end
+
   def initialize tournament
     @tournament = tournament
     self
-  end
-
-  def render
-    content_tag :div, class: 'final-matches-view-model' do
-      ''.tap do |outer_tag|
-        if show_victory_image?
-          outer_tag << victory_image_div
-          outer_tag << tag(:hr)
-        end
-        outer_tag << grand_final_div
-        outer_tag << content_tag(:div, '', class: 'cb')
-        outer_tag << left_quarter_final_div
-        outer_tag << left_semi_final_div
-        outer_tag << right_semi_final_div
-        outer_tag << right_quarter_final_div
-        outer_tag << content_tag(:div, '', class: 'cb')
-        if show_last_16?
-          outer_tag << tag(:hr)
-          outer_tag << content_tag(:h3, MatchInfo.pretty_stage(:last_16))
-          outer_tag << last_16_div
-        end
-      end.html_safe
-    end
   end
 
   def visible?
     matches.any?
   end
 
-  private
+  def grand_final_view_model
+    MatchViewModel.new(final_match, match_name: :long, info_position: :bottom)
+  end
+
+  def left_quarter_final_view_models
+    quarter_final_matches[0..1].collect do |match|
+      MatchViewModel.new(match, match_name: :short)
+    end
+  end
+
+  def left_semi_final_view_model
+    MatchViewModel.new(semi_final_matches[0], match_name: :short)
+  end
+
+  def right_semi_final_view_model
+    MatchViewModel.new(semi_final_matches[1], match_name: :short, info_position: :left)
+  end
+
+  def right_quarter_final_view_models
+    quarter_final_matches[2..3].collect do |match|
+      MatchViewModel.new(match, match_name: :short, info_position: :left)
+    end
+  end
+
+  def last_16_view_models
+    last_16_matches.collect do |match|
+      MatchViewModel.new(match, match_name: :short)
+    end.each_slice(2)
+  end
 
   def victory_image_tag
     %w{png jpg jpeg}.each do |ext|
@@ -51,9 +60,7 @@ class FinalMatchesViewModel
     nil
   end
 
-  def show_victory_image?
-    victory_image_tag.present?
-  end
+  private
 
   def matches
     @matches ||=
@@ -78,71 +85,5 @@ class FinalMatchesViewModel
 
   def last_16_matches
     @last_16_matches ||= matches.select {|m| m.stage == :last_16}
-  end
-
-  def show_last_16?
-    matches.any? {|m| m.stage == :last_16}
-  end
-
-  # Rendering
-
-  def victory_image_div
-    content_tag :div, class: 'victory-image' do
-      victory_image_tag
-    end
-  end
-
-  def grand_final_div
-    content_tag :div, class: 'final' do
-      MatchViewModel.new(final_match, match_name: :long, info_position: :bottom).render
-    end
-  end
-
-  def left_quarter_final_div
-    content_tag :div, class: 'quarter-final left' do
-      ''.tap do |outer_tag|
-        outer_tag << MatchViewModel.new(quarter_final_matches[0], match_name: :short).render
-        outer_tag << content_tag(:div, '', class: 'cb')
-        outer_tag << MatchViewModel.new(quarter_final_matches[1], match_name: :short).render
-      end.html_safe
-    end
-  end
-
-  def left_semi_final_div
-    content_tag :div, class: 'semi-final left' do
-      MatchViewModel.new(semi_final_matches[0], match_name: :short).render
-    end
-  end
-
-  def right_semi_final_div
-    content_tag :div, class: 'semi-final right' do
-      MatchViewModel.new(semi_final_matches[1], match_name: :short, info_position: :left).render
-    end
-  end
-
-  def right_quarter_final_div
-    content_tag :div, class: 'quarter-final right' do
-      ''.tap do |outer_tag|
-        outer_tag << MatchViewModel.new(quarter_final_matches[2], match_name: :short, info_position: :left).render
-        outer_tag << content_tag(:div, '', class: 'cb')
-        outer_tag << MatchViewModel.new(quarter_final_matches[3], match_name: :short, info_position: :left).render
-      end.html_safe
-    end
-  end
-
-  def last_16_div
-    content_tag :div, class: 'last-16' do
-      ''.tap do |outer_tag|
-        last_16_matches.each_slice(2) do |top_match, bottom_match|
-          outer_tag << content_tag(:div, class: 'last-16-block') do
-            ''.tap do |inner_tag|
-              inner_tag << MatchViewModel.new(top_match, match_name: :short).render
-              inner_tag << content_tag(:div, '', class: 'cb')
-              inner_tag << MatchViewModel.new(bottom_match, match_name: :short).render
-            end.html_safe
-          end
-        end
-      end.html_safe
-    end
   end
 end

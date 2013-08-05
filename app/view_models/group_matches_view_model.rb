@@ -9,22 +9,20 @@ class GroupMatchesViewModel
 
   attr_reader :tournament
 
+  def to_partial_path
+    'view_models/group_matches'
+  end
+
   def initialize tournament
     @tournament = tournament
     self
   end
 
-  def render
-    content_tag :div, class: 'group-matches-view-model' do
-      ''.tap do |outer_tag|
-        groups.each do |group|
-          outer_tag << group_selector(group)
-          outer_tag << group_title(group)
-          outer_tag << GroupViewModel.new(tournament, group).render
-          outer_tag << content_tag(:div, '', class: 'cb')
-          outer_tag << tag(:hr)
-        end
-      end.html_safe
+  def render_groups
+    groups.collect do |group|
+      {selector: group_selector(group),
+       title: group_title(group),
+       group_view_model: GroupViewModel.new(tournament, group)}
     end
   end
 

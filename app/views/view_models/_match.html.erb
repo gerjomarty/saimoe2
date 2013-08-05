@@ -1,0 +1,19 @@
+<% cache vm do %>
+    <div class="match-view-model <%= vm.info_position_class %>" style="<%= vm.style %>">
+        <div class="match-entries <%= vm.info_position_class %>">
+            <% vm.character_entries.each.with_index do |ce, i| %>
+                <%= render partial: ce, as: :vm %>
+                <% if vm.info_position_class == 'info-bottom' && i.odd? %>
+                    <div class="cb"></div>
+                <% end %>
+            <% end %>
+        </div>
+
+        <% if vm.info_position_class == 'info-bottom' %>
+            <div class="cb"></div>
+        <% end %>
+        
+        <%= vm.match_info_div %>
+        <div class="cb"></div>
+    </div>
+<% end %>
