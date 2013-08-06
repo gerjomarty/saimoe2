@@ -12,9 +12,9 @@
   <div class="row-fluid">
     <% @chars.each do |char_arr| %>
       <div class="span3">
-        <% char_arr.each do |character_entry| %>
-          <%= character_entry.render %>
-        <% end %>
+        <%= render partial: 'view_models/character_entry',
+                   collection: char_arr,
+                   as: :vm %>
       </div>
     <% end %>
   </div>
@@ -26,7 +26,9 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <%= @statistics_list_view_model.render %>
+    <%= render partial: 'view_models/statistics_list',
+               object: @statistics_list_view_model,
+               as: :vm %>
   </div>
 </div>
 
@@ -34,7 +36,9 @@
   <h2>Tournament History</h2>
 </div>
 
-<%= @tournament_history_view_model.render %>
+<%= render partial: 'view_models/tournament_history',
+           object: @tournament_history_view_model,
+           as: :vm %>
 
 <div class="form-actions">
   <%= link_to 'Voice actor index', voice_actors_path, class: :btn  %>

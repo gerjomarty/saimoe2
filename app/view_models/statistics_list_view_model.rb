@@ -13,6 +13,10 @@ class StatisticsListViewModel
     'view_models/statistics_list'
   end
 
+  def dependencies
+    [statistics, comparison_statistics, entities_to_bold].compact
+  end
+
   def initialize statistics, options={}
     raise ArgumentError, 'statistics must be an instance of Statistics' unless statistics.is_a? Statistics
     @statistics = statistics

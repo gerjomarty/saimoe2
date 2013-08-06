@@ -3,9 +3,11 @@ class MatchEntry < ActiveRecord::Base
 
   attr_accessible :number_of_votes, :position, :match, :previous_match, :appearance, :is_finished, :is_winner, :vote_share, :character_name
 
-  belongs_to :match, inverse_of: :match_entries
-  belongs_to :previous_match, class_name: 'Match', foreign_key: :previous_match_id, inverse_of: :next_match_entries
-  belongs_to :appearance, inverse_of: :match_entries
+  belongs_to :match, inverse_of: :match_entries, touch: true
+  belongs_to :previous_match, class_name: 'Match', foreign_key: :previous_match_id, inverse_of: :next_match_entries, touch: true
+  belongs_to :appearance, inverse_of: :match_entries, touch: true
+
+  has_one :tournament, through: :match
 
   validates :match_id, presence: true
   validates :position, presence: true, numericality: {only_integer: true}

@@ -1,4 +1,4 @@
-<% cache vm do %>
+<% cache vm.dependencies do %>
     <% vm.statistics_results.each do |stage_name, results| %>
         <% if stage_name %>
             <h4><%= stage_name %></h4>

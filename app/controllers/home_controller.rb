@@ -1,8 +1,6 @@
 class HomeController < ApplicationController
   layout 'tournaments'
 
-  caches_action :index
-
   def index
     @most_recent_view_models = Match.ordered_by_date
                                     .where(is_finished: true,

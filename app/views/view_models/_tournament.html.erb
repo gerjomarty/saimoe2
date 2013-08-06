@@ -1,10 +1,14 @@
-<% cache vm do %>
+<% cache vm.dependencies do %>
     <div class="tournament-view-model">
         <% if vm.final_matches_view_model.visible? %>
-            <%= render partial: vm.final_matches_view_model, as: :vm %>
+            <%= render partial: 'view_models/final_matches',
+                       object: vm.final_matches_view_model,
+                       as: :vm %>
             <div class="cb"></div>
             <hr />
         <% end %>
-        <%= render partial: vm.group_matches_view_model, as: :vm %>
+        <%= render partial: 'view_models/group_matches',
+                   object: vm.group_matches_view_model,
+                   as: :vm %>
     </div>
 <% end %>

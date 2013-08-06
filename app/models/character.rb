@@ -7,7 +7,7 @@ class Character < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
-  belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id
+  belongs_to :main_series, class_name: 'Series', inverse_of: :main_characters, foreign_key: :main_series_id, touch: true
   has_many :character_roles, inverse_of: :character
 
   has_many :series, through: :character_roles

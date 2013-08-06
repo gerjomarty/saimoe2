@@ -5,8 +5,8 @@ class Appearance < ActiveRecord::Base
 
   mount_uploader :character_avatar, AvatarUploader
 
-  belongs_to :character_role, inverse_of: :appearances
-  belongs_to :tournament, inverse_of: :appearances
+  belongs_to :character_role, inverse_of: :appearances, touch: true
+  belongs_to :tournament, inverse_of: :appearances, touch: true
   has_many :match_entries, inverse_of: :appearance
   has_many :voice_actor_roles, inverse_of: :appearance
 

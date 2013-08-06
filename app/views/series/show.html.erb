@@ -13,7 +13,9 @@
     <div class="row-fluid">
       <% @major_chars.each do |char_arr| %>
         <div class="span3">
-          <%= render partial: char_arr, as: :vm %>
+          <%= render partial: 'view_models/character_entry',
+                     collection: char_arr,
+                     as: :vm %>
         </div>
       <% end %>
     </div>
@@ -29,7 +31,9 @@
     <div class="row-fluid">
       <% @cameo_chars.each do |char_arr| %>
         <div class="span3">
-          <%= render partial: char_arr, as: :vm %>
+          <%= render partial: 'view_models/character_entry',
+                     collection: char_arr,
+                     as: :vm %>
         </div>
       <% end %>
     </div>
@@ -42,7 +46,9 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <%= render partial: @statistics_list_view_model, as: :vm %>
+    <%= render partial: 'view_models/statistics_list',
+               object: @statistics_list_view_model,
+               as: :vm %>
   </div>
 </div>
 
@@ -50,7 +56,9 @@
   <h2>Tournament History</h2>
 </div>
 
-<%= render partial: @tournament_history_view_model, as: :vm %>
+<%= render partial: 'view_models/tournament_history',
+           object: @tournament_history_view_model,
+           as: :vm %>
 
 <div class="form-actions">
   <%= link_to 'Series index', series_index_path, class: 'btn' %>

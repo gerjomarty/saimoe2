@@ -14,6 +14,10 @@ class DateMatchViewModel
     'view_models/date_match'
   end
 
+  def dependencies
+    [match]
+  end
+
   def initialize match
     @match = match
     self

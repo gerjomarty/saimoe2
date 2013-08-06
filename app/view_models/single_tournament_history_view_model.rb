@@ -13,6 +13,10 @@ class SingleTournamentHistoryViewModel
     'view_models/single_tournament_history'
   end
 
+  def dependencies
+    [entity, tournament]
+  end
+
   def initialize entity, tournament
     @entity = entity
     @tournament = tournament
@@ -42,6 +46,10 @@ class SingleTournamentHistoryViewModel
     else
       'disabled'
     end
+  end
+
+  def popover_name stage
+    "#{tournament.year}_#{stage}"
   end
 
   def popover_view_model stage

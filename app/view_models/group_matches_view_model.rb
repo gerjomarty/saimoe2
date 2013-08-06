@@ -13,6 +13,10 @@ class GroupMatchesViewModel
     'view_models/group_matches'
   end
 
+  def dependencies
+    [tournament]
+  end
+
   def initialize tournament
     @tournament = tournament
     self

@@ -1,5 +1,7 @@
-<% cache vm do %>
+<% cache vm.dependencies do %>
     <dl class="dl-horizontal">
-        <%= render partial: @single_tournament_view_models, as: :vm %>
+        <%= render partial: 'view_models/single_tournament_history',
+                   object: @single_tournament_view_models,
+                   as: :vm %>
     </dl>
 <% end %>

@@ -13,6 +13,10 @@ class GroupViewModel
     'view_models/group'
   end
 
+  def dependencies
+    [tournament, group]
+  end
+
   def initialize tournament, group
     @tournament = tournament
     @group = group

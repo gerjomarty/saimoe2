@@ -2,4 +2,6 @@
   <h1>Series <small>Sorted by total votes gained in Saimoe <%= @tournament.year %></small></h1>
 </div>
 
-<%= render partial: @view_model, as: :vm %>
+<%= render partial: 'view_models/statistics_list',
+           object: @view_model,
+           as: :vm %>

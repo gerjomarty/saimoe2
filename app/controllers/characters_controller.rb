@@ -1,7 +1,6 @@
 require 'alphabetical_pagination'
 
 class CharactersController < ApplicationController
-  caches_action :index
 
   # GET /characters
   def index

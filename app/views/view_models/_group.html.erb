@@ -1,11 +1,13 @@
-<% cache vm do %>
+<% cache vm.dependencies do %>
     <div class="group-view-model">
         <% vm.render_group_stages.each do |r| %>
             <div class="group-view-model-stage">
                 <h4><%= r[:stage] %></h4>
                 <div class="cb"></div>
                 <% r[:match_view_models].each do |match_view_model| %>
-                    <%= render partial: match_view_model, as: :vm %>
+                    <%= render partial: 'view_models/match',
+                               object: match_view_model,
+                               as: :vm %>
                     <div class="cb"></div>
                 <% end %>
             </div>

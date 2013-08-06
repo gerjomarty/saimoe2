@@ -1,7 +1,6 @@
 require 'alphabetical_pagination'
 
 class SeriesController < ApplicationController
-  caches_action :index
 
   # GET /series
   def index

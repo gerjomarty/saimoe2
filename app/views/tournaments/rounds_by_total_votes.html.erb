@@ -2,4 +2,6 @@
   <h1>Characters <small>Sorted by votes gained at each stage of Saimoe <%= @tournament.year %></small></h1>
 </div>
 
-<%= render partial: @view_model, as: :vm %>
+<%= render partial: 'view_models/statistics_list',
+           object: @view_model,
+           as: :vm %>

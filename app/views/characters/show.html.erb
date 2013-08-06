@@ -22,7 +22,9 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <%= render partial: @statistics_list_view_model, as: :vm %>
+    <%= render partial: 'view_models/statistics_list',
+               object: @statistics_list_view_model,
+               as: :vm %>
   </div>
 </div>
 
@@ -30,7 +32,9 @@
   <h2>Tournament History</h2>
 </div>
 
-<%= render partial: @tournament_history_view_model, as: :vm %>
+<%= render partial: 'view_models/tournament_history',
+           object: @tournament_history_view_model,
+           as: :vm %>
 
 <div class="form-actions">
   <%= link_to 'Character index', characters_path, class: 'btn' %>

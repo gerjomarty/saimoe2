@@ -13,6 +13,10 @@ class WinnersLosersPopoverViewModel
     'view_models/winners_losers_popover'
   end
 
+  def dependencies
+    [winners, losers, unfinished].compact
+  end
+
   def initialize winners, losers, unfinished
     @winners = winners || []
     @losers = losers || []

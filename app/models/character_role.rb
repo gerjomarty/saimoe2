@@ -1,6 +1,6 @@
 class CharacterRole < ActiveRecord::Base
-  belongs_to :character, inverse_of: :character_roles
-  belongs_to :series, inverse_of: :character_roles
+  belongs_to :character, inverse_of: :character_roles, touch: true
+  belongs_to :series, inverse_of: :character_roles, touch: true
   has_many :appearances, inverse_of: :character_role
 
   accepts_nested_attributes_for :appearances, allow_destroy: true

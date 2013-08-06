@@ -16,6 +16,10 @@ class CharacterEntry
     'view_models/character_entry'
   end
 
+  def dependencies
+    [character, match_entry].compact
+  end
+
   def initialize character_or_match_entry, options={}
     if character_or_match_entry.is_a? Character
       @character = character_or_match_entry

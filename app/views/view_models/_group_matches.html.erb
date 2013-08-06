@@ -1,9 +1,11 @@
-<% cache vm do %>
+<% cache vm.dependencies do %>
     <div class="group-matches-view-model">
         <% vm.render_groups.each do |r| %>
             <%= r[:selector] %>
             <%= r[:title] %>
-            <%= render partial: r[:group_view_model], as: :vm %>
+            <%= render partial: 'view_models/group',
+                       object: r[:group_view_model],
+                       as: :vm %>
             <div class="cb"></div>
             <hr />
         <% end %>

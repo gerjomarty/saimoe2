@@ -15,6 +15,10 @@ class MatchViewModel
     'view_models/match'
   end
 
+  def dependencies
+    [match]
+  end
+
   def initialize match, options={}
   	@match = match
     options.each {|key, value| self.send "#{key}=".to_sym, value }

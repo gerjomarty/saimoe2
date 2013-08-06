@@ -13,6 +13,10 @@ class TournamentViewModel
     'view_models/tournament'
   end
 
+  def dependencies
+    [tournament]
+  end
+
   def initialize tournament
     @tournament = tournament
     self

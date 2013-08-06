@@ -13,6 +13,10 @@ class TournamentHistoryViewModel
     'view_models/tournament_history'
   end
 
+  def dependencies
+    [entity]
+  end
+
   def initialize entity
     @entity = entity
     self
