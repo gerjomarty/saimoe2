@@ -118,8 +118,10 @@ class CharacterEntry
     content_tag :div, class: 'character_name' do
       if character && character_display_name
         link_to character_display_name, character_path(character), title: character_display_name
-      else
+      elsif previous_match
         "Winner of #{previous_match.pretty}"
+      else
+        "#{match_entry.match.pretty(:short)} Entry #{match_entry.position}"
       end
     end
   end

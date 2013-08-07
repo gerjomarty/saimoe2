@@ -1,9 +1,18 @@
-<div class="hero-unit">
+<div class="well">
   <p>
     This site aims to bring together facts and figures about the current and previous iterations of the <em>Anime Saimoe Tournament</em>&mdash;a competition to find the most moe character of the year, organised by users of Japanese message board <%= link_to '2ch', 'http://www.2ch.net' %>.
   </p>
   <p>
-    This is not the official Saimoe site, and is not responsible for the running of the tournament. The official Saimoe 2012 site is <%= link_to 'here', 'http://ast2012.saimoe.me' %>, but is in Japanese only. Many thanks to Anonymous of the <%= link_to 'unofficial English Saimoe site', 'http://www.animesaimoe.org' %>, from which all of the data on this site is collected.
+    This is not the official Saimoe site, nor is it responsible for the running of the tournament. The official Saimoe 2013 site is <%= link_to 'here', 'http://acst13.saimoe.me/' %>, but is in Japanese only. Many thanks to Anonymous of the <%= link_to 'unofficial English Saimoe site', 'http://www.animesaimoe.org' %>, from which all of the data on this site is collected.
+  </p>
+  <p>
+    <strong>Update 2013-08-07:</strong>
+  </p>
+  <p>
+    The site has undergone a bit of a refresh in time for the 2013 tournament proper. Expect more features and statistics throughout this year's tournament.
+  </p>
+  <p>
+    The preliminary rounds to decide who qualifies for the tournament are happening at the moment, and will continue until 2013-08-16. See <%= link_to 'animesaimoe.org', 'http://www.animesaimoe.org/' %> for information on who's qualified so far and how to take part.
   </p>
 </div>
 
@@ -20,7 +29,7 @@
       <% end %>
     </div>
     <div class="span6 home-match-container">
-      <% if @todays_match_view_models.any? %>
+      <% if @todays_match_view_models %>
         <div class="page-header">
           <h3>Today's <%= 'Match'.pluralize(@todays_match_view_models.size) %></h3>
         </div>
@@ -31,7 +40,7 @@
         <div class="page-header">
           <h3>Coming Up</h3>
         </div>
-        <p>Next match on <%= @next_match_date.to_s(:short) %></p>
+        <h4>Next match on <%= @next_match_date.to_s(:long) %></h4>
       <% end %>
     </div>
   </div>

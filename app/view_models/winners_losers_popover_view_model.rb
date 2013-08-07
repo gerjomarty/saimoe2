@@ -34,8 +34,7 @@ class WinnersLosersPopoverViewModel
     return '' if unfinished.none?
     content_tag(:div, class: 'row-fluid') do
       content_tag(:div, class: 'span12') do
-        content_tag(:h4, 'Yet to play') +
-        render_list(unfinished)
+        render_list('Yet to play', unfinished)
       end
     end
   end
@@ -51,16 +50,14 @@ class WinnersLosersPopoverViewModel
   def winners_div
     return '' if winners.none?
     content_tag(:div, class: winners_losers_class) do
-      content_tag(:h4, 'Winners') +
-      render_list(winners, winners_table_class)
+      render_list('Winners', winners, winners_table_class)
     end
   end
 
   def losers_div
     return '' if losers.none?
     content_tag(:div, class: winners_losers_class) do
-      content_tag(:h4, 'Losers') +
-      render_list(losers, losers_table_class)
+      render_list('Losers', losers, losers_table_class)
     end
   end
 
@@ -84,8 +81,13 @@ class WinnersLosersPopoverViewModel
     end
   end
 
-  def render_list info, table_class=nil
+  def render_list title, info, table_class=nil
     content_tag(:table, class: table_class) do
+      content_tag(:thead) do
+        content_tag(:tr) do
+          content_tag(:th, colspan: '2', class: 'table-title') { title }
+        end
+      end +
       content_tag(:tbody) do
         info.collect do |i|
           content_tag(:tr) do

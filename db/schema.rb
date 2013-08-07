@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121020150534) do
+ActiveRecord::Schema.define(:version => 20130724231711) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -72,7 +72,6 @@ ActiveRecord::Schema.define(:version => 20121020150534) do
     t.boolean  "is_finished"
     t.boolean  "is_winner"
     t.float    "vote_share"
-    t.float    "table_height"
     t.string   "character_name"
   end
 
@@ -91,7 +90,6 @@ ActiveRecord::Schema.define(:version => 20121020150534) do
     t.boolean  "is_finished"
     t.integer  "number_of_votes"
     t.boolean  "is_draw"
-    t.float    "table_height"
     t.string   "vote_graph"
   end
 

@@ -78,9 +78,9 @@ class Statistics
   alias_method :for_tournament, :for_tournaments
 
   def before_date date
-    date = date.to_date
+    date = date.try :to_date
 
-    @scope = @scope.where("#{Match.q_column :date} < ?", date).scoped
+    @scope = @scope.where("#{Match.q_column :date} < ?", date).scoped if date
 
     self
   end

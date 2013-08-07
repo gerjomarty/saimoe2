@@ -55,22 +55,17 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
     MatchEntry.create! me.slice(:number_of_votes, :position).merge(match: m, appearance: app, previous_match: prev_match)
   end
 
-  if (2002..2011).include? year.to_i
+  if (me_votes = match_hash[:match_entries].collect {|me| me[:number_of_votes]}) && me_votes.any? && me_votes.all?
     m.is_finished = true
-    m.save!
-  elsif 2012 == year.to_i
-    if match_hash[:match_entries].collect {|me| me[:number_of_votes]}.all?
-      m.is_finished = true
-    else
-      m.is_finished = false
-    end
-    m.save!
+  else
+    m.is_finished = false
   end
+  m.save!
 end
 
 $stderr.print "Initialising tournaments..."
 
-(2002..2012).each do |year|
+(2002..2013).each do |year|
   t = Tournament.find_or_initialize_by_year year.to_s
   t.group_stages = case year
     when 2002
@@ -79,7 +74,7 @@ $stderr.print "Initialising tournaments..."
       [:round_1, :round_1_playoff, :round_2, :round_3, :group_final]
     when 2004, 2010
       [:round_1, :round_2, :group_final]
-    when 2005..2009, 2011..2012
+    when 2005..2009, 2011..2013 # TODO: 2013's repechage groups and last 16
       [:round_1, :round_2, :round_3, :group_final]
     else
       raise "Year #{year} doesn't have stages defined"
@@ -147,7 +142,7 @@ end
 
 $stderr.puts " done!"
 
-(2002..2012).each do |year|
+(2002..2013).each do |year|
   year = year.to_s
   $stderr.print "Loading match data from #{year}..."
 

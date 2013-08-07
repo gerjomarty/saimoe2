@@ -4,8 +4,6 @@
             <%= vm.tournament.year %>
         </dt>
         <dd>
-            <%= vm.render_stage_buttons %>
-
             <div class="btn-group">
                 <% vm.visible_stages.each do |stage| %>
                     <button class="btn <%= vm.button_class(stage) %>"
@@ -17,9 +15,15 @@
                 <% end %>
                 <% vm.participated_stages.each do |stage| %>
                     <div rel="html_named_popover_<%= vm.popover_name(stage) %>_content">
-                        <%= render partial: 'view_models/winners_losers_popover',
-                                   object: vm.popover_view_model,
-                                   as: :vm %>
+                        <% if vm.single_match_popover_view_model(stage) %>
+                            <%= render partial: 'view_models/match',
+                                       object: vm.single_match_popover_view_model(stage),
+                                       as: :vm %>
+                        <% elsif vm.multiple_matches_popover_view_model(stage) %>
+                            <%= render partial: 'view_models/winners_losers_popover',
+                                       object: vm.multiple_matches_popover_view_model(stage),
+                                       as: :vm %>
+                        <% end %>
                     </div>
                 <% end %>
             </div>

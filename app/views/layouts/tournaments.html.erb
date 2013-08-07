@@ -7,11 +7,10 @@
         <%= nav_bar static: :top, responsive: true do %>
 
           <%= menu_group do %>
-            <%= menu_text "Saimoe #{@tournament.year}", pull: :left, class: 'top-subtitle' %>
+            <%= menu_item "Saimoe #{@tournament.year}", short_tournament_path(@tournament.year), pull: :left, class: 'top-subtitle' %>
           <% end %>
 
           <%= menu_group do %>
-            <%= menu_item 'Tournament bracket', short_tournament_path(@tournament.year) %>
             <%= drop_down 'Character statistics' do %>
               <%= menu_item 'Characters by total votes', short_tournament_action_path(@tournament.year, :characters_by_total_votes) %>
               <%= menu_item 'Characters by average votes', short_tournament_action_path(@tournament.year, :characters_by_average_votes) %>
@@ -25,6 +24,13 @@
             <%= drop_down 'Voice actor statistics' do %>
               <%= menu_item 'Voice actors by total votes', short_tournament_action_path(@tournament.year, :voice_actors_by_total_votes) %>
               <%= menu_item 'Rounds by voice actor prevalence', short_tournament_action_path(@tournament.year, :rounds_by_voice_actor_prevalence)  %>
+            <% end %>
+          <% end %>
+
+          <% if @tournament.year == '2013' %>
+            <%= menu_group do %>
+              <%= menu_item 'Code Generator', 'http://rose-lilac.sakura.ne.jp/code/index.html' %>
+              <%= menu_item '2ch Voting Board', 'http://kohada.2ch.net/vote/' %>
             <% end %>
           <% end %>
 

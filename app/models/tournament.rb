@@ -48,6 +48,6 @@ class Tournament < ActiveRecord::Base
   end
 
   def most_recent_match_date
-    matches.where(is_finished: true).maximum(Match.q_column :date).to_date
+    matches.where(is_finished: true).maximum(Match.q_column :date).try(:to_date)
   end
 end

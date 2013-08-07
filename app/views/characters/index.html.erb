@@ -6,25 +6,27 @@
   </div>
 </div>
 
-<%= render partial: "shared/alpha_pagination",
-           locals: {default_letter: @ap.default_letter, active_letters: @ap.active_letters} %>
+<% cache do %>
+  <%= render partial: "shared/alpha_pagination",
+             locals: {default_letter: @ap.default_letter, active_letters: @ap.active_letters} %>
 
-<div class="row-fluid">
-  <% @ap.get_data.each do |l_data| %>
-    <div class="span<%= 12 / @ap.real_no_of_columns %>">
-      <% l_data.each do |letter, s_data| %>
-        <h3><a name="<%= letter %>" class="anchor"><%= letter %></a></h3>
-        <% s_data.each do |series, c_data| %>
-          <h4><%= link_to(series.name, series_path(series)) %></h4>
-          <div class="well">
-            <% c_data.each do |character| %>
-              <%= render partial: 'view_models/character_entry',
-                         object: CharacterEntry.new(character, show_series: false, fixed_width: false),
-                         as: :vm %>
-            <% end %>
-          </div>
+  <div class="row-fluid">
+    <% @ap.get_data.each do |l_data| %>
+      <div class="span<%= 12 / @ap.real_no_of_columns %>">
+        <% l_data.each do |letter, s_data| %>
+          <h3><a name="<%= letter %>" class="anchor"><%= letter %></a></h3>
+          <% s_data.each do |series, c_data| %>
+            <h4><%= link_to(series.name, series_path(series)) %></h4>
+            <div class="well">
+              <% c_data.each do |character| %>
+                <%= render partial: 'view_models/character_entry',
+                           object: CharacterEntry.new(character, show_series: false, fixed_width: false),
+                           as: :vm %>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
-  <% end %>
-</div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

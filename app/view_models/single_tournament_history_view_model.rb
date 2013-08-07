@@ -23,19 +23,6 @@ class SingleTournamentHistoryViewModel
     self
   end
 
-  def render_stage_buttons
-    content_tag(:div, class: 'btn-group') do
-      visible_stages.collect do |stage|
-        content_tag(:button, class: "btn #{button_class(stage)}", rel: "html_named_popover_#{tournament.year}_#{stage}", data: {trigger: 'hover click', placement: :top, container: :body}) do
-          MatchInfo.pretty_stage(stage)
-        end
-      end.inject(:+)
-    end +
-    participated_stages.collect do |stage|
-      content_tag(:div, rel: "html_named_popover_#{tournament.year}_#{stage}_content") { popover_content(stage) }
-    end.inject(:+)
-  end
-
   def button_class stage
     if winning_stages.include? stage
       'btn-success'
@@ -52,14 +39,6 @@ class SingleTournamentHistoryViewModel
     "#{tournament.year}_#{stage}"
   end
 
-  def popover_view_model stage
-    if entity.is_a? Character
-      single_match_popover_view_model stage
-    else
-      multiple_matches_popover_view_model stage
-    end
-  end
-
   def participated_stages
     @participated_stages ||= entry_information.keys
   end
@@ -68,19 +47,23 @@ class SingleTournamentHistoryViewModel
     @visible_stages ||= all_stages & (participated_stages | default_visible_stages)
   end
 
-  private
-
+  # Only makes sense for single character situations
   def single_match_popover_view_model stage
+    return nil unless entity.is_a? Character
     match = entry_information[stage].values.flatten.first[:match]
     return nil unless match
     MatchViewModel.new(match, show_percentages: true)
   end
 
+  # Only makes sense for multiple character situations
   def multiple_matches_popover_view_model stage
+    return nil if entity.is_a? Character
     WinnersLosersPopoverViewModel.new(entry_information[stage][:winner],
                                       entry_information[stage][:loser],
                                       entry_information[stage][:unfinished])
   end
+
+  private
 
   # Common to tournament
 
