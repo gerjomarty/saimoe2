@@ -30,11 +30,6 @@ unless File.directory? dropbox
   exit 1
 end
 
-unless File.absolute_path(dropbox) =~ /\/Public/
-  $stderr.puts "Error: database dump must be in Public folder"
-  exit 1
-end
-
 if regen_database
   $stdout.puts "Regenerating the database from the base YAML data..."
   unless system("rake db:drop && rake db:create && rake db:migrate && rake db:seed")
