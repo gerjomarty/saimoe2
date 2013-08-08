@@ -20,6 +20,7 @@ gem 'fog'
 gem 'mime-types'
 gem 'rmagick'
 
+gem 'twitter-bootstrap-rails', '~> 2.2.0'
 group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'jquery-rails', '~> 2.2.0'
@@ -27,7 +28,6 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 
   # twitter-bootstrap-rails gems
-  gem 'twitter-bootstrap-rails', '~> 2.2.0'
   gem 'therubyracer'
   gem 'less-rails'
 end
