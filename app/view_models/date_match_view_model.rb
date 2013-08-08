@@ -36,7 +36,7 @@ class DateMatchViewModel
 
   def character_entries
     @character_entries ||= match.match_entries.ordered_by_votes.collect do |me|
-      CharacterEntry.new(me, show_color: true, show_percentage: true, use_percentage_width: true)
+      CharacterEntry.new(me, cache: :date_match, show_color: true, show_percentage: true, use_percentage_width: true)
     end
   end
 end

@@ -9,14 +9,14 @@ class MatchViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :match
-  attr_accessor :match_name, :info_position, :table_margins, :show_percentages
+  attr_accessor :cache, :match_name, :info_position, :table_margins, :show_percentages
 
   def to_partial_path
     'view_models/match'
   end
 
   def dependencies
-    [match]
+    [match, cache].compact
   end
 
   def initialize match, options={}
@@ -39,7 +39,7 @@ class MatchViewModel
 
   def character_entries
     match_entries.collect do |me|
-      CharacterEntry.new(me, show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages)
+      CharacterEntry.new(me, cache: :match, show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages)
     end
   end
 

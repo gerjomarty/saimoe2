@@ -20,7 +20,7 @@
             <div class="well">
               <% c_data.each do |character| %>
                 <%= render partial: 'view_models/character_entry',
-                           object: CharacterEntry.new(character, show_series: false, fixed_width: false),
+                           object: CharacterEntry.new(character, cache: :characters_index, show_series: false, fixed_width: false),
                            as: :vm %>
               <% end %>
             </div>

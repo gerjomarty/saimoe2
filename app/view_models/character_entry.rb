@@ -10,14 +10,14 @@ class CharacterEntry
   include ApplicationHelper
 
   attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
-  attr_accessor :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background
+  attr_accessor :cache, :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background
 
   def to_partial_path
     'view_models/character_entry'
   end
 
   def dependencies
-    [character, match_entry].compact
+    [character, match_entry, cache].compact
   end
 
   def initialize character_or_match_entry, options={}
@@ -211,7 +211,7 @@ class CharacterEntry
 
   def should_make_transparent?
     if transparency == :all_but_winner
-      !winner?
+      match_entry.is_finished? ? !winner? : false
     else
       transparency
     end

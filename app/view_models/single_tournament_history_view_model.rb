@@ -52,7 +52,7 @@ class SingleTournamentHistoryViewModel
     return nil unless entity.is_a? Character
     match = entry_information[stage].values.flatten.first[:match]
     return nil unless match
-    MatchViewModel.new(match, show_percentages: true)
+    MatchViewModel.new(match, cache: :single_tournament_history, show_percentages: true)
   end
 
   # Only makes sense for multiple character situations

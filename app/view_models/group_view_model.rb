@@ -28,7 +28,7 @@ class GroupViewModel
       {
         stage: MatchInfo.pretty_stage(stage),
         match_view_models: matches_for(stage).collect do |match|
-          MatchViewModel.new(match, table_margins: index > 0)
+          MatchViewModel.new(match, cache: :group, table_margins: index > 0)
         end
       }
     end

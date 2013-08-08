@@ -20,7 +20,7 @@ gem 'fog'
 gem 'mime-types'
 gem 'rmagick'
 
-gem 'twitter-bootstrap-rails', '~> 2.2.0'
+gem 'twitter-bootstrap-rails', '~> 2.2.0' # This has been moved outside :assets as a hack to get around twitter-bootstrap-rails issue #584
 group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'jquery-rails', '~> 2.2.0'

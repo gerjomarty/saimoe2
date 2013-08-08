@@ -27,32 +27,32 @@ class FinalMatchesViewModel
   end
 
   def grand_final_view_model
-    MatchViewModel.new(final_match, match_name: :long, info_position: :bottom)
+    MatchViewModel.new(final_match, cache: :final_matches, match_name: :long, info_position: :bottom)
   end
 
   def left_quarter_final_view_models
     quarter_final_matches[0..1].collect do |match|
-      MatchViewModel.new(match, match_name: :short)
+      MatchViewModel.new(match, cache: :final_matches, match_name: :short)
     end
   end
 
   def left_semi_final_view_model
-    MatchViewModel.new(semi_final_matches[0], match_name: :short)
+    MatchViewModel.new(semi_final_matches[0], cache: :final_matches, match_name: :short)
   end
 
   def right_semi_final_view_model
-    MatchViewModel.new(semi_final_matches[1], match_name: :short, info_position: :left)
+    MatchViewModel.new(semi_final_matches[1], cache: :final_matches, match_name: :short, info_position: :left)
   end
 
   def right_quarter_final_view_models
     quarter_final_matches[2..3].collect do |match|
-      MatchViewModel.new(match, match_name: :short, info_position: :left)
+      MatchViewModel.new(match, cache: :final_matches, match_name: :short, info_position: :left)
     end
   end
 
   def last_16_view_models
     last_16_matches.collect do |match|
-      MatchViewModel.new(match, match_name: :short)
+      MatchViewModel.new(match, cache: :final_matches, match_name: :short)
     end.each_slice(2)
   end
 
