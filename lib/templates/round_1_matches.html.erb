@@ -1,0 +1,54 @@
+<html>
+
+<head>
+<style type="text/css">
+
+table.layout { }
+td.layout { padding: 20 }
+table.bracket { background-color: #ffffff }
+td.leftpic { height: 100; width: 100; padding: 0 }
+td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 280 }
+td.eventtitle { padding: 1; text-align: center; max-height: 40; width: 375 }
+td.event { padding: 1; text-align: left; max-height: 40; width: 375 }
+td.topic { padding: 1; text-align: center; height: 76; width: 81 }
+td.block { padding: 1; text-align: left; height: 76; width: 17 }
+
+.contestantname { font-size: 23; font-family: Chaparral Pro }
+.seriesname { font-size: 13; font-style: italic; font-family: Chaparral Pro }
+.voiceactor { font-size: 13; font-family: Chaparral Pro }
+.preliminaryranking { font-size: 13; font-family: Chaparral Pro }
+.previousbest { font-size: 13; font-family: Chaparral Pro }
+.code { font-size: 9; text-align: right; font-family: Chaparral Pro }
+.title { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.topictitle { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.words { font-size: 14; font-family: Chaparral Pro }
+.date { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.shortname { }
+.win { font-weight: bold }
+
+</style>
+</head>
+
+<body bgcolor="#ffff99">
+
+<% names.each do |match| %>
+    <table class="bracket" border="1">
+        <% match.each do |r| %>
+            <tr>
+                <td class="leftpic"><img src="Round One/<%= r[:name] %>.jpg" /></td>
+                <td bgcolor="#<%= r[:series_color].sub(/\A#/, '') %>" class="leftcontestant">
+                    <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: <%= r[:voice_actor] || '' %></div><div class="preliminaryranking">Preliminary Ranking: <%= r[:preliminary_rank] || '' %></div><div class="previousbest"><%= r[:previous_best] == 'New Entry' ? r[:previous_best] : (r[:previous_best] ? "Previous Best: #{r[:previous_best]}" : '') %></div><div class="code"><%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %></div>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+<% end %>
+
+<br /><br /><br />
+
+<% if result_list %>
+    <%= result_list %>
+<% end %>
+
+</body>
+</html>

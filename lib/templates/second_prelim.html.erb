@@ -46,7 +46,7 @@ td.pic { height: 70; width: 70; padding: 0 }
                     <td bgcolor="<%= colour %>" class="ranking"><div class="position"><%= rr[:ranking] %></div></td>
                     <td bgcolor="<%= colour %>" class="votes"><div class="votecount"><%= rr[:vote_count] %></div></td>
                     <td bgcolor="<%= colour %>" class="contestant">
-                        <div class="contestantname"><%= rr[:name] %></div><div class="seriesname"><%= rr[:series] %></div><div class="voiceactor">Voice Actor: </div>
+                        <div class="contestantname"><%= rr[:name] %></div><div class="seriesname"><%= rr[:series] %></div><div class="voiceactor">Voice Actor: <%= rr[:voice_actor] || '' %></div>
                     </td>
                     <td class="pic"><img src="Prelim Chart Icons/<%= rr[:name] %>.jpg" /></td>
                 </tr>

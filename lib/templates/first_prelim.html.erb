@@ -40,7 +40,7 @@ td.pic { height: 70; width: 70; padding: 0 }
             <td bgcolor="#e04241" class="ranking"><div class="position"><%= results[0][:ranking] %></div></td>
             <td bgcolor="#e04241" class="votes"><div class="votecount"><%= results[0][:vote_count] %></div></td>
             <td bgcolor="#e04241" class="topcontestant">
-                <div class="topcontestantname"><%= results[0][:name] %></div><div class="topseriesname"><%= results[0][:series] %></div><div class="topvoiceactor">Voice Actor: </div>
+                <div class="topcontestantname"><%= results[0][:name] %></div><div class="topseriesname"><%= results[0][:series] %></div><div class="topvoiceactor">Voice Actor: <%= results[0][:voice_actor] || '' %></div>
             </td>
             <td class="bigpic"><img src="Round One/<%= results[0][:name] %>.jpg" /></td>
         </tr>
@@ -59,7 +59,7 @@ td.pic { height: 70; width: 70; padding: 0 }
                 <td bgcolor="<%= colour %>" class="ranking"><div class="position"><%= r[:ranking] %></div></td>
                 <td bgcolor="<%= colour %>" class="votes"><div class="votecount"><%= r[:vote_count] %></div></td>
                 <td bgcolor="<%= colour %>" class="contestant">
-                <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: </div>
+                <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: <%= r[:voice_actor] || '' %></div>
             </td>
             <td class="pic"><img src="Prelim Chart Icons/<%= r[:name] %>.jpg" /></td>
             </tr>
