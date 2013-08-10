@@ -42,13 +42,13 @@ class GroupMatchesViewModel
     content_tag :div, class: 'pagination pagination-small pagination-centered' do
       content_tag(:ul) do
         ''.tap do |outer_tag|
-          outer_tag << content_tag(:li, link_to('Jump to:', '#'), class: 'disabled')
+          outer_tag << content_tag(:li, link_to('Jump to:', '#', data: {disabled: true}), class: 'disabled')
           groups.each do |group|
             if MatchInfo::PLAYOFF_GROUPS.first == group
-              outer_tag << content_tag(:li, link_to('Playoff groups:', '#'), class: 'disabled')
+              outer_tag << content_tag(:li, link_to('Playoff groups:', '#', data: {disabled: true}), class: 'disabled')
             end
             state = 'active' if group == current_group
-            outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group.upcase}"), class: state)
+            outer_tag << content_tag(:li, link_to(MatchInfo.pretty_group(group, :short), "##{group.upcase}", data: {disabled: group == current_group}), class: state)
           end
         end.html_safe
       end

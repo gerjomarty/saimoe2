@@ -7,3 +7,6 @@ jQuery ->
     $("div[rel=#{content_rel}]").html()
   $('.tooltip').tooltip()
   $('[rel=tooltip]').tooltip()
+  $('a[data-disabled="true"]').on 'click', (event) ->
+    event.preventDefault
+    return false

@@ -10,7 +10,7 @@ class DateController < ApplicationController
       return
     end
 
-    @date_match_view_models = Match.find_all_by_date(@date).collect do |m|
+    @date_match_view_models = Match.ordered.where(date: @date).collect do |m|
       DateMatchViewModel.new(m)
     end
 
