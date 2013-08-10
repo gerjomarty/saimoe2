@@ -127,7 +127,7 @@ class MatchViewModel
     return @next_match_playoff unless @next_match_playoff.nil?
     next_mes = match.next_match_entries.includes(:match)
     @next_match_playoff =
-      if !next_mes.empty? && next_mes.all? {|me| me.match.playoff_match? }
+      if !next_mes.empty? && next_mes.all? {|me| me.match.playoff_match? && !me.match.tournament.group_stages_with_playoffs_to_display.include?(me.match.stage) }
         next_mes[0].match
       else
         false

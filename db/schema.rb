@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130724231711) do
+ActiveRecord::Schema.define(:version => 20130810172407) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(:version => 20130724231711) do
   add_index "match_entries", ["previous_match_id"], :name => "index_match_entries_on_previous_match_id"
 
   create_table "matches", :force => true do |t|
-    t.string   "group",           :limit => 1
+    t.string   "group"
     t.string   "stage",                        :null => false
     t.integer  "match_number",    :limit => 2
     t.date     "date",                         :null => false
@@ -107,11 +107,12 @@ ActiveRecord::Schema.define(:version => 20130724231711) do
   add_index "series", ["slug"], :name => "index_series_on_slug", :unique => true
 
   create_table "tournaments", :force => true do |t|
-    t.string   "year",         :limit => 4, :null => false
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.text     "group_stages",              :null => false
-    t.text     "final_stages",              :null => false
+    t.string   "year",                                  :limit => 4, :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
+    t.text     "group_stages",                                       :null => false
+    t.text     "final_stages",                                       :null => false
+    t.text     "group_stages_with_playoffs_to_display"
   end
 
   create_table "voice_actor_roles", :force => true do |t|

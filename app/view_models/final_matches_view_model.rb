@@ -23,7 +23,7 @@ class FinalMatchesViewModel
   end
 
   def visible?
-    matches.any?
+    matches.any? {|m| m.match_entries.any? {|me| me.appearance } }
   end
 
   def grand_final_view_model
@@ -52,7 +52,7 @@ class FinalMatchesViewModel
 
   def last_16_view_models
     last_16_matches.collect do |match|
-      MatchViewModel.new(match, cache: :final_matches, match_name: :short)
+      MatchViewModel.new(match, cache: :final_matches)
     end.each_slice(2)
   end
 

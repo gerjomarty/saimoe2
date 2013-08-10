@@ -119,9 +119,11 @@ class CharacterEntry
       if character && character_display_name
         link_to character_display_name, character_path(character), title: character_display_name
       elsif previous_match
-        "Winner of #{previous_match.pretty}"
+        text = "Winner of #{previous_match.pretty(:short)}"
+        content_tag(:span, title: text) { text }
       else
-        "#{match_entry.match.pretty(:short)} Entry #{match_entry.position}"
+        text = "#{match_entry.match.pretty(:short)} Entry #{match_entry.position}"
+        content_tag(:span, title: text) { text }
       end
     end
   end

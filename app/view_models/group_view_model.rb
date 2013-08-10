@@ -37,7 +37,7 @@ class GroupViewModel
   private
 
   def stages
-    @stages ||= MatchInfo::PLAYOFF_GROUPS.include?(group) ? MatchInfo::PLAYOFF_GROUP_STAGES : tournament.group_stages_without_playoffs
+    @stages ||= MatchInfo::PLAYOFF_GROUPS.include?(group) ? (tournament.group_stages_with_playoffs_to_display || []) : tournament.group_stages_without_playoffs
   end
 
   def matches_for stage

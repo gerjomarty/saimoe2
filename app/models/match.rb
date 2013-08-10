@@ -140,20 +140,27 @@ class Match < ActiveRecord::Base
     case length
     when :long
       case stage
-      when :final                      then 'Grand Final'
-      when :semi_final, :quarter_final then "#{pretty_stage} #{match_number}"
-      when :last_16                    then ('A'..'P').each_slice(2).collect {|g1, g2| "Group #{g1} winner vs Group #{g2} winner" }[match_number - 1]
-      when :group_final                then "#{pretty_group} Final"
-      else                                  "#{pretty_stage} Match #{pretty_group(:short)}#{match_number}"
+      when :final                                then 'Grand Final'
+      when :semi_final, :quarter_final, :last_16 then "#{pretty_stage} #{match_number}"
+      when :group_final                          then "#{pretty_group} Final"
+      else                                            "#{pretty_stage} Match #{pretty_group(:short)}#{match_number}"
       end
     when :short
       case stage
-      when :final         then 'Final'
-      when :semi_final    then "SF#{match_number}"
-      when :quarter_final then "QF#{match_number}"
-      when :last_16       then ('A'..'P').each_slice(2).collect {|g1, g2| "#{g1} vs #{g2}" }[match_number - 1]
-      when :group_final   then "#{pretty_group(:short)} Final"
-      else                     "#{pretty_group(:short)}#{match_number}"
+      when :final                  then 'Final'
+      when :semi_final             then "SF #{match_number}"
+      when :quarter_final          then "QF #{match_number}"
+      when :last_16                then "L16 #{match_number}"
+      when :losers_playoff_finals  then "LP Final #{match_number}"
+      when :losers_playoff_round_2 then "LP R2 #{match_number}"
+      when :losers_playoff_round_1 then "LP R1 #{match_number}"
+      when :group_final            then "#{pretty_group(:short)} Final"
+      when :round_3                then "R3 #{pretty_group(:short)}#{match_number}"
+      when :round_2_playoff        then "R2P #{pretty_group(:short)}#{match_number}"
+      when :round_2                then "R2 #{pretty_group(:short)}#{match_number}"
+      when :round_1_playoff        then "R1P #{pretty_group(:short)}#{match_number}"
+      when :round_1                then "R1 #{pretty_group(:short)}#{match_number}"
+      else                              "#{pretty_group(:short)}#{match_number}"
       end
     end
   end

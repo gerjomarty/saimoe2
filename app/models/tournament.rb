@@ -1,8 +1,9 @@
 class Tournament < ActiveRecord::Base
   include Ordering
 
-  attr_accessible :year, :group_stages, :final_stages
+  attr_accessible :year, :group_stages, :final_stages, :group_stages_with_playoffs_to_display
   serialize :group_stages, Array
+  serialize :group_stages_with_playoffs_to_display, Array
   serialize :final_stages, Array
 
   has_many :appearances, inverse_of: :tournament
@@ -16,6 +17,7 @@ class Tournament < ActiveRecord::Base
 
   validates :year, presence: true, uniqueness: true, format: {with: /\d{4}/}, length: {is: 4}
   validates :group_stages, presence: true, group_stage: true
+  validates :group_stages_with_playoffs_to_display, group_stage: true
   validates :final_stages, presence: true, final_stage: true
 
   ORDER = [q_column(:year)].freeze

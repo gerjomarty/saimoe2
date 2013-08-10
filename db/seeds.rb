@@ -50,7 +50,7 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
                     group: me[:previous_match][:group],
                     match_number: me[:previous_match][:match_number] == 'null' ? nil : me[:previous_match][:match_number]).first!
     if prev_match.nil? && (MatchInfo::STAGES - [:round_1, :round_1_playoff]).include?(stage)
-      raise "Possible problem with prev match for match entry #{me.inspect}"
+      raise "Possible problem with prev match for match entry #{me.inspect}" unless year.to_s == '2013'
     end
     MatchEntry.create! me.slice(:number_of_votes, :position).merge(match: m, appearance: app, previous_match: prev_match)
   end
@@ -74,14 +74,29 @@ $stderr.print "Initialising tournaments..."
       [:round_1, :round_1_playoff, :round_2, :round_3, :group_final]
     when 2004, 2010
       [:round_1, :round_2, :group_final]
-    when 2005..2009, 2011..2013 # TODO: 2013's repechage groups and last 16
+    when 2005..2009, 2011, 2012
       [:round_1, :round_2, :round_3, :group_final]
+    when 2013
+      [:round_1, :round_2, :round_3, :group_final, :losers_playoff_round_1, :losers_playoff_round_2, :losers_playoff_finals]
     else
-      raise "Year #{year} doesn't have stages defined"
+      raise "Year #{year} doesn't have group stages defined"
   end
-  finals = [:quarter_final, :semi_final, :final]
-  finals.unshift :last_16 if year == 2002
-  t.final_stages = finals
+  t.final_stages = case year
+    when 2002, 2013
+      [:last_16, :quarter_final, :semi_final, :final]
+    when 2003..2012
+      [:quarter_final, :semi_final, :final]
+    else
+      raise "Year #{year} doesn't have final stages defined"
+  end
+  t.group_stages_with_playoffs_to_display =
+    if year == 2002
+      [:round_1, :round_2]
+    elsif year == 2013
+      [:losers_playoff_round_1, :losers_playoff_round_2, :losers_playoff_finals]
+    else
+      nil
+    end
   t.save!
 end
 
