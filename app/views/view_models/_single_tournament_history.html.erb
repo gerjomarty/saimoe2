@@ -13,20 +13,20 @@
                         <%= MatchInfo.pretty_stage(stage) %>
                     </button>
                 <% end %>
-                <% vm.participated_stages.each do |stage| %>
-                    <div rel="html_named_popover_<%= vm.popover_name(stage) %>_content">
-                        <% if vm.single_match_popover_view_model(stage) %>
-                            <%= render partial: 'view_models/match',
-                                       object: vm.single_match_popover_view_model(stage),
-                                       as: :vm %>
-                        <% elsif vm.multiple_matches_popover_view_model(stage) %>
-                            <%= render partial: 'view_models/winners_losers_popover',
-                                       object: vm.multiple_matches_popover_view_model(stage),
-                                       as: :vm %>
-                        <% end %>
-                    </div>
-                <% end %>
             </div>
+            <% vm.participated_stages.each do |stage| %>
+                <div rel="html_named_popover_<%= vm.popover_name(stage) %>_content">
+                    <% if vm.single_match_popover_view_model(stage) %>
+                        <%= render partial: 'view_models/match',
+                                   object: vm.single_match_popover_view_model(stage),
+                                   as: :vm %>
+                    <% elsif vm.multiple_matches_popover_view_model(stage) %>
+                        <%= render partial: 'view_models/winners_losers_popover',
+                                   object: vm.multiple_matches_popover_view_model(stage),
+                                   as: :vm %>
+                    <% end %>
+                </div>
+            <% end %>
         </dd>
     </div>
 <% end %>
