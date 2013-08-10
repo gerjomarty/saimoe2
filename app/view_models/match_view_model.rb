@@ -39,7 +39,7 @@ class MatchViewModel
 
   def character_entries
     match_entries.collect do |me|
-      CharacterEntry.new(me, cache: :match, show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages)
+      CharacterEntry.new(me, cache: [:match, cache].join('_'), show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages)
     end
   end
 
