@@ -13,6 +13,7 @@ td.topcontestant { padding: 1; text-align: left; max-height: 40; width: 250 }
 td.contestant { padding: 1; text-align: left; max-height: 40; width: 280 }
 td.lowercontestant { padding: 1; text-align: left; max-height: 40; width: 354 }
 td.pic { height: 70; width: 70; padding: 0 }
+td.smallpic { height: 40; width: 40; padding: 0 }
 
 .position { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
 .votecount { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
@@ -64,6 +65,7 @@ td.pic { height: 70; width: 70; padding: 0 }
                     <td bgcolor="#cccccc" class="ranking"><div class="lowerposition"><%= rr[:ranking] %></div></td>
                     <td bgcolor="#cccccc" class="votes"><div class="lowervotecount"><%= rr[:vote_count] %></div></td>
                     <td bgcolor="#cccccc" class="lowercontestant"><div class="lowercontestantname"><%= rr[:name] %></div><div class="lowerseriesname"><%= rr[:series] %></div></td>
+                    <td class="smallpic"><img src="charticons/SP1/<%= rr[:name] %>.jpg" /></td>
                 </tr>
             <% end %>
         </table>

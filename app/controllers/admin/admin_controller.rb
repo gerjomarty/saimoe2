@@ -116,7 +116,7 @@ class Admin::AdminController < ApplicationController
         name_string = name_string.force_encoding('UTF-8')
       end
       name_arr = name_string.lines.to_a.collect {|l| l.try(:strip).try(:chomp).try(:strip)}.compact
-      name_arr.collect! {|l| l.empty? ? nil : l}
+      name_arr.collect! {|l| l && l.empty? ? nil : l}
       name_arr.compact!
 
       @split_names = [[]].tap {|sr|
@@ -204,7 +204,7 @@ class Admin::AdminController < ApplicationController
         result_string = result_string.force_encoding('UTF-8')
       end
       result_arr = result_string.lines.to_a.collect {|l| l.try(:strip).try(:chomp).try(:strip)}.compact
-      result_arr.collect! {|l| l.empty? ? nil : l}
+      result_arr.collect! {|l| l && l.empty? ? nil : l}
       result_arr.compact!
 
       @split_results = [[]].tap { |sr|
