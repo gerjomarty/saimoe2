@@ -58,16 +58,18 @@ class Admin::AdminController < ApplicationController
     end
 
     character_arr.collect! do |i|
-      i.collect { |ii|
+      row = i.collect { |ii|
         stripped = ii.try(:strip).try(:chomp).try(:strip)
         stripped && stripped.empty? ? nil : stripped
       }.reverse.drop_while {|ii| ii.nil? }.reverse.to_a # Remove trailing nils
+      row + ([nil] * ([7 - row.size, 0].max))
     end
     series_arr.collect! do |i|
-      i.collect { |ii|
+      row = i.collect { |ii|
         stripped = ii.try(:strip).try(:chomp).try(:strip)
         stripped && stripped.empty? ? nil : stripped
       }.reverse.drop_while {|ii| ii.nil? }.reverse.to_a # Remove trailing nils
+      row + ([nil] * ([4 - row.size, 0].max))
     end
     character_arr.collect! {|i| i && i.empty? ? nil : i}
     series_arr.collect! {|i| i && i.empty? ? nil : i}
