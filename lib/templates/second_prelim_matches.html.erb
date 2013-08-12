@@ -1,0 +1,66 @@
+<html>
+
+<head>
+<style type="text/css">
+
+table.layout { }
+td.layout { padding: 20 }
+table.bracket { background-color: #ffffff }
+
+td.contestant { padding: 1; text-align: left; height: 70; min-width: 300 }
+td.pic { height: 70; width: 70; padding: 0 }
+
+
+.contestantname { font-size: 16; font-family: Chaparral Pro }
+.seriesname { font-size: 14; font-style: italic; font-family: Chaparral Pro }
+.smallerseriesname { font-size: 13; font-style: italic; font-family: Chaparral Pro }
+.voiceactor { font-size: 13; font-family: Chaparral Pro }
+.ranking { font-size: 13; font-family: Chaparral Pro }
+
+
+</style>
+</head>
+
+<body bgcolor="#ffff99">
+
+<% no_of_columns = 4 %>
+<% no_of_extra_table_entries = names.size.modulo(no_of_columns) %>
+<% no_of_main_table_entries = names.size - no_of_extra_table_entries %>
+
+<table class="bracket" border="1">
+    <% names[0...no_of_main_table_entries].each_slice(no_of_columns) do |row_names| %>
+        <tr>
+            <% row_names.each do |r| %>
+                <td class="pic"><img src="Prelim Chart Icons/SP1/<%= r[:name] %>.jpg" /></td>
+                <td bgcolor="#<%= (r[:series_color] && r[:series_color].sub(/\A#/, '')) || Series.where(name: r[:series]).first.try(:color_code) || 'e6e6e6' %>" class="contestant">
+                    <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: <%= r[:voice_actor] || '' %></div><div class="ranking">Ranking: <%= r[:preliminary_rank] || '' %></div>
+                </td>
+            <% end %>
+        </tr>
+    <% end %>
+</table>
+
+<% unless no_of_extra_table_entries.zero? %>
+    <br /><br /><br />
+
+    <table class="bracket" border="1">
+        <tr>
+            <% $stderr.puts "\n\n#{names.size}, #{no_of_main_table_entries}, #{no_of_extra_table_entries}\n\n" %>
+            <% names[no_of_main_table_entries..-1].each do |r| %>
+                <td class="pic"><img src="Prelim Chart Icons/SP1/<%= r[:name] %>.jpg" /></td>
+                <td bgcolor="#<%= (r[:series_color] && r[:series_color].sub(/\A#/, '')) || Series.where(name: r[:series]).first.try(:color_code) || 'e6e6e6' %>" class="contestant">
+                    <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: <%= r[:voice_actor] || '' %></div><div class="ranking">Ranking: <%= r[:preliminary_rank] || '' %></div>
+                </td>
+            <% end %>
+        </tr>
+    </table>
+<% end %>
+
+<br /><br /><br />
+
+<% if result_list %>
+    <%= result_list %>
+<% end %>
+
+</body>
+</html>

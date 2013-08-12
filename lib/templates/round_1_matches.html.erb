@@ -36,7 +36,7 @@ td.block { padding: 1; text-align: left; height: 76; width: 17 }
         <% match.each do |r| %>
             <tr>
                 <td class="leftpic"><img src="Round One/<%= r[:name] %>.jpg" /></td>
-                <td bgcolor="#<%= r[:series_color].sub(/\A#/, '') %>" class="leftcontestant">
+                <td bgcolor="#<%= r[:series_color] && r[:series_color].sub(/\A#/, '') %>" class="leftcontestant">
                     <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: <%= r[:voice_actor] || '' %></div><div class="preliminaryranking">Preliminary Ranking: <%= r[:preliminary_rank] || '' %></div><div class="previousbest"><%= r[:previous_best] == 'New Entry' ? r[:previous_best] : (r[:previous_best] ? "Previous Best: #{r[:previous_best]}" : '') %></div><div class="code"><%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %></div>
                 </td>
             </tr>

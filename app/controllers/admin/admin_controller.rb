@@ -183,7 +183,10 @@ class Admin::AdminController < ApplicationController
         end
       end
 
-      if info[:name_round_1_matches] == '1'
+      if info[:name_second_prelim_matches] == '1'
+        template = Template.new(names: template_names[0], result_list: name_list)
+                           .render(File.read(Rails.root.join('lib', 'templates', 'second_prelim_matches.html.erb')))
+      elsif info[:name_round_1_matches] == '1'
         template = Template.new(names: template_names, result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'round_1_matches.html.erb')))
       else
