@@ -38,7 +38,7 @@ td.smallpic { height: 40; width: 40; padding: 0 }
     <% cut_off_index = results.rindex {|r| r[:ranking] == results[15][:ranking] } %>
     <% colours = %w(#e04241 #e7552f #f67a0f #fd8c00 #fec528 #ffe13d #ebf567 #d7ed7d #aedda9 #8bc9bf #44a1ea #218cff #6fa0f4 #96abee #dcafd4 #fba9c1) %>
 
-    <% winners_half_way_point = (cut_off_index / 2.0).ceil %>
+    <% winners_half_way_point = (cut_off_index / 2.0).ceil.to_i %>
     <% [results[0...half_way_point], results[half_way_point..cut_off_index]].each do |r| %>
         <table class="bracket" border="1">
             <% r.each do |rr| %>
@@ -57,7 +57,7 @@ td.smallpic { height: 40; width: 40; padding: 0 }
 
     <br>
 
-    <% losers_half_way_point = ((results.size - (cut_off_index+1)) / 2.0).ceil + cut_off_index %>
+    <% losers_half_way_point = ((results.size - (cut_off_index+1)) / 2.0).ceil.to_i + cut_off_index %>
     <% [results[(cut_off_index + 1)...losers_half_way_point], results[losers_half_way_point..-1]].each do |r| %>
         <table class="bracket" border="1">
             <% r.each do |rr| %>
