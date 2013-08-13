@@ -53,9 +53,10 @@ td.smallpic { height: 40; width: 40; padding: 0 }
                 </tr>
             <% end %>
         </table>
+        <br /><br />
     <% end %>
 
-    <br />
+    <br /><br />
 
     <% losers_half_way_point = ((results.size - 1 - cut_off_index) / 2.0).ceil.to_i + cut_off_index %>
     <% [results[(cut_off_index+1)..losers_half_way_point], results[(losers_half_way_point+1)..(results.size-1)]].each do |r| %>
@@ -69,6 +70,7 @@ td.smallpic { height: 40; width: 40; padding: 0 }
                 </tr>
             <% end %>
         </table>
+        <br /><br />
     <% end %>
 
 <% end %>
