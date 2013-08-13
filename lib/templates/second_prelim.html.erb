@@ -39,7 +39,7 @@ td.smallpic { height: 40; width: 40; padding: 0 }
     <% colours = %w(#e04241 #e7552f #f67a0f #fd8c00 #fec528 #ffe13d #ebf567 #d7ed7d #aedda9 #8bc9bf #44a1ea #218cff #6fa0f4 #96abee #dcafd4 #fba9c1) %>
 
     <% winners_half_way_point = (cut_off_index / 2.0).ceil %>
-    <% [results[0...half_way_point], results[half_way_point..cut_off_index].each do |r| %>
+    <% [results[0...half_way_point], results[half_way_point..cut_off_index]].each do |r| %>
         <table class="bracket" border="1">
             <% r.each do |rr| %>
                 <tr>
