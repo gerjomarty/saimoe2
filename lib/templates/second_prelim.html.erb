@@ -9,9 +9,8 @@ table.bracket { background-color: #ffffff }
 
 td.ranking { padding: 1; text-align: center; width: 35 }
 td.votes { padding: 1; text-align: center; width: 30 }
-td.topcontestant { padding: 1; text-align: left; max-height: 40; width: 250 }
-td.contestant { padding: 1; text-align: left; max-height: 40; width: 280 }
-td.lowercontestant { padding: 1; text-align: left; max-height: 40; width: 354 }
+td.contestant { padding: 1; text-align: left; max-height: 40; width: 320 }
+td.lowercontestant { padding: 1; text-align: left; max-height: 40; width: 350 }
 td.pic { height: 70; width: 70; padding: 0 }
 td.smallpic { height: 40; width: 40; padding: 0 }
 
@@ -38,7 +37,7 @@ td.smallpic { height: 40; width: 40; padding: 0 }
     <% cut_off_index = results.rindex {|r| r[:ranking] == results[15][:ranking] } %>
     <% colours = %w(#e04241 #e7552f #f67a0f #fd8c00 #fec528 #ffe13d #ebf567 #d7ed7d #aedda9 #8bc9bf #44a1ea #218cff #6fa0f4 #96abee #dcafd4 #fba9c1) %>
 
-    <% winners_half_way_point = (cut_off_index / 2.0).ceil.to_i %>
+    <% winners_half_way_point = (cut_off_index / 2.0).floor.to_i %>
     <% [results[0..winners_half_way_point], results[(winners_half_way_point+1)..cut_off_index]].each do |r| %>
         <table class="bracket" border="1">
             <% r.each do |rr| %>
