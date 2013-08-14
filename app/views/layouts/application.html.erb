@@ -34,6 +34,12 @@
         <%= menu_item 'Characters', characters_path %>
         <%= menu_item 'Series', series_index_path %>
         <%= menu_item 'Voice Actors', voice_actors_path %>
+
+        <%= drop_down 'Statistics' do %>
+          <%= menu_item 'Characters by total votes', statistics_characters_by_total_votes_path %>
+          <%= menu_item 'Series by total votes', statistics_series_by_total_votes_path %>
+          <%= menu_item 'Voice actors by total votes', statistics_voice_actors_by_total_votes_path %>
+        <% end %>
       <% end %>
 
       <%= menu_group pull: :right do %>

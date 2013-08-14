@@ -31,6 +31,10 @@ Saimoe2::Application.routes.draw do
     end
   end
 
+  get 'statistics/characters_by_total_votes'
+  get 'statistics/series_by_total_votes'
+  get 'statistics/voice_actors_by_total_votes'
+
   get 'autocomplete' => 'application#autocomplete', as: :autocomplete
 
   constraints year: /20\d{2}/ do

@@ -14,7 +14,7 @@ class StatisticsListViewModel
   end
 
   def dependencies
-    [statistics, comparison_statistics, entities_to_bold].compact
+    [statistics.hash, comparison_statistics.try(:hash), entities_to_bold].compact
   end
 
   def initialize statistics, options={}

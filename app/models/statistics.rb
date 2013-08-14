@@ -17,7 +17,7 @@
 class Statistics
   include ApplicationHelper
 
-  attr_reader :model_class, :render_function
+  attr_reader :model_class, :render_function, :statistic_type, :sort_in_stages, :tournaments, :cut_off_date, :entity, :should_cut_off_same_rank, :before_context, :after_context
 
   ALLOWED_MODEL_CLASSES = [Character, Series, VoiceActor]
 
@@ -31,8 +31,24 @@ class Statistics
     self
   end
 
+  def == other
+    model_class == other.model_class &&
+      statistic_type == other.statistic_type &&
+      sort_in_stages == other.sort_in_stages &&
+      tournaments == other.tournaments &&
+      cut_off_date == other.cut_off_date &&
+      entity == other.entity &&
+      should_cut_off_same_rank == other.should_cut_off_same_rank &&
+      before_context == other.before_context &&
+      after_context == other.after_context
+  end
+
+  def hash
+    [model_class, statistic_type, sort_in_stages, tournaments, cut_off_date, entity, should_cut_off_same_rank, before_context, after_context].hash
+  end
+
   def get_statistic stat
-    raise 'Only one statistic allowed to be fetched' if @statistic_defined
+    raise 'Only one statistic allowed to be fetched' if @statistic_type
 
     case stat
     when :total_votes
@@ -49,7 +65,7 @@ class Statistics
       raise ArgumentError, 'Invalid statistic type passed'
     end
 
-    @statistic_defined = true
+    @statistic_type = stat
 
     self
   end
@@ -65,8 +81,12 @@ class Statistics
     self
   end
 
+  def tournaments
+    @tournaments || []
+  end
+
   def for_tournaments *tournaments
-    tournaments = Array(tournaments).flatten.compact
+    @tournaments = Array(tournaments).flatten.compact
 
     unless tournaments.empty?
       @scope = @scope.where(appearances: {tournament_id: tournaments.collect(&:id)}).scoped
@@ -78,9 +98,9 @@ class Statistics
   alias_method :for_tournament, :for_tournaments
 
   def before_date date
-    date = date.try :to_date
+    @cut_off_date = date.try :to_date
 
-    @scope = @scope.where("#{Match.q_column :date} < ?", date).scoped if date
+    @scope = @scope.where("#{Match.q_column :date} < ?", @cut_off_date).scoped if @cut_off_date
 
     self
   end
@@ -111,7 +131,7 @@ class Statistics
   end
 
   def fetch_results
-    raise 'Must specify statistic to get' unless @statistic_defined
+    raise 'Must specify statistic to get' unless @statistic_type
 
     apply_rank
     apply_ordering
@@ -241,7 +261,7 @@ class Statistics
 
   def self.model_scope model_class
     scope = if model_class == Character
-              Character.joins(:character_roles => [:series, {:appearances => [:tournament, {:match_entries => :match}]}])
+              Character.joins([:main_series, :character_roles => {:appearances => [:tournament, {:match_entries => :match}]}])
                        .select("#{Series.q_column :id} AS series_id")
                        .group(Character.q_column :id).group(Series.q_column :id)
                        .scoped
