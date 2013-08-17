@@ -20,11 +20,9 @@
   </head>
 
   <body>
-    <%= nav_bar static: :top, responsive: true, inverse: true, brand: image_tag('saimoe-logo.png'), brand_link: '#' do %>
+    <%= nav_bar static: :top, responsive: true, inverse: true, brand: image_tag('saimoe-logo.png'), brand_link: root_path do %>
 
       <%= menu_group do %>
-        <%= menu_item 'Home', root_path %>
-
         <%= drop_down 'Tournaments' do %>
           <% Tournament.ordered.reverse_order.each do |t| %>
             <%= menu_item t.year, short_tournament_path(t.year) %>

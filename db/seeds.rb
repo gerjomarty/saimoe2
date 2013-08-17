@@ -140,10 +140,12 @@ characters.sort_by {|c| c[:role_type] == :cameo ? 1 : 0}.each do |c|
 
   # Keep a record of the voice actor per character role for later
   cr_va_mapping[char_role] = if c[:multiple_vas]
+    c[:multiple_vas].each {|va| VoiceActor.where(first_name: va[:va_first_name], last_name: va[:va_last_name]).first_or_create! }
     c[:multiple_vas]                       # Array
   elsif c[:va] && c[:va] == :without
     :without                               # Symbol
   elsif c[:va_first_name] || c[:va_last_name]
+    VoiceActor.where(first_name: c[:va_first_name], last_name: c[:va_last_name]).first_or_create!
     c.slice(:va_first_name, :va_last_name) # Hash
   else
     nil

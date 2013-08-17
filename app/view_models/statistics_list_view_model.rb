@@ -40,7 +40,7 @@ class StatisticsListViewModel
   end
 
   def render_table_rows stage_name, results
-    results.collect do |result|
+    results && results.collect do |result|
       content_tag(:tr) { render_table_row stage_name, *result }
     end.inject(:+)
   end
