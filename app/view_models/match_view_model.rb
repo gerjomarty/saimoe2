@@ -165,9 +165,9 @@ class MatchViewModel
     when 0
       return %w(#D3D3D3)
     when 1
-      return %W(##{mes[0].series.color_code})
+      return mes[0].series.color_code ? %W(##{mes[0].series.color_code}) : %w(#D3D3D3)
     else
-      return [mes.first, mes.last].collect {|me| "##{me.series.color_code}" }
+      return [mes.first, mes.last].collect {|me| me.series.color_code ? "##{me.series.color_code}" : '#D3D3D3' }
     end
   end
 

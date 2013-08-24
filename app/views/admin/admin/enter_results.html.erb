@@ -1,0 +1,19 @@
+<div class="page-header">
+  <h1>Enter results</h1>
+</div>
+
+<%= form_for :results, html: {class: 'form-horizontal'} do |f| -%>
+    <% @matches.each do |m| %>
+        <div class="well">
+            <h3><%= m.pretty(:long) %></h3>
+            <% m.match_entries.ordered_by_position.each do |me| %>
+                <%= f.text_field "match_#{m.id}_#{me.id}" %>
+                <%= f.label "match_#{m.id}_#{me.id}", "#{me.character_name} @ #{me.series.name}" %>
+            <% end %>
+        </div>
+    <% end %>
+
+    <div class="form-actions">
+        <%= f.submit 'Submit', class: 'btn btn-primary' %>
+    </div>
+<% end -%>

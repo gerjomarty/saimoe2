@@ -2,6 +2,7 @@ Saimoe2::Application.routes.draw do
 
   namespace :admin do
     match 'utilities', to: 'admin#utilities', via: [:get, :post]
+    match 'enter-results', to: 'admin#enter_results', via: [:get, :post], as: :enter_results
     match 'clear-cache', to: 'admin#clear_cache', via: :get, as: :clear_cache
 
     resources :characters, except: :show

@@ -27,6 +27,48 @@ class Admin::AdminController < ApplicationController
     end
   end
 
+  def enter_results
+    @matches = Match.ordered_by_date.where(is_finished: false, date: Match.where(is_finished: false).minimum(:date))
+
+    unless (results = params && params[:results])
+      render
+      return
+    end
+
+    result_match_entries = results.keys.collect {|k| /match_(\d+)_(\d+)/.match(k)[2] }.compact.collect {|id| MatchEntry.find(id.to_i) }
+
+    result_match_entries.each do |me|
+      votes = results["match_#{me.match.id}_#{me.id}"].to_i
+      me.number_of_votes = votes
+    end
+
+    result_match_entries.each do |me|
+      me.save!
+    end
+
+    result_matches = results.keys.collect {|k| /match_(\d+)/.match(k)[1] }.compact.collect {|id| Match.find(id.to_i) }
+
+    result_matches.each do |m|
+      m.is_finished = true
+      m.save!
+    end
+
+    result_matches.each do |m|
+      if m.winning_match_entries.size == 1
+        app = m.winning_match_entries[0].appearance
+        if MatchEntry.where(previous_match_id: m.id).size == 1
+          next_me = MatchEntry.where(previous_match_id: m.id).first
+          next_me.appearance = app
+          next_me.save!
+        end
+      end
+    end
+
+    if result_matches.all?(&:is_finished?)
+      flash[:info] = "Matches #{result_matches.collect(&:id).join(', ')} updated"
+    end
+  end
+
   def utilities
     unless (info = params && params[:info])
       render
