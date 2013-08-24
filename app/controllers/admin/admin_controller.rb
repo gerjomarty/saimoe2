@@ -107,6 +107,9 @@ class Admin::AdminController < ApplicationController
     end
     series_arr.sort_by! {|_, e_series, _, _| [e_series]}
 
+    $stderr.puts "\n\n\n#{character_arr.inspect}\n\n\n"
+    $stderr.puts "\n\n\n#{series_arr.inspect}\n\n\n"
+
     if info[:transform] == 'name_list'
 
       order_by_name = (info[:name_order_by_name] == '1')
@@ -123,11 +126,14 @@ class Admin::AdminController < ApplicationController
 
       @split_names = [[]].tap {|sr|
         name_arr.collect {|str|
-          if (match = /\A(?:[^\p{Space}]+\p{Space})(?:<<)?(.*?)\uff20(.*?)(?:>>)?\Z/.match(str))
+          if (match = /\A(?:[^\p{Space}]+\p{Space})*(?:<<)?(.*?)\uff20(.*?)(?:>>)?\Z/.match(str))
             match.to_a.collect(&:strip)
           else
             ''
           end
+        }.tap {|a|
+          $stderr.puts "\n#{a.inspect}\n"
+          a
         }.collect {|id_string, id_name, id_series|
           char_index = character_arr.index {|j_name, _, _, _, _, _, _, _| j_name == id_name} if id_name
           series_index = series_arr.index {|j_series, _, _, _| j_series == id_series} if id_series
