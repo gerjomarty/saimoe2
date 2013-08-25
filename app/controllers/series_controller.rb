@@ -17,9 +17,16 @@ class SeriesController < ApplicationController
   def show
     @series = Series.find(params[:id])
     @tournament_history_view_model = TournamentHistoryViewModel.new(@series)
-    @statistics_list_view_model = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:total_votes).for_entity(@series, true),
-                                    comparison_statistics: Statistics.new(Series).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
-                                    entities_to_bold: @series)
+
+    @vote_stats = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:total_votes).for_entity(@series, true),
+                    comparison_statistics: Statistics.new(Series).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
+                    entities_to_bold: @series)
+    @appearance_stats = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:match_appearances).for_entity(@series, true),
+                          comparison_statistics: Statistics.new(Series).get_statistic(:match_appearances).before_date(Match.most_recent_finish_date),
+                          entities_to_bold: @series)
+    @win_stats = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:match_wins).for_entity(@series, true),
+                   comparison_statistics: Statistics.new(Series).get_statistic(:match_wins).before_date(Match.most_recent_finish_date),
+                   entities_to_bold: @series)
 
     if request.path != series_path(@series)
       redirect_to series_url(@series), status: :moved_permanently

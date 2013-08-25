@@ -56,6 +56,10 @@ class StatisticsListViewModel
     end
   end
 
+  def empty?
+    statistics_results.nil? || statistics_results.empty? || statistics_results.all? {|_, res| res.nil? || res.empty? }
+  end
+
   private
 
   def render_table_row stage_name, rank, stat, entity, series
@@ -75,7 +79,7 @@ class StatisticsListViewModel
 
     span_class, icon, title, extra =
       if previous_rank.nil?
-        [:new, 'star', 'New', '(New)']
+        [:new, 'star', 'New entry', '(New)']
       elsif rank < previous_rank
         [:up, 'arrow-up', "Up #{previous_rank - rank}", "(#{previous_rank - rank})"]
       elsif rank > previous_rank
@@ -95,7 +99,7 @@ class StatisticsListViewModel
 
   def render_rank rank, entity
     content_tag(:td, class: (:emphasize if should_bold_entity?(entity))) do
-      rank.ordinalize
+      (rank.to_s + content_tag(:sup) { rank.ordinalize.scan(/\D+/).first }).html_safe
     end
   end
 

@@ -59,6 +59,8 @@ class Statistics
       get_vote_share
     when :match_appearances
       get_match_appearances
+    when :match_wins
+      get_match_wins
     when :unique_entrants
       get_unique_entrants
     else
@@ -207,9 +209,20 @@ class Statistics
     @stat_name = :number_of_match_entries
     @normalization_function = lambda {|mes| mes.to_i }
 
-    @rank_order = "COUNT(#{MatchEntry.star}) DESC"
+    @rank_order = "COUNT(DISTINCT #{Match.star}) DESC"
 
-    @scope = @scope.select("COUNT(#{MatchEntry.star}) AS #@stat_name")
+    @scope = @scope.select("COUNT(DISTINCT #{Match.star}) AS #@stat_name")
+                   .scoped
+  end
+
+  def get_match_wins
+    @stat_name = :number_of_match_wins
+    @normalization_function = lambda {|wins| wins.to_i }
+
+    @rank_order = "COUNT(DISTINCT #{Match.star}) DESC"
+
+    @scope = @scope.select("COUNT(DISTINCT #{Match.star}) AS #@stat_name")
+                   .where(match_entries: {is_winner: true})
                    .scoped
   end
 

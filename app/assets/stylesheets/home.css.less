@@ -4,9 +4,13 @@
 @import "variables_and_functions";
 
 .home-match-container {
-	.match-view-model.info-bottom {
+	.match-view-model {
+		width: @ce_fixed_outer_width + @mvm_info_width + @mvm_padding;
+
 		margin-top: 0.4em;
 		margin-bottom: 0.4em;
+		margin-left: auto;
+		margin-right: auto;
 
 		&:first-child {
 			margin-top: 0;

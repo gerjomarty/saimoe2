@@ -26,10 +26,10 @@ class SingleTournamentHistoryViewModel
   def button_class stage
     if winning_stages.include? stage
       'btn-success'
-    elsif losing_stages.include? stage
-      'btn-danger'
     elsif unfinished_stages.include? stage
       'btn-warning'
+    elsif losing_stages.include? stage
+      'btn-danger'
     else
       'disabled'
     end

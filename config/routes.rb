@@ -3,7 +3,7 @@ Saimoe2::Application.routes.draw do
   namespace :admin do
     match 'utilities', to: 'admin#utilities', via: [:get, :post]
     match 'enter-results', to: 'admin#enter_results', via: [:get, :post], as: :enter_results
-    match 'clear-cache', to: 'admin#clear_cache', via: :get, as: :clear_cache
+    get 'clear-cache', to: 'admin#clear_cache', as: :clear_cache
 
     resources :characters, except: :show
   end
@@ -32,19 +32,27 @@ Saimoe2::Application.routes.draw do
     end
   end
 
-  get 'statistics/characters_by_total_votes'
-  get 'statistics/series_by_total_votes'
-  get 'statistics/voice_actors_by_total_votes'
+  namespace :statistics do
+    get 'characters-by-total-votes', to: 'statistics#characters_by_total_votes', as: :characters_by_total_votes
+    get 'series-by-total-votes', to: 'statistics#series_by_total_votes', as: :series_by_total_votes
+    get 'voice-actors-by-total-votes', to: 'statistics#voice_actors_by_total_votes', as: :voice_actors_by_total_votes
+    get 'characters-by-match-appearances', to: 'statistics#characters_by_match_appearances', as: :characters_by_match_appearances
+    get 'series-by-match-appearances', to: 'statistics#series_by_match_appearances', as: :series_by_match_appearances
+    get 'voice-actors-by-match-appearances', to: 'statistics#voice_actors_by_match_appearances', as: :voice_actors_by_match_appearances
+    get 'characters-by-match-wins', to: 'statistics#characters_by_match_wins', as: :characters_by_match_wins
+    get 'series-by-match-wins', to: 'statistics#series_by_match_wins', as: :series_by_match_wins
+    get 'voice-actors-by-match-wins', to: 'statistics#voice_actors_by_match_wins', as: :voice_actors_by_match_wins
+  end
 
   get 'autocomplete' => 'application#autocomplete', as: :autocomplete
 
   constraints year: /20\d{2}/ do
-    match ':year', to: 'tournaments#show', as: :short_tournament
-    match ':year/:action', controller: :tournaments, as: :short_tournament_action
+    get ':year', to: 'tournaments#show', as: :short_tournament
+    get ':year/:action', controller: :tournaments, as: :short_tournament_action
   end
 
   constraints date: /20\d{6}/ do
-    match ':date', to: 'date#show', as: :date
+    get ':date', to: 'date#show', as: :date
   end
 
   get 'home/index', as: :index

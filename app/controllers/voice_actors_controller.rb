@@ -15,15 +15,23 @@ class VoiceActorsController < ApplicationController
   # GET /voice-actors/1
   def show
     @voice_actor = VoiceActor.find(params[:id])
-    @tournament_history_view_model = TournamentHistoryViewModel.new(@voice_actor)
-    @statistics_list_view_model = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:total_votes).for_entity(@voice_actor, true),
-                                    comparison_statistics: Statistics.new(VoiceActor).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
-                                    entities_to_bold: @voice_actor)
 
     if request.path != voice_actor_path(@voice_actor)
       redirect_to voice_actor_url(@voice_actor), status: :moved_permanently
       return
     end
+
+    @tournament_history_view_model = TournamentHistoryViewModel.new(@voice_actor)
+
+    @vote_stats = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:total_votes).for_entity(@voice_actor, true),
+                    comparison_statistics: Statistics.new(VoiceActor).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
+                    entities_to_bold: @voice_actor)
+    @appearance_stats = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:match_appearances).for_entity(@voice_actor, true),
+                          comparison_statistics: Statistics.new(VoiceActor).get_statistic(:match_appearances).before_date(Match.most_recent_finish_date),
+                          entities_to_bold: @voice_actor)
+    @win_stats = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:match_wins).for_entity(@voice_actor, true),
+                   comparison_statistics: Statistics.new(VoiceActor).get_statistic(:match_wins).before_date(Match.most_recent_finish_date),
+                   entities_to_bold: @voice_actor)
 
     chars = Character.ordered.includes(:main_series)
                      .joins(:character_roles => {:appearances => :voice_actor_roles})

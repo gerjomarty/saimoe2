@@ -18,9 +18,15 @@ class CharactersController < ApplicationController
   def show
     @character = Character.find(params[:id])
     @tournament_history_view_model = TournamentHistoryViewModel.new(@character)
-    @statistics_list_view_model = StatisticsListViewModel.new(Statistics.new(Character).get_statistic(:total_votes).for_entity(@character, true),
-                                    comparison_statistics: Statistics.new(Character).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
-                                    entities_to_bold: @character)
+    @vote_stats = StatisticsListViewModel.new(Statistics.new(Character).get_statistic(:total_votes).for_entity(@character, true),
+                    comparison_statistics: Statistics.new(Character).get_statistic(:total_votes).before_date(Match.most_recent_finish_date),
+                    entities_to_bold: @character)
+    @appearance_stats = StatisticsListViewModel.new(Statistics.new(Character).get_statistic(:match_appearances).for_entity(@character, true),
+                          comparison_statistics: Statistics.new(Character).get_statistic(:match_appearances).before_date(Match.most_recent_finish_date),
+                          entities_to_bold: @character)
+    @win_stats = StatisticsListViewModel.new(Statistics.new(Character).get_statistic(:match_wins).for_entity(@character, true),
+                   comparison_statistics: Statistics.new(Character).get_statistic(:match_wins).before_date(Match.most_recent_finish_date),
+                   entities_to_bold: @character)
 
     if request.path != character_path(@character)
       redirect_to character_url(@character), status: :moved_permanently

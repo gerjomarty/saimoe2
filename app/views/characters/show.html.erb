@@ -20,16 +20,42 @@
   <h2>Statistics</h2>
 </div>
 
+<% number_of_stats_columns = [@win_stats, @appearance_stats, @vote_stats].reject {|s| s.empty? }.size %>
+
 <div class="row-fluid">
-  <div class="span6">
-    <h4>
-      Total votes across all tournaments<br />
-      <small>(<%= link_to 'See all', statistics_characters_by_total_votes_path %>)</small>
-    </h4>
-    <%= render partial: 'view_models/statistics_list',
-               object: @statistics_list_view_model,
-               as: :vm %>
-  </div>
+  <% unless @win_stats.empty? %>
+    <div class="span<%= 12 / number_of_stats_columns %>">
+      <h4>
+        Total match wins<br />
+        <small>(<%= link_to 'See all', statistics_characters_by_match_wins_path %>)</small>
+      </h4>
+      <%= render partial: 'view_models/statistics_list',
+                 object: @win_stats,
+                 as: :vm %>
+    </div>
+  <% end %>
+  <% unless @appearance_stats.empty? %>
+    <div class="span<%= 12 / number_of_stats_columns %>">
+      <h4>
+        Total matches participated in<br />
+        <small>(<%= link_to 'See all', statistics_characters_by_match_appearances_path %>)</small>
+      </h4>
+      <%= render partial: 'view_models/statistics_list',
+                 object: @appearance_stats,
+                 as: :vm %>
+    </div>
+  <% end %>
+  <% unless @vote_stats.empty? %>
+    <div class="span<%= 12 / number_of_stats_columns %>">
+      <h4>
+        Total votes<br />
+        <small>(<%= link_to 'See all', statistics_characters_by_total_votes_path %>)</small>
+      </h4>
+      <%= render partial: 'view_models/statistics_list',
+                 object: @vote_stats,
+                 as: :vm %>
+    </div>
+  <% end %>
 </div>
 
 <div class="page-header"<%= " style=\"border-bottom: 1px solid ##{series.color_code}\"".html_safe if series.color_code %>>

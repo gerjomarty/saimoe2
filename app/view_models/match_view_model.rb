@@ -9,7 +9,7 @@ class MatchViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :match
-  attr_accessor :cache, :match_name, :info_position, :table_margins, :show_percentages
+  attr_accessor :cache, :match_name, :info_position, :table_margins, :show_percentages, :match_entry_ordering
 
   def to_partial_path
     'view_models/match'
@@ -72,11 +72,25 @@ class MatchViewModel
   def show_percentages
     @show_percentages.nil? ? false : @show_percentages
   end
+  def match_entry_ordering
+    @match_entry_ordering.nil? ? :ordered_by_position : @match_entry_ordering
+  end
+  def match_entry_ordering= strategy
+    allowed_values = [:ordered_by_position, :ordered_by_votes]
+    raise ArgumentError, "match_entry_ordering must be one of #{allowed_values.inspect}" unless allowed_values.include?(strategy)
+    @match_entry_ordering = strategy
+  end
 
   private
 
   def match_entries
-  	@match_entries ||= match.match_entries.ordered_by_position
+    @match_entries ||=
+      case match_entry_ordering
+      when :ordered_by_position
+        match.match_entries.ordered_by_position
+      when :ordered_by_votes
+        match.match_entries.ordered_by_votes
+      end
   end
 
   def match_info_content
@@ -163,7 +177,7 @@ class MatchViewModel
   def background_colors
     case (mes = (next_match_playoff || match).winning_match_entries).size
     when 0
-      return %w(#D3D3D3)
+      return %w(#FFFFFF)
     when 1
       return mes[0].series.color_code ? %W(##{mes[0].series.color_code}) : %w(#D3D3D3)
     else

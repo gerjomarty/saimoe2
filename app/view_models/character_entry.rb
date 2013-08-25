@@ -172,6 +172,7 @@ class CharacterEntry
   def series_color
     return nil unless show_color
     @series_color ||= series.color_code if series
+    @series_color ||= 'D3D3D3'
   end
 
   def votes
