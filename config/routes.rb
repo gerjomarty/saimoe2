@@ -32,17 +32,15 @@ Saimoe2::Application.routes.draw do
     end
   end
 
-  namespace :statistics do
-    get 'characters-by-total-votes', to: 'statistics#characters_by_total_votes', as: :characters_by_total_votes
-    get 'series-by-total-votes', to: 'statistics#series_by_total_votes', as: :series_by_total_votes
-    get 'voice-actors-by-total-votes', to: 'statistics#voice_actors_by_total_votes', as: :voice_actors_by_total_votes
-    get 'characters-by-match-appearances', to: 'statistics#characters_by_match_appearances', as: :characters_by_match_appearances
-    get 'series-by-match-appearances', to: 'statistics#series_by_match_appearances', as: :series_by_match_appearances
-    get 'voice-actors-by-match-appearances', to: 'statistics#voice_actors_by_match_appearances', as: :voice_actors_by_match_appearances
-    get 'characters-by-match-wins', to: 'statistics#characters_by_match_wins', as: :characters_by_match_wins
-    get 'series-by-match-wins', to: 'statistics#series_by_match_wins', as: :series_by_match_wins
-    get 'voice-actors-by-match-wins', to: 'statistics#voice_actors_by_match_wins', as: :voice_actors_by_match_wins
-  end
+  get 'statistics/characters-by-total-votes', to: 'statistics#characters_by_total_votes', as: :statistics_characters_by_total_votes
+  get 'statistics/series-by-total-votes', to: 'statistics#series_by_total_votes', as: :statistics_series_by_total_votes
+  get 'statistics/voice-actors-by-total-votes', to: 'statistics#voice_actors_by_total_votes', as: :statistics_voice_actors_by_total_votes
+  get 'statistics/characters-by-match-appearances', to: 'statistics#characters_by_match_appearances', as: :statistics_characters_by_match_appearances
+  get 'statistics/series-by-match-appearances', to: 'statistics#series_by_match_appearances', as: :statistics_series_by_match_appearances
+  get 'statistics/voice-actors-by-match-appearances', to: 'statistics#voice_actors_by_match_appearances', as: :statistics_voice_actors_by_match_appearances
+  get 'statistics/characters-by-match-wins', to: 'statistics#characters_by_match_wins', as: :statistics_characters_by_match_wins
+  get 'statistics/series-by-match-wins', to: 'statistics#series_by_match_wins', as: :statistics_series_by_match_wins
+  get 'statistics/voice-actors-by-match-wins', to: 'statistics#voice_actors_by_match_wins', as: :statistics_voice_actors_by_match_wins
 
   get 'autocomplete' => 'application#autocomplete', as: :autocomplete
 
