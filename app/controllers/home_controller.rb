@@ -9,7 +9,7 @@ class HomeController < ApplicationController
                                            end
 
     @todays_match_view_models =
-      if (scope = Match.ordered_by_date.where(is_finished: false, date: Time.zone.now.to_date).scoped).any?
+      if (scope = Match.ordered_by_date.where(is_finished: false, date: Time.zone.now.advance(hours: 1).to_date).scoped).any?
         scope.collect {|m| MatchViewModel.new(m, cache: :home_todays_matches, match_name: :short) }
       else
         nil
