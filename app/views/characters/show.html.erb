@@ -1,5 +1,7 @@
+<% content_for :title do %>
+  <%= @character.full_name %> | Saimoe
+<% end %>
 <% series = @character.main_series %>
-
 <div class="row-fluid">
   <% if @character.avatar? %>
     <div class="span2" style="text-align: center; margin: 10px 0;">

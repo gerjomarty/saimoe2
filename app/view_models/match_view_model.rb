@@ -128,12 +128,7 @@ class MatchViewModel
 
   def match_name_content
     if match_name
-      options = {}.tap do |o|
-        o.merge!(itemprop: :name) if schema_markup
-      end
-      content_tag :span, options do
-        match.pretty(match_name)
-      end
+      match.pretty(match_name)
     end
   end
 
