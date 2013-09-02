@@ -1,5 +1,5 @@
 <% cache vm.dependencies do %>
-    <div class="<%= vm.main_div_class %>" style="<%= vm.main_div_style %>">
+    <div class="<%= vm.main_div_class %>" style="<%= vm.main_div_style %>" <%= 'itemprop="performer" itemscope itemtype="http://schema.org/Person"'.html_safe if vm.schema_markup %>>
         <%= vm.avatar_div %>
         <%= vm.stats_div %>
         <%= vm.character_div %>

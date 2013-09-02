@@ -9,7 +9,7 @@ class MatchViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :match
-  attr_accessor :cache, :match_name, :info_position, :table_margins, :show_percentages, :match_entry_ordering
+  attr_accessor :cache, :match_name, :info_position, :table_margins, :show_percentages, :match_entry_ordering, :schema_markup
 
   def to_partial_path
     'view_models/match'
@@ -39,7 +39,7 @@ class MatchViewModel
 
   def character_entries
     match_entries.collect do |me|
-      CharacterEntry.new(me, cache: [:match, cache].join('_'), show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages)
+      CharacterEntry.new(me, cache: [:match, cache].join('_'), show_color: true, transparency: transparency_strategy, right_align: alignment_strategy(me) == :right_align, show_percentage: show_percentages, schema_markup: schema_markup)
     end
   end
 
@@ -75,6 +75,9 @@ class MatchViewModel
   def match_entry_ordering
     @match_entry_ordering.nil? ? :ordered_by_position : @match_entry_ordering
   end
+  def schema_markup
+    @schema_markup.nil? ? false : @schema_markup
+  end
   def match_entry_ordering= strategy
     allowed_values = [:ordered_by_position, :ordered_by_votes]
     raise ArgumentError, "match_entry_ordering must be one of #{allowed_values.inspect}" unless allowed_values.include?(strategy)
@@ -106,7 +109,15 @@ class MatchViewModel
   end
 
   def match_date_content
-    link_to(match.date.to_s(:month_day), date_path(match.date.to_s(:number)))
+    time_options = {}.tap do |o|
+      o.merge!(itemprop: :startDate, datetime: match.date.iso8601) if schema_markup
+    end
+    link_options = {}.tap do |o|
+      o.merge!(itemprop: :url) if schema_markup
+    end
+    link_to date_path(match.date.to_s(:number)), link_options do
+      content_tag(:time, time_options) { match.date.to_s(:month_day) }
+    end
   end
 
   def match_extra_content
@@ -117,7 +128,12 @@ class MatchViewModel
 
   def match_name_content
     if match_name
-      match.pretty(match_name)
+      options = {}.tap do |o|
+        o.merge!(itemprop: :name) if schema_markup
+      end
+      content_tag :span, options do
+        match.pretty(match_name)
+      end
     end
   end
 

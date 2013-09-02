@@ -10,7 +10,7 @@ class CharacterEntry
   include ApplicationHelper
 
   attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
-  attr_accessor :cache, :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background
+  attr_accessor :cache, :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background, :schema_markup
 
   def to_partial_path
     'view_models/character_entry'
@@ -68,6 +68,9 @@ class CharacterEntry
   def grey_background
     @grey_background.nil? ? false : @grey_background
   end
+  def schema_markup
+    @schema_markup.nil? ? false : @schema_markup
+  end
 
   def main_div_class
     'character_entry'.tap do |div_class|
@@ -92,7 +95,11 @@ class CharacterEntry
   def avatar_div
     return '' unless show_avatar
     content_tag :div, class: 'character_image' do
-      image_tag avatar_url, title: character_display_name
+      options = {}.tap do |o|
+        o.merge!(title: character_display_name)
+        o.merge!(itemprop: :image) if schema_markup
+      end
+      image_tag avatar_url, options
     end
   end
 
@@ -117,13 +124,30 @@ class CharacterEntry
   def character_div
     content_tag :div, class: 'character_name' do
       if character && character_display_name
-        link_to character_display_name, character_path(character), title: character_display_name
+        link_options = {}.tap do |o|
+          o.merge!(title: character_display_name)
+          o.merge!(itemprop: :url) if schema_markup
+        end
+        span_options = {}.tap do |o|
+          o.merge!(itemprop: :name) if schema_markup
+        end
+        link_to(character_path(character), link_options) do
+          content_tag(:span, span_options) { character_display_name }
+        end
       elsif previous_match
         text = "Winner of #{previous_match.pretty(:short)}"
-        content_tag(:span, title: text) { text }
+        span_options = {}.tap do |o|
+          o.merge!(title: text)
+          o.merge!(itemprop: :name) if schema_markup
+        end
+        content_tag(:span, span_options) { text }
       else
         text = "#{match_entry.match.pretty(:short)} Entry #{match_entry.position}"
-        content_tag(:span, title: text) { text }
+        span_options = {}.tap do |o|
+          o.merge!(title: text)
+          o.merge!(itemprop: :name) if schema_markup
+        end
+        content_tag(:span, span_options) { text }
       end
     end
   end
