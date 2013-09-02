@@ -50,6 +50,11 @@ class MatchViewModel
     end
   end
 
+  def schema_description
+    match_entries.all? {|me| me.character_name } &&
+      match_entries.collect(&:character_name).join(' vs ')
+  end
+
   def match_name
     @match_name.nil? ? false : @match_name
   end

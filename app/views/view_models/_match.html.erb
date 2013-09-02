@@ -2,6 +2,9 @@
     <div class="match-view-model <%= vm.info_position_class %>" style="<%= vm.style %>" <%= 'itemscope itemtype="http://schema.org/Event"'.html_safe if vm.schema_markup %>>
         <% if vm.schema_markup %>
             <meta itemprop="name" content="<%= vm.match.pretty(:long) %>" />
+            <% if vm.schema_description %>
+                <meta itemprop="description" content="<%= vm.schema_description %>" />
+            <% end %>
         <% end %>
         <div class="match-entries <%= vm.info_position_class %>">
             <% vm.character_entries.each.with_index do |ce, i| %>
