@@ -10,7 +10,7 @@ class CharacterEntry
   include ApplicationHelper
 
   attr_reader :character, :match_entry # Can show one of these, so only one is allowed to be defined in initializer
-  attr_accessor :cache, :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :transparency, :grey_background, :schema_markup
+  attr_accessor :cache, :extra_class, :extra_style, :right_align, :show_avatar, :show_series, :show_color, :show_votes, :show_percentage, :fixed_width, :use_percentage_width, :percentage_width_max_votes, :percentage_width_min_votes, :transparency, :grey_background, :schema_markup
 
   def to_partial_path
     'view_models/character_entry'
@@ -215,7 +215,19 @@ class CharacterEntry
 
   def percentage_width
     return nil unless use_percentage_width
-    @percentage_width ||= ([100 * vote_share + 50, 100].min) if vote_share
+    return @percentage_width unless @percentage_width.nil?
+    if votes && percentage_width_max_votes && percentage_width_min_votes
+      min_percentage = 50
+      max_percentage = 100
+
+      left_span = percentage_width_max_votes - percentage_width_min_votes
+      right_span = max_percentage - min_percentage
+
+      scaled_votes = (votes - percentage_width_min_votes).to_f / left_span.to_f
+      @percentage_width = min_percentage + scaled_votes * right_span
+    else
+      @percentage_width = ([100 * vote_share + 50, 100].min) if vote_share
+    end
   end
 
   def winner?

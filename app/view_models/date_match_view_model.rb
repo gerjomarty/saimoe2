@@ -9,6 +9,7 @@ class DateMatchViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :match
+  attr_accessor :percentage_width_max_votes, :percentage_width_min_votes
 
   def to_partial_path
     'view_models/date_match'
@@ -18,8 +19,9 @@ class DateMatchViewModel
     [match]
   end
 
-  def initialize match
+  def initialize match, options={}
     @match = match
+    options.each {|key, value| self.send "#{key}=".to_sym, value }
     self
   end
 
@@ -36,7 +38,7 @@ class DateMatchViewModel
 
   def character_entries
     @character_entries ||= match.match_entries.ordered_by_votes.collect do |me|
-      CharacterEntry.new(me, cache: :date_match, show_color: true, show_percentage: true, use_percentage_width: true)
+      CharacterEntry.new(me, cache: :date_match, show_color: true, show_percentage: true, use_percentage_width: true, percentage_width_max_votes: percentage_width_max_votes, percentage_width_min_votes: percentage_width_min_votes)
     end
   end
 end
