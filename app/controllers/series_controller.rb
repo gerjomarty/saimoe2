@@ -28,6 +28,20 @@ class SeriesController < ApplicationController
                    comparison_statistics: Statistics.new(Series).get_statistic(:match_wins).before_date(Match.most_recent_finish_date),
                    entities_to_bold: @series)
 
+    if (@tournament = Tournament.ordered.last).series.include?(@series)
+      @current_vote_stats = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:total_votes).for_tournament(@tournament).for_entity(@series, true),
+                              comparison_statistics: Statistics.new(Series).get_statistic(:total_votes).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                              entities_to_bold: @series)
+      @current_appearance_stats = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:match_appearances).for_tournament(@tournament).for_entity(@series, true),
+                                    comparison_statistics: Statistics.new(Series).get_statistic(:match_appearances).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                                    entities_to_bold: @series)
+      @current_win_stats = StatisticsListViewModel.new(Statistics.new(Series).get_statistic(:match_wins).for_tournament(@tournament).for_entity(@series, true),
+                             comparison_statistics: Statistics.new(Series).get_statistic(:match_wins).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                             entities_to_bold: @series)
+    else
+      @current_vote_stats = @current_appearance_stats = @current_win_stats = nil
+    end
+
     if request.path != series_path(@series)
       redirect_to series_url(@series), status: :moved_permanently
       return

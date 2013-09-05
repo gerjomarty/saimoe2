@@ -33,6 +33,20 @@ class VoiceActorsController < ApplicationController
                    comparison_statistics: Statistics.new(VoiceActor).get_statistic(:match_wins).before_date(Match.most_recent_finish_date),
                    entities_to_bold: @voice_actor)
 
+    if (@tournament = Tournament.ordered.last).voice_actors.include?(@voice_actor)
+      @current_vote_stats = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:total_votes).for_tournament(@tournament).for_entity(@voice_actor, true),
+                              comparison_statistics: Statistics.new(VoiceActor).get_statistic(:total_votes).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                              entities_to_bold: @voice_actor)
+      @current_appearance_stats = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:match_appearances).for_tournament(@tournament).for_entity(@voice_actor, true),
+                                    comparison_statistics: Statistics.new(VoiceActor).get_statistic(:match_appearances).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                                    entities_to_bold: @voice_actor)
+      @current_win_stats = StatisticsListViewModel.new(Statistics.new(VoiceActor).get_statistic(:match_wins).for_tournament(@tournament).for_entity(@voice_actor, true),
+                             comparison_statistics: Statistics.new(VoiceActor).get_statistic(:match_wins).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                             entities_to_bold: @voice_actor)
+    else
+      @current_vote_stats = @current_appearance_stats = @current_win_stats = nil
+    end
+
     chars = Character.ordered.includes(:main_series)
                      .joins(:character_roles => {:appearances => :voice_actor_roles})
                      .where(:voice_actor_roles => {voice_actor_id: @voice_actor.id}).all.uniq.collect do |c|

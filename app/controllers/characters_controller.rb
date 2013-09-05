@@ -28,6 +28,14 @@ class CharactersController < ApplicationController
                    comparison_statistics: Statistics.new(Character).get_statistic(:match_wins).before_date(Match.most_recent_finish_date),
                    entities_to_bold: @character)
 
+    if (@tournament = Tournament.ordered.last).characters.include?(@character)
+      @current_vote_stats = StatisticsListViewModel.new(Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).for_entity(@character, true),
+                              comparison_statistics: Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).before_date(Match.most_recent_finish_date),
+                              entities_to_bold: @character)
+    else
+      @current_vote_stats = nil
+    end
+
     if request.path != character_path(@character)
       redirect_to character_url(@character), status: :moved_permanently
     end

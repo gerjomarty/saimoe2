@@ -31,23 +31,23 @@
 
         <%= drop_down 'Characters' do %>
           <%= menu_item 'View all', characters_path %>
-          <%= menu_item 'By total votes', statistics_characters_by_total_votes_path %>
-          <%= menu_item 'By match appearances', statistics_characters_by_match_appearances_path %>
-          <%= menu_item 'By match wins', statistics_characters_by_match_wins_path %>
+          <%= menu_item 'By total votes', statistics_by_total_votes_characters_path %>
+          <%= menu_item 'By match appearances', statistics_by_match_appearances_characters_path %>
+          <%= menu_item 'By match wins', statistics_by_match_wins_characters_path %>
         <% end %>
 
         <%= drop_down 'Series' do %>
           <%= menu_item 'View all', series_index_path %>
-          <%= menu_item 'By total votes', statistics_series_by_total_votes_path %>
-          <%= menu_item 'By match appearances', statistics_series_by_match_appearances_path %>
-          <%= menu_item 'By match wins', statistics_series_by_match_wins_path %>
+          <%= menu_item 'By total votes', statistics_by_total_votes_series_index_path %>
+          <%= menu_item 'By match appearances', statistics_by_match_appearances_series_index_path %>
+          <%= menu_item 'By match wins', statistics_by_match_wins_series_index_path %>
         <% end %>
 
         <%= drop_down 'Voice Actors' do %>
           <%= menu_item 'View all', voice_actors_path %>
-          <%= menu_item 'By total votes', statistics_voice_actors_by_total_votes_path %>
-          <%= menu_item 'By match appearances', statistics_voice_actors_by_match_appearances_path %>
-          <%= menu_item 'By match wins', statistics_voice_actors_by_match_wins_path %>
+          <%= menu_item 'By total votes', statistics_by_total_votes_voice_actors_path %>
+          <%= menu_item 'By match appearances', statistics_by_match_appearances_voice_actors_path %>
+          <%= menu_item 'By match wins', statistics_by_match_wins_voice_actors_path %>
         <% end %>
       <% end %>
 

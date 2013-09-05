@@ -22,43 +22,59 @@
   <h2>Statistics</h2>
 </div>
 
-<% number_of_stats_columns = [@win_stats, @appearance_stats, @vote_stats].reject {|s| s.empty? }.size %>
+<% if @current_vote_stats && !@current_vote_stats.empty? %>
+  <div class="row-fluid">
+    <div class="span12">
+      <h4>
+        Total votes in Saimoe <%= @tournament.year %><br />
+        <small>(<%= link_to 'See all', short_tournament_action_path(@tournament.year, :characters_by_total_votes) %>)</small>
+      </h4>
+      <%= render partial: 'view_models/statistics_list',
+                 object: @current_vote_stats,
+                 as: :vm %>
+    </div>
+  </div>
+<% end %>
 
-<div class="row-fluid">
-  <% unless @win_stats.empty? %>
-    <div class="span<%= 12 / number_of_stats_columns %>">
-      <h4>
-        Total match wins<br />
-        <small>(<%= link_to 'See all', statistics_characters_by_match_wins_path %>)</small>
-      </h4>
-      <%= render partial: 'view_models/statistics_list',
-                 object: @win_stats,
-                 as: :vm %>
-    </div>
-  <% end %>
-  <% unless @appearance_stats.empty? %>
-    <div class="span<%= 12 / number_of_stats_columns %>">
-      <h4>
-        Total matches participated in<br />
-        <small>(<%= link_to 'See all', statistics_characters_by_match_appearances_path %>)</small>
-      </h4>
-      <%= render partial: 'view_models/statistics_list',
-                 object: @appearance_stats,
-                 as: :vm %>
-    </div>
-  <% end %>
-  <% unless @vote_stats.empty? %>
-    <div class="span<%= 12 / number_of_stats_columns %>">
-      <h4>
-        Total votes<br />
-        <small>(<%= link_to 'See all', statistics_characters_by_total_votes_path %>)</small>
-      </h4>
-      <%= render partial: 'view_models/statistics_list',
-                 object: @vote_stats,
-                 as: :vm %>
-    </div>
-  <% end %>
-</div>
+<% number_of_stats_columns = [@win_stats, @appearance_stats, @vote_stats].reject {|s| s.nil? || s.empty? }.size %>
+
+<% if number_of_stats_columns > 0 %>
+  <div class="row-fluid">
+    <% unless @win_stats.empty? %>
+      <div class="span<%= 12 / number_of_stats_columns %>">
+        <h4>
+          Total match wins<br />
+          <small>(<%= link_to 'See all', statistics_by_match_wins_characters_path %>)</small>
+        </h4>
+        <%= render partial: 'view_models/statistics_list',
+                   object: @win_stats,
+                   as: :vm %>
+      </div>
+    <% end %>
+    <% unless @appearance_stats.empty? %>
+      <div class="span<%= 12 / number_of_stats_columns %>">
+        <h4>
+          Total matches participated in<br />
+          <small>(<%= link_to 'See all', statistics_by_match_appearances_characters_path %>)</small>
+        </h4>
+        <%= render partial: 'view_models/statistics_list',
+                   object: @appearance_stats,
+                   as: :vm %>
+      </div>
+    <% end %>
+    <% unless @vote_stats.empty? %>
+      <div class="span<%= 12 / number_of_stats_columns %>">
+        <h4>
+          Total votes<br />
+          <small>(<%= link_to 'See all', statistics_by_total_votes_characters_path %>)</small>
+        </h4>
+        <%= render partial: 'view_models/statistics_list',
+                   object: @vote_stats,
+                   as: :vm %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 <div class="page-header"<%= " style=\"border-bottom: 1px solid ##{series.color_code}\"".html_safe if series.color_code %>>
   <h2>Tournament History</h2>

@@ -256,8 +256,21 @@ class Statistics
   def filter_to_entity results
     entity_index = results.index {|_, _, e, _| @entity == e }
     return nil if entity_index.nil?
-    higher_index = @before_context == :all ? 0 : [entity_index - @before_context, 0].max
-    lower_index = @after_context == :all ? results.size - 1 : [entity_index + @after_context, results.size - 1].min
+
+    higher_index = @before_context == :all ? 0 : entity_index - @before_context
+    lower_index = @after_context == :all ? results.size - 1 : entity_index + @after_context
+
+    if higher_index < 0
+      # Add more context after the entity if there is no before context
+      lower_index += (0 - higher_index)
+      higher_index = 0
+    elsif lower_index > results.size - 1
+      # Add more context before the entity if there is no after context
+      higher_index -= (lower_index - (results.size - 1))
+      lower_index = results.size - 1
+    end
+    higher_index = [higher_index, 0].max
+    lower_index = [lower_index, results.size - 1].min
 
     return results[higher_index..lower_index] if @should_cut_off_same_rank
 

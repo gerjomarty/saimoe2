@@ -11,36 +11,41 @@ Saimoe2::Application.routes.draw do
   with_options only: [:index, :show] do |m|
     m.resources(:tournaments) do
       member do
-        get 'characters_by_total_votes'
-        get 'characters_by_average_votes'
-        get 'series_by_total_votes'
-        get 'voice_actors_by_total_votes'
-        get 'rounds_by_total_votes'
-        get 'rounds_by_vote_percentages'
-        get 'rounds_by_series_prevalence'
-        get 'rounds_by_voice_actor_prevalence'
+        get 'characters_by_total_votes', as: :characters_by_total_votes
+        get 'characters_by_average_votes', as: :characters_by_average_votes
+        get 'series_by_total_votes', as: :series_by_total_votes
+        get 'voice_actors_by_total_votes', as: :voice_actors_by_total_votes
+        get 'rounds_by_total_votes', as: :rounds_by_total_votes
+        get 'rounds_by_vote_percentages', as: :rounds_by_vote_percentages
+        get 'rounds_by_series_prevalence', as: :rounds_by_series_prevalence
+        get 'rounds_by_voice_actor_prevalence', as: :rounds_by_voice_actor_prevalence
       end
     end
     m.resources(:characters) do
-      get 'autocomplete', on: :collection
+      collection do
+        get 'autocomplete'
+        get 'by-total-votes', to: 'statistics#characters_by_total_votes', as: :statistics_by_total_votes
+        get 'by-match-appearances', to: 'statistics#characters_by_match_appearances', as: :statistics_by_match_appearances
+        get 'by-match-wins', to: 'statistics#characters_by_match_wins', as: :statistics_by_match_wins
+      end
     end
     m.resources(:series) do
-      get 'autocomplete', on: :collection
+      collection do
+        get 'autocomplete'
+        get 'by-total-votes', to: 'statistics#series_by_total_votes', as: :statistics_by_total_votes
+        get 'by-match-appearances', to: 'statistics#series_by_match_appearances', as: :statistics_by_match_appearances
+        get 'by-match-wins', to: 'statistics#series_by_match_wins', as: :statistics_by_match_wins
+      end
     end
     m.resources(:voice_actors, path: 'voice-actors') do
-      get 'autocomplete', on: :collection
+      collection do
+        get 'autocomplete'
+        get 'by-total-votes', to: 'statistics#voice_actors_by_total_votes', as: :statistics_by_total_votes
+        get 'by-match-appearances', to: 'statistics#voice_actors_by_match_appearances', as: :statistics_by_match_appearances
+        get 'by-match-wins', to: 'statistics#voice_actors_by_match_wins', as: :statistics_by_match_wins
+      end
     end
   end
-
-  get 'statistics/characters-by-total-votes', to: 'statistics#characters_by_total_votes', as: :statistics_characters_by_total_votes
-  get 'statistics/series-by-total-votes', to: 'statistics#series_by_total_votes', as: :statistics_series_by_total_votes
-  get 'statistics/voice-actors-by-total-votes', to: 'statistics#voice_actors_by_total_votes', as: :statistics_voice_actors_by_total_votes
-  get 'statistics/characters-by-match-appearances', to: 'statistics#characters_by_match_appearances', as: :statistics_characters_by_match_appearances
-  get 'statistics/series-by-match-appearances', to: 'statistics#series_by_match_appearances', as: :statistics_series_by_match_appearances
-  get 'statistics/voice-actors-by-match-appearances', to: 'statistics#voice_actors_by_match_appearances', as: :statistics_voice_actors_by_match_appearances
-  get 'statistics/characters-by-match-wins', to: 'statistics#characters_by_match_wins', as: :statistics_characters_by_match_wins
-  get 'statistics/series-by-match-wins', to: 'statistics#series_by_match_wins', as: :statistics_series_by_match_wins
-  get 'statistics/voice-actors-by-match-wins', to: 'statistics#voice_actors_by_match_wins', as: :statistics_voice_actors_by_match_wins
 
   get 'autocomplete' => 'application#autocomplete', as: :autocomplete
 
