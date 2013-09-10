@@ -9,6 +9,7 @@ gem 'nested_form', '~> 0.3.0'
 gem 'google-analytics-rails'
 gem 'rack-canonical-host', '~> 0.0.0'
 gem 'cache_digests'
+gem 'sitemap_generator', '~> 4.2.0'
 
 # memcache gems
 gem 'dalli'
