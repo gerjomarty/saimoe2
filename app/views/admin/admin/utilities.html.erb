@@ -6,7 +6,7 @@
   <div class="row-fluid">
     <div class="span6">
       <h2>Characters</h2>
-      <h4>In format <em>Japanese Character Name*, English Character Name*, Character code, Voice actor, Voice actor code, Preliminary ranking, Previous best</em> - one per line</h4>
+      <h4>In format <em>Japanese Character Name*, English Character Name*, Character code, Voice actor, Voice actor code, Preliminary ranking, Previous best, Round 1 vote rank, Round 1 votes, Round 1 percentage rank, Round 1 percentage, Defeated 1, Defeated 2, ...</em> - one per line</h4>
       <small>*: Required field</small>
       <br />
       <%= f.file_field :character_csv %>
@@ -40,6 +40,10 @@
     <h4>
       <%= f.check_box :name_round_1_matches %>
       <%= f.label :name_round_1_matches, 'Generate Round 1 match template' %>
+    </h4>
+    <h4>
+      <%= f.check_box :name_round_2_matches %>
+      <%= f.label :name_round_2_matches, 'Generate Round 2 match templates' %>
     </h4>
     <%= f.file_field :name_csv %>
   </div>

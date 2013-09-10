@@ -100,18 +100,16 @@ class Admin::AdminController < ApplicationController
     end
 
     character_arr.collect! do |i|
-      row = i.collect { |ii|
+      i.collect { |ii|
         stripped = ii.try(:strip).try(:chomp).try(:strip)
         stripped && stripped.empty? ? nil : stripped
       }.reverse.drop_while {|ii| ii.nil? }.reverse.to_a # Remove trailing nils
-      row + ([nil] * ([7 - row.size, 0].max))
     end
     series_arr.collect! do |i|
-      row = i.collect { |ii|
+      i.collect { |ii|
         stripped = ii.try(:strip).try(:chomp).try(:strip)
         stripped && stripped.empty? ? nil : stripped
       }.reverse.drop_while {|ii| ii.nil? }.reverse.to_a # Remove trailing nils
-      row + ([nil] * ([4 - row.size, 0].max))
     end
     character_arr.collect! {|i| i && i.empty? ? nil : i}
     series_arr.collect! {|i| i && i.empty? ? nil : i}
@@ -127,7 +125,7 @@ class Admin::AdminController < ApplicationController
       return
     end
 
-    # Add SERIES on to the end of character - should now have 8 entries per row
+    # Add SERIES on to the end of character
     curr_series = nil
     character_arr.collect! do |i|
       if i[0] == 'SERIES'
@@ -139,7 +137,7 @@ class Admin::AdminController < ApplicationController
     end
     character_arr.compact!
 
-    character_arr.sort_by! do |_, e_name, _, _, _, _, _, _|
+    character_arr.sort_by! do |_, e_name|
       split_name = e_name.try(:split, / /)
       if split_name.nil? || split_name.size == 1
         [e_name || '']
@@ -147,10 +145,7 @@ class Admin::AdminController < ApplicationController
         [split_name.last, e_name || '']
       end
     end
-    series_arr.sort_by! {|_, e_series, _, _| [e_series]}
-
-    $stderr.puts "\n\n\n#{character_arr.inspect}\n\n\n"
-    $stderr.puts "\n\n\n#{series_arr.inspect}\n\n\n"
+    series_arr.sort_by! {|_, e_series| [e_series]}
 
     if info[:transform] == 'name_list'
 
@@ -173,24 +168,27 @@ class Admin::AdminController < ApplicationController
           else
             ''
           end
-        }.tap {|a|
-          $stderr.puts "\n#{a.inspect}\n"
-          a
         }.collect {|id_string, id_name, id_series|
-          char_index = character_arr.index {|j_name, _, _, _, _, _, _, _| j_name == id_name} if id_name
-          series_index = series_arr.index {|j_series, _, _, _| j_series == id_series} if id_series
-          j_name, e_name, char_code, va, va_code, prelim_rank, prev_best = nil
-          j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, _ = character_arr[char_index] if char_index
+          char_index = character_arr.index {|j_name, _| j_name == id_name} if id_name
+          series_index = series_arr.index {|j_series, _| j_series == id_series} if id_series
+          j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, defeated = nil
+          if char_index
+            j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent = character_arr[char_index]
+            defeated = character_arr[char_index][11..-2]
+            defeated = nil if defeated && defeated.empty?
+          end
           j_series, e_series, series_color, series_code = nil
-          j_series, e_series, series_color, series_code = series_arr[series_index] if series_index
+          if series_index
+            j_series, e_series, series_color, series_code = series_arr[series_index]
+          end
           if e_series && char_index && e_series =~ USE_CHARACTER_ARR_SERIES_REGEXP
             e_series = character_arr[char_index].last
-            series_index = series_arr.index {|_, e_s, _, _| e_s == e_series }
+            series_index = series_arr.index {|_, e_s| e_s == e_series }
             if series_index
               _, _, series_color, series_code = series_arr[series_index]
             end
           end
-          [id_string, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code]
+          [id_string, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, defeated]
         }.each {|result|
           if result[0].present?
             sr[-1] << result
@@ -202,7 +200,7 @@ class Admin::AdminController < ApplicationController
 
       if order_by_name
         @split_names.collect! do |results|
-          results.sort_by do |_, _, e_name, _, e_series, _, _, _, _, _, _, _|
+          results.sort_by do |_, _, e_name, _, e_series|
             split_name = e_name.try(:split, / /)
             if split_name.nil? || split_name.size == 1
               [(e_name.nil? || e_series.nil?) ? 0 : 1, e_series || '', e_name || '']
@@ -214,13 +212,13 @@ class Admin::AdminController < ApplicationController
       end
 
       name_list = @split_names.collect {|r|
-        r.collect {|id_string, j_name, e_name, j_series, e_series, _, _, _, _, _, _, _|
+        r.collect {|id_string, j_name, e_name, j_series, e_series|
           "#{e_name || '???'} @ #{e_series || '???'}: #{j_name && j_series ? %Q|<<#{j_name}\uff20#{j_series}>>| : id_string}"
         }.join("<br />\r\n")
       }.join("<br /><br />\r\n\r\n")
 
       template_names = @split_names.collect do |s_result|
-        s_result.collect do |_, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code|
+        s_result.collect do |_, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, defeated|
           {name: e_name || j_name,
            series: e_series || j_series,
            character_code: char_code,
@@ -229,7 +227,12 @@ class Admin::AdminController < ApplicationController
            preliminary_rank: prelim_rank,
            previous_best: prev_best,
            series_color: series_color,
-           series_code: series_code}
+           series_code: series_code,
+           round_1_vote_rank: r1_vote_rank,
+           round_1_votes: r1_votes,
+           round_1_percentage_rank: r1_percent_rank,
+           round_1_percentage: r1_percent,
+           defeated: defeated}
         end
       end
 
@@ -239,6 +242,9 @@ class Admin::AdminController < ApplicationController
       elsif info[:name_round_1_matches] == '1'
         template = Template.new(names: template_names, result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'round_1_matches.html.erb')))
+      elsif info[:name_round_2_matches] == '1'
+        template = Template.new(names: template_names, result_list: name_list)
+                           .render(File.read(Rails.root.join('lib', 'templates', 'round_2_matches.html.erb')))
       else
         template = Template.new(result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'result_list.html.erb')))
