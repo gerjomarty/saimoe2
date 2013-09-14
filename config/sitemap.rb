@@ -1,6 +1,6 @@
 # Set the host name for URL creation
 SitemapGenerator::Sitemap.default_host = "http://www.saimoe.info"
-SitemapGenerator::Sitemap.sitemaps_host = "http://s3.amazonaws.com/#{ENV['AWS_BUCKET']}/"
+SitemapGenerator::Sitemap.sitemaps_host = "http://#{ENV['AWS_BUCKET']}.s3.amazonaws.com/"
 SitemapGenerator::Sitemap.public_path = 'tmp/carrierwave/'
 SitemapGenerator::Sitemap.sitemaps_path = 'sitemaps/'
 SitemapGenerator::Sitemap.adapter = SitemapGenerator::WaveAdapter.new

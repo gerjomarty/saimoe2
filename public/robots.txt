@@ -3,4 +3,11 @@
 # To ban all spiders from the entire site uncomment the next two lines:
 #User-Agent: *
 #Disallow: /
+
 Sitemap: http://saimoe-resources.s3.amazonaws.com/sitemaps/sitemap.xml.gz
+
+User-Agent: *
+Disallow: /admin/
+
+User-Agent: turnitinbot
+Disallow: /
