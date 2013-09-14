@@ -10,6 +10,7 @@ gem 'google-analytics-rails'
 gem 'rack-canonical-host', '~> 0.0.0'
 gem 'cache_digests'
 gem 'sitemap_generator', '~> 4.2.0'
+gem 'thin'
 
 # memcache gems
 gem 'dalli'
@@ -22,6 +23,7 @@ gem 'mime-types'
 gem 'rmagick'
 
 gem 'twitter-bootstrap-rails', '~> 2.2.0' # This has been moved outside :assets as a hack to get around twitter-bootstrap-rails issue #584
+
 group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'jquery-rails', '~> 2.2.0'
@@ -47,12 +49,10 @@ group :test do
 end
 
 group :development do
-  gem 'thin'
   gem 'heroku'
 end
 
 group :production do
-  gem 'passenger'
   gem 'newrelic_rpm'
 end
 
