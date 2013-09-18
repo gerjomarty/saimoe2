@@ -176,6 +176,8 @@ class MatchViewModel
   def transparency_strategy
     if next_match_playoff
       true
+    elsif match.tournament.stages.include?(:losers_playoff_round_1)
+      :non_losers_playoff_entries
     else
       :all_but_winner
     end

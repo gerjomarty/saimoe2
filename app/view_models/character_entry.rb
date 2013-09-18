@@ -61,7 +61,7 @@ class CharacterEntry
     @transparency.nil? ? false : @transparency
   end
   def transparency= strategy
-    allowed_values = [true, false, :all_but_winner]
+    allowed_values = [true, false, :all_but_winner, :non_losers_playoff_entries]
     raise ArgumentError, "transparency must be one of #{allowed_values.inspect}" unless allowed_values.include?(strategy)
     @transparency = strategy
   end
@@ -249,10 +249,27 @@ class CharacterEntry
   # Rendering
 
   def should_make_transparent?
-    if transparency == :all_but_winner
-      match_entry.is_finished? ? !winner? : false
-    else
+    if transparency == true || transparency == false
       transparency
+    elsif !match_entry.is_finished?
+      false
+    elsif transparency == :all_but_winner
+      !winner?
+    elsif transparency == :non_losers_playoff_entries
+      current_me = match_entry
+      winning_mes = match_entry.match.match_entries.select(&:is_winner?)
+      while current_me.match.next_match_entries.first.match.group_match? && !current_me.match.next_match_entries.select(&:is_winner).empty? do
+        winning_mes = current_me.match.next_match_entries.select(&:is_winner)
+        current_me = winning_mes.first
+      end
+      winning_appearances = winning_mes.collect(&:appearance)
+
+      if !(match_entry.match.winning_match_entries.collect(&:appearance) & winning_appearances).empty? &&
+        match_entry.match.match_entries.ordered_by_votes.with_rank.select {|r| r[:rank] == '1' || r[:rank] == '2' }.include?(match_entry)
+        false
+      else
+        true
+      end
     end
   end
 end
