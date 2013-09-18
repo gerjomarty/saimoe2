@@ -38,15 +38,17 @@ class TournamentsController < ApplicationController
   end
 
   def rounds_by_total_votes
+    winners_only = params[:winners_only] == '1'
     stats = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).in_stages
     comparison = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
-    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
+    @view_model = StatisticsListViewModel.new(stats, only_show_winners: winners_only, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_vote_percentages
+    winners_only = params[:winners_only] == '1'
     stats = Statistics.new(Character).get_statistic(:vote_share).for_tournament(@tournament).in_stages
     comparison = Statistics.new(Character).get_statistic(:vote_share).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
-    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
+    @view_model = StatisticsListViewModel.new(stats, only_show_winners: winners_only, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_series_prevalence

@@ -8,13 +8,14 @@ class StatisticsListViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :statistics, :comparison_statistics, :entities_to_bold
+  attr_accessor :only_show_winners
 
   def to_partial_path
     'view_models/statistics_list'
   end
 
   def dependencies
-    [statistics.hash, comparison_statistics.try(:hash), entities_to_bold].compact
+    [statistics.hash, comparison_statistics.try(:hash), entities_to_bold, only_show_winners].compact
   end
 
   def initialize statistics, options={}
@@ -50,7 +51,19 @@ class StatisticsListViewModel
 
     results = statistics.fetch_results
     if results.is_a? Hash
-      @statistics_results = results.collect {|r| [MatchInfo.pretty_stage(r[0]), r[1]]}
+      tournament = statistics.tournaments.first
+      @statistics_results = results.collect do |r|
+        [
+          MatchInfo.pretty_stage(r[0]),
+          r[1].collect do |stats|
+            if !only_show_winners || (only_show_winners && stats[2].matches.where(tournament_id: tournament, stage: r[0]).first.winning_match_entries.any? {|wme| wme.character == stats[2] })
+              stats
+            else
+              nil
+            end
+          end.compact
+        ]
+      end
     else
       @statistics_results = [[nil, results]]
     end
