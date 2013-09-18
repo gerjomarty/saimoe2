@@ -17,7 +17,7 @@
 class Statistics
   include ApplicationHelper
 
-  attr_reader :model_class, :render_function, :statistic_type, :sort_in_stages, :tournaments, :cut_off_date, :entity, :should_cut_off_same_rank, :before_context, :after_context
+  attr_reader :model_class, :render_function, :statistic_type, :sort_in_stages, :winners_only, :tournaments, :cut_off_date, :entity, :should_cut_off_same_rank, :before_context, :after_context
 
   ALLOWED_MODEL_CLASSES = [Character, Series, VoiceActor]
 
@@ -97,6 +97,12 @@ class Statistics
     self
   end
 
+  def for_winners_only
+    @winners_only = true
+
+    self
+  end
+
   alias_method :for_tournament, :for_tournaments
 
   def before_date date
@@ -137,6 +143,7 @@ class Statistics
 
     apply_rank
     apply_ordering
+    apply_winners
     results = @scope.collect {|r| [r[:rank].to_i,
                                    r[:stage],
                                    r[@stat_name] && @normalization_function.call(r[@stat_name]),
@@ -250,6 +257,12 @@ class Statistics
       @scope = @scope.order(:rank).merge(Series.ordered).ordered.scoped
     else
       @scope = @scope.order(:rank).ordered.scoped
+    end
+  end
+
+  def apply_winners
+    if @winners_only
+      @scope = @scope.where(match_entries: {is_winner: true}).scoped
     end
   end
 
