@@ -95,9 +95,9 @@ td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-fami
             <tr>
                 <td class="category">Defeated</td>
                 <td class="info">
-                    <%- (r[:defeated] || []).each do |defeated| -%>
+                    <% (r[:defeated] || []).each do |defeated| -%>
                         <img src="Defeated/<%= defeated %>.jpg" />
-                    <%- end -%>
+                    <% end -%>
                 </td>
             </tr>
         </table>
