@@ -8,13 +8,14 @@ class StatisticsListViewModel
   include Rails.application.routes.url_helpers
 
   attr_reader :statistics, :comparison_statistics, :entities_to_bold
+  attr_accessor :cache
 
   def to_partial_path
     'view_models/statistics_list'
   end
 
   def dependencies
-    [statistics.hash, comparison_statistics.try(:hash), entities_to_bold].compact
+    [statistics.hash, comparison_statistics.try(:hash), entities_to_bold, cache].compact
   end
 
   def initialize statistics, options={}

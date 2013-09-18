@@ -40,17 +40,23 @@ class TournamentsController < ApplicationController
   def rounds_by_total_votes
     winners_only = params[:winners_only] == '1'
     stats = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).in_stages
-    stats = stats.for_winners_only if winners_only
     comparison = Statistics.new(Character).get_statistic(:total_votes).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
-    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
+    if winners_only
+      stats = stats.for_winners_only
+      comparison = comparison.for_winners_only
+    end
+    @view_model = StatisticsListViewModel.new(stats, cache: winners_only.to_s, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_vote_percentages
     winners_only = params[:winners_only] == '1'
     stats = Statistics.new(Character).get_statistic(:vote_share).for_tournament(@tournament).in_stages
-    stats = stats.for_winners_only if winners_only
     comparison = Statistics.new(Character).get_statistic(:vote_share).for_tournament(@tournament).in_stages.before_date(@tournament.most_recent_match_date)
-    @view_model = StatisticsListViewModel.new(stats, comparison_statistics: @tournament.currently_on? ? comparison : nil)
+    if winners_only
+      stats = stats.for_winners_only
+      comparison = comparison.for_winners_only
+    end
+    @view_model = StatisticsListViewModel.new(stats, cache: winners_only.to_s, comparison_statistics: @tournament.currently_on? ? comparison : nil)
   end
 
   def rounds_by_series_prevalence
