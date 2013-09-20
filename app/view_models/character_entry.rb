@@ -17,7 +17,7 @@ class CharacterEntry
   end
 
   def dependencies
-    [character, match_entry, cache].compact
+    [character, match_entry, match_entry.match.next_match_entries.first, cache].compact
   end
 
   def initialize character_or_match_entry, options={}
@@ -258,8 +258,8 @@ class CharacterEntry
     elsif transparency == :non_losers_playoff_entries
       current_me = match_entry
       winning_mes = match_entry.match.match_entries.select(&:is_winner?)
-      while current_me.match.next_match_entries.first.match.group_match? && !current_me.match.next_match_entries.select(&:is_winner).empty? do
-        winning_mes = current_me.match.next_match_entries.select(&:is_winner)
+      while current_me.match.next_match_entries.first.match.group_match? && !current_me.match.next_match_entries.first.match.match_entries.select(&:is_winner).empty? do
+        winning_mes = current_me.match.next_match_entries.first.match.match_entries.select(&:is_winner)
         current_me = winning_mes.first
       end
       winning_appearances = winning_mes.collect(&:appearance)
