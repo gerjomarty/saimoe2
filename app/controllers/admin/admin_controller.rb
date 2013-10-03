@@ -171,10 +171,10 @@ class Admin::AdminController < ApplicationController
         }.collect {|id_string, id_name, id_series|
           char_index = character_arr.index {|j_name, _| j_name == id_name} if id_name
           series_index = series_arr.index {|j_series, _| j_series == id_series} if id_series
-          j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, defeated = nil
+          j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, r2_vote_rank, r2_votes, r2_percent_rank, r2_percent, total_votes_rank, total_votes_number, nickname, defeated = nil
           if char_index
-            j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent = character_arr[char_index]
-            defeated = character_arr[char_index][11..-2]
+            j_name, e_name, char_code, va, va_code, prelim_rank, prev_best, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, r2_vote_rank, r2_votes, r2_percent_rank, r2_percent, total_votes_rank, total_votes_number, nickname = character_arr[char_index]
+            defeated = character_arr[char_index][18..-2]
             defeated = nil if defeated && defeated.empty?
           end
           j_series, e_series, series_color, series_code = nil
@@ -188,7 +188,7 @@ class Admin::AdminController < ApplicationController
               _, _, series_color, series_code = series_arr[series_index]
             end
           end
-          [id_string, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, defeated]
+          [id_string, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, r2_vote_rank, r2_votes, r2_percent_rank, r2_percent, total_votes_rank, total_votes_number, nickname, defeated]
         }.each {|result|
           if result[0].present?
             sr[-1] << result
@@ -218,7 +218,7 @@ class Admin::AdminController < ApplicationController
       }.join("<br /><br />\r\n\r\n")
 
       template_names = @split_names.collect do |s_result|
-        s_result.collect do |_, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, defeated|
+        s_result.collect do |_, j_name, e_name, j_series, e_series, char_code, va, va_code, prelim_rank, prev_best, series_color, series_code, r1_vote_rank, r1_votes, r1_percent_rank, r1_percent, r2_vote_rank, r2_votes, r2_percent_rank, r2_percent, total_votes_rank, total_votes_number, nickname, defeated|
           {name: e_name || j_name,
            series: e_series || j_series,
            character_code: char_code,
@@ -232,6 +232,13 @@ class Admin::AdminController < ApplicationController
            round_1_votes: r1_votes,
            round_1_percentage_rank: r1_percent_rank,
            round_1_percentage: r1_percent,
+           round_2_vote_rank: r2_vote_rank,
+           round_2_votes: r2_votes,
+           round_2_percentage_rank: r2_percent_rank,
+           round_2_percentage: r2_percent,
+           total_votes_rank: total_votes_rank,
+           total_votes: total_votes_number,
+           nickname: nickname,
            defeated: defeated}
         end
       end
@@ -245,6 +252,9 @@ class Admin::AdminController < ApplicationController
       elsif info[:name_round_2_matches] == '1'
         template = Template.new(names: template_names, result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'round_2_matches.html.erb')))
+      elsif info[:name_round_3_matches] == '1'
+        template = Template.new(names: template_names, result_list: name_list)
+                           .render(File.read(Rails.root.join('lib', 'templates', 'round_3_matches.html.erb')))
       else
         template = Template.new(result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'result_list.html.erb')))
