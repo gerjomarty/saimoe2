@@ -69,7 +69,7 @@ td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-fami
             <tr>
                 <td class="leftpic"><img src="Round Three/<%= r[:name] %>.jpg" /></td>
                 <td bgcolor="#<%= r[:series_color] && r[:series_color].sub(/\A#/, '') %>" class="leftcontestant">
-                    <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor">Voice Actor: <%= r[:voice_actor] || '' %></div><div class="preliminaryranking">Preliminary Ranking: <%= r[:preliminary_rank] || '' %></div><div class="firstroundranking">Round 1 Vote Ranking: <%= r[:round_1_vote_rank] || '' %> (<%= r[:round_1_votes] || '' %>)</div><div class="firstroundranking">Round 1 Percentage Ranking: <%= r[:round_1_percentage_rank] || '' %> (<%= r[:round_1_percentage].try(:gsub, /%\Z/, '') || '' %>%)</div><div class="secondroundranking">Round 2 Vote Ranking: <%= r[:round_2_vote_rank] || '' %> (<%= r[:round_2_votes] || '' %>)</div><div class="secondroundranking">Round 2 Percentage Ranking: <%= r[:round_2_percentage_rank] || '' %> (<%= r[:round_2_percentage].try(:gsub, /%\Z/, '') || '' %>%)</div><div class="totalvotes"><b>Total Votes</b>: <%= r[:total_votes_rank] || '' %> (<%= r[:total_votes] || '' %>)</div><div class="defeated">Defeated: <%= r[:defeated].try(:join, ', ') || '' %></div><div class="previousbest"><%= r[:previous_best] == 'New Entry' ? r[:previous_best] : (r[:previous_best] ? "Previous Best: #{r[:previous_best]}" : '') %></div><div class="code"><%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %></div>
+                    <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor"><b>Voice Actor</b>: <%= r[:voice_actor] || '' %></div><div class="preliminaryranking"><b>Preliminary Ranking</b>: <%= r[:preliminary_rank] || '' %></div><div class="firstroundranking"><b>Round 1 Ranking</b>: <%= r[:round_1_vote_rank] || '' %> (<%= r[:round_1_votes] || '' %>) / <%= r[:round_1_percentage_rank] || '' %> (<%= r[:round_1_percentage].try(:gsub, /%\Z/, '') || '' %>%)</div><div class="secondroundranking"><b>Round 2 Ranking</b>: <%= r[:round_2_vote_rank] || '' %> (<%= r[:round_2_votes] || '' %>) / <%= r[:round_2_percentage_rank] || '' %> (<%= r[:round_2_percentage].try(:gsub, /%\Z/, '') || '' %>%)</div><div class="totalvotes"><b>Total Votes</b>: <%= r[:total_votes_rank] || '' %> (<%= r[:total_votes] || '' %>)</div><div class="defeated"><b>Defeated</b>: <%= r[:defeated].try(:join, ', ') || '' %></div><div class="previousbest"><b>Previous Best</b>: <%= r[:previous_best] %></div><div class="code"><%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %></div>
                 </td>
             </tr>
         <% end %>
@@ -83,7 +83,7 @@ td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-fami
     <% match.each do |r| %>
         <table class="neobracket" border="1">
             <tr>
-                <td class="name" colspan="2"><%= r[:name] %><br /><div class="nick">"<%= r[:nickname] || '' %>"</div></td>
+                <td class="name" colspan="2"><%= r[:name] %><br /><div class="nick"></div></td>
             </tr>
             <tr>
                 <td class="bigpic" colspan="2"><img src="Round Two Neo/<%= r[:name] %>.jpg" /></td>
