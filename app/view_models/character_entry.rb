@@ -17,7 +17,12 @@ class CharacterEntry
   end
 
   def dependencies
-    [character, match_entry, match_entry.try(:match).try(:next_match_entries).try(:first), cache].compact
+    [character,
+      match_entry,
+      match_entry.try(:match).try(:next_match_entries).try(:first),
+      match_entry.try(:match).try(:next_match_entries).try(:first).try(:match).try(:next_match_entries).try(:first),
+      match_entry.try(:match).try(:next_match_entries).try(:first).try(:match).try(:next_match_entries).try(:first).try(:match).try(:next_match_entries).try(:first),
+      cache].compact
   end
 
   def initialize character_or_match_entry, options={}
