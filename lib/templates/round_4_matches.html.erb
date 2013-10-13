@@ -11,7 +11,7 @@ table.neobracket { background-color: #000000 }
 
 
 td.leftpic { height: 215; width: 215; padding: 0 }
-td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 285 }
+td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 320 }
 
 <%# td.leftpic { height: 150; width: 150; padding: 0 } %>
 <%# td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 320 } %>
@@ -83,7 +83,7 @@ td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-fami
     <% match.each do |r| %>
         <table class="neobracket" border="1">
             <tr>
-                <td class="name" colspan="2"><%= r[:name] %><br /><div class="nick">"<%= '' %>"</div></td>
+                <td class="name" colspan="2"><%= r[:name] %></td>
             </tr>
             <tr>
                 <td class="bigpic" colspan="2"><img src="Round Two Neo/<%= r[:name] %>.jpg" /></td>
