@@ -262,9 +262,9 @@ class CharacterEntry
       !winner?
     elsif transparency == :non_losers_playoff_entries
       current_me = match_entry
-      winning_mes = match_entry.match.match_entries.select(&:is_winner?)
-      while current_me.match.next_match_entries.first.match.group_match? && !current_me.match.next_match_entries.first.match.match_entries.select(&:is_winner).empty? do
-        winning_mes = current_me.match.next_match_entries.first.match.match_entries.select(&:is_winner)
+      winning_mes = Array(match_entry.try(:match).try)(:match_entries)).select(&:is_winner?)
+      while current_me.try(:match).try(:next_match_entries).try(:first).try(:match).try(:group_match?) && !Array(current_me.try(:match).try(:next_match_entries).try(:first).try(:match).try(:match_entries)).select(&:is_winner).empty? do
+        winning_mes = Array(current_me.try(:match).try(:next_match_entries).try(:first).try(:match).try(:match_entries)).select(&:is_winner)
         current_me = winning_mes.first
       end
       winning_appearances = winning_mes.collect(&:appearance)
