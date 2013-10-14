@@ -264,7 +264,7 @@ class CharacterEntry
       end
       winning_appearances = winning_mes.collect(&:appearance)
 
-      if !(match_entry.match.winning_match_entries.collect(&:appearance) & winning_appearances).empty? &&
+      if !(Array(match_entry.try(:match).try(:winning_match_entries)).collect(&:appearance) & winning_appearances).empty? &&
         match_entry.match.match_entries.ordered_by_votes.with_rank.select {|r| r[:rank] == '1' || r[:rank] == '2' }.include?(match_entry)
         false
       else
