@@ -59,6 +59,11 @@ class GroupMatchesViewModel
   end
 
   def groups
-    @groups ||= tournament.groups
+    return @groups if @groups
+    if tournament.groups.include? :losers_playoff
+      @groups = [:losers_playoff] + (tournament.groups - [:losers_playoff])
+    else
+      @groups = tournament.groups
+    end
   end
 end

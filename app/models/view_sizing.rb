@@ -49,7 +49,9 @@ class ViewSizing
 
     # Magic numbers that make the tournament layout work.
     # Dear god would I like to find something better than this
-    margin += 0.17 if base_entrant_counts.size == 2
+    margin += 0.2 if base_entrant_counts.size == 1 && base_entrant_counts[0] == 3
+
+    margin += 0.9 if base_entrant_counts.size == 2
     margin -= 0 if base_entrant_counts.size == 3
     margin -= 0.25 if base_entrant_counts.size == 4
     margin -= 0.59 if base_entrant_counts.size == 6
