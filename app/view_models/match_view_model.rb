@@ -226,7 +226,9 @@ class MatchViewModel
     if table_margins
       margin = ViewSizing.match_tournament_margin match_entries.size, match.base_match_entry_counts(match.playoff_group?)
       height = ViewSizing.mvm_outer_height match.base_match_entry_counts(match.playoff_group?)
-      "padding-bottom: #{margin}em; padding-top: #{margin}em;"
+      if margin > 0
+        "padding-bottom: #{margin}em; padding-top: #{margin}em;"
+      end
     end
   end
 

@@ -115,7 +115,7 @@ class Match < ActiveRecord::Base
                        .ordered_by_position
                        .collect(&:previous_match).compact.uniq).empty?
       if allow_playoff_groups
-        {self => self.playoff_match? ? 0 : match_entries.count}
+        {self => self.playoff_match? && !self.playoff_group? ? 0 : match_entries.count}
       else
         {self => self.playoff_match? || self.playoff_group? ? 0 : match_entries.count}
       end
