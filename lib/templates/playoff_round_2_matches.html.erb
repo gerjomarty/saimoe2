@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<style type="text/css">
+
+table.layout { }
+td.layout { padding: 20 }
+table.bracket { background-color: #ffffff }
+
+td.leftpic { height: 215; width: 215; padding: 0 }
+td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 375 }
+
+.contestantname { font-size: 29; font-family: Chaparral Pro }
+.seriesname { font-size: 20; font-style: italic; font-family: Chaparral Pro }
+.voiceactor { font-size: 14; font-family: Chaparral Pro }
+.preliminaryranking { font-size: 14; font-family: Chaparral Pro }
+.firstroundranking { font-size: 14; font-family: Chaparral Pro }
+.secondroundranking { font-size: 14; font-family: Chaparral Pro }
+.totalvotes { font-size: 14; font-family: Chaparral Pro }
+.defeated { font-size: 14; font-family: Chaparral Pro }
+.previousbest { font-size: 14; font-family: Chaparral Pro }
+.code { font-size: 9; text-align: right; font-family: Chaparral Pro }
+.title { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.date { font-size: 14; font-weight: bold; font-family: Chaparral Pro }
+.shortname { }
+.win { font-weight: bold }
+
+
+</style>
+</head>
+
+<body bgcolor="#ffff99">
+
+<% names.each do |match| %>
+    <table class="bracket" border="1">
+        <% match.each do |r| %>
+            <tr>
+                <td class="leftpic"><img src="Round Three/<%= r[:name] %>.jpg" /></td>
+                <td bgcolor="#<%= r[:series_color] && r[:series_color].sub(/\A#/, '') %>" class="leftcontestant">
+                    <div class="contestantname"><%= r[:name] %></div><div class="seriesname"><%= r[:series] %></div><div class="voiceactor"><b>Voice Actor</b>: <%= r[:voice_actor] || '' %></div><div class="preliminaryranking"><b>Preliminary Ranking</b>: <%= r[:preliminary_rank] || '' %></div><div class="firstroundranking"><b>Round 1 Ranking</b>: <%= r[:round_1_vote_rank] || '' %> (<%= r[:round_1_votes] || '' %>) / <%= r[:round_1_percentage_rank] || '' %> (<%= r[:round_1_percentage].try(:gsub, /%\Z/, '') || '' %>%)</div><div class="secondroundranking"><b>Round 2 Ranking</b>: <%= r[:round_2_vote_rank] || '' %> (<%= r[:round_2_votes] || '' %>) / <%= r[:round_2_percentage_rank] || '' %> (<%= r[:round_2_percentage].try(:gsub, /%\Z/, '') || '' %>%)</div><div class="defeated"><b>Defeated By</b>: <%= r[:defeated_by] || '' %></div><div class="defeated"><b>Defeated</b>: <%= r[:defeated].try(:join, ', ') || '' %></div><div class="previousbest"><b>Previous Best</b>: <%= r[:previous_best] || '' %></div><div class="code"><%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %></div>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+    <br /><br />
+<% end %>
+
+<br /><br /><br />
+
+<% if result_list %>
+    <%= result_list %>
+<% end %>
+
+</body>
+</html>

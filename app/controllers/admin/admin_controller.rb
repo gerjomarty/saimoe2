@@ -266,6 +266,9 @@ class Admin::AdminController < ApplicationController
       elsif info[:name_playoff_round_1_matches] == '1'
         template = Template.new(names: template_names, result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'playoff_round_1_matches.html.erb')))
+      elsif info[:name_playoff_round_2_matches] == '1'
+        template = Template.new(names: template_names, result_list: name_list)
+                           .render(File.read(Rails.root.join('lib', 'templates', 'playoff_round_2_matches.html.erb')))
       else
         template = Template.new(result_list: name_list)
                            .render(File.read(Rails.root.join('lib', 'templates', 'result_list.html.erb')))
