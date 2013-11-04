@@ -20,12 +20,12 @@ td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 320 }
 <%# td.year { padding: 1; text-align: center; max-height: 40; width: 40 } %>
 <%# td.history { padding: 1; text-align: left; max-height: 40; width: 398 } %>
 
-td.name { width: 496; padding: 0; text-align: center; font-family: OCR A Std; font-size: 31; color: #00ff00 }
+td.name { width: 496; padding: 0; text-align: center; font-family: OCR A Std; font-size: 32; color: #00ff00 }
 td.nickname { width: 496; padding: 0; text-align: center; font-family: OCR A Std; font-size: 24; color: #00ff00 }
 td.bigpic { width: 496; padding: 0 }
 td.category { width: 250; padding: 0; font-family: OCR A Std; font-size: 18; color: #00ff00 }
 td.info { padding: 1; text-align: left; max-height: 40; width: 240; font-family: OCR A Std; font-size: 18; color: #00ff00 }
-td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-family: OCR A Std; font-size: 18; color: #00ff00 }
+td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-family: OCR A Std; font-size: 21; color: #00ff00 }
 
 .contestantname { font-size: 36; font-family: Chaparral Pro }
 .seriesname { font-size: 25; font-style: italic; font-family: Chaparral Pro }
@@ -102,7 +102,7 @@ td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-fami
             </tr>
             <tr>
                 <td class="category">Playoff Votes</td>
-                <td class="info"><%= r[:playoff_votes] || '' %></td>
+                <td class="info"><%= "#{r[:playoff_votes]} votes" || '' %></td>
             </tr>
             <tr>
                 <td class="category">Total Votes</td>
