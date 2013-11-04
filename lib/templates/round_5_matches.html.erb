@@ -1,0 +1,134 @@
+
+<html>
+
+<head>
+<style type="text/css">
+
+table.layout { }
+td.layout { padding: 20 }
+table.bracket { background-color: #ffffff }
+table.neobracket { background-color: #000000 }
+
+
+td.leftpic { height: 215; width: 215; padding: 0 }
+td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 320 }
+
+<%# td.leftpic { height: 150; width: 150; padding: 0 } %>
+<%# td.leftcontestant { padding: 1; text-align: left; max-height: 40; width: 320 } %>
+<%# td.eventtitle { padding: 1; text-align: center; max-height: 40; width: 400 } %>
+<%# td.event { padding: 1; text-align: left; max-height: 40; width: 400 } %>
+<%# td.year { padding: 1; text-align: center; max-height: 40; width: 40 } %>
+<%# td.history { padding: 1; text-align: left; max-height: 40; width: 398 } %>
+
+td.name { width: 496; padding: 0; text-align: center; font-family: OCR A Std; font-size: 31; color: #00ff00 }
+td.nickname { width: 496; padding: 0; text-align: center; font-family: OCR A Std; font-size: 24; color: #00ff00 }
+td.bigpic { width: 496; padding: 0 }
+td.category { width: 250; padding: 0; font-family: OCR A Std; font-size: 18; color: #00ff00 }
+td.info { padding: 1; text-align: left; max-height: 40; width: 240; font-family: OCR A Std; font-size: 18; color: #00ff00 }
+td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-family: OCR A Std; font-size: 18; color: #00ff00 }
+
+.contestantname { font-size: 36; font-family: Chaparral Pro }
+.seriesname { font-size: 25; font-style: italic; font-family: Chaparral Pro }
+.voiceactor { font-size: 20; font-family: Chaparral Pro }
+.preliminaryranking { font-size: 15; font-family: Chaparral Pro }
+.firstroundranking { font-size: 15; font-family: Chaparral Pro }
+.secondroundranking { font-size: 15; font-family: Chaparral Pro }
+.thirdroundranking { font-size: 15; font-family: Chaparral Pro }
+.totalvotes { font-size: 15; font-family: Chaparral Pro }
+.defeated { font-size: 15; font-family: Chaparral Pro }
+.previousbest { font-size: 15; font-family: Chaparral Pro }
+.code { font-size: 9; text-align: right; font-family: Chaparral Pro }
+.date {  }
+.shortname { }
+.win { font-weight: bold }
+
+<%# .contestantname { font-size: 24; font-family: Chaparral Pro } %>
+<%# .seriesname { font-size: 15; font-style: italic; font-family: Chaparral Pro } %>
+<%# .voiceactor { font-size: 13; font-family: Chaparral Pro } %>
+<%# .preliminaryranking { font-size: 13; font-family: Chaparral Pro } %>
+<%# .firstroundranking { font-size: 13; font-family: Chaparral Pro } %>
+<%# .defeated { font-size: 13; font-family: Chaparral Pro } %>
+<%# .previousbest { font-size: 13; font-family: Chaparral Pro } %>
+<%# .code { font-size: 9; text-align: right; font-family: Chaparral Pro } %>
+<%# .title { font-size: 14; font-weight: bold; font-family: Chaparral Pro } %>
+<%# .words { font-size: 14; font-family: Chaparral Pro } %>
+<%# .date { font-size: 14; font-weight: bold; font-family: Chaparral Pro } %>
+<%# .shortname { } %>
+<%# .win { font-weight: bold } %>
+
+.nick { font-size: 22 }
+
+</style>
+</head>
+
+<body bgcolor="#ffff99">
+
+<% names.each do |match| %>
+    <% match.each do |r| %>
+        <table class="neobracket" border="1">
+            <tr>
+                <td class="name" colspan="2"><%= r[:name] %></td>
+            </tr>
+            <tr>
+                <td class="bigpic" colspan="2"><img src="Round Two Neo/<%= r[:name] %>.jpg" /></td>
+            </tr>
+            <tr>
+                <td class="category">Series</td>
+                <td class="info"><%= r[:series] %></td>
+            </tr>
+            <tr>
+                <td class="category">Voice Actor</td>
+                <td class="info"><%= r[:voice_actor] || '' %></td>
+            </tr>
+            <tr>
+                <td class="category">Preliminary Ranking</td>
+                <td class="info"><%= r[:preliminary_rank] || '' %></td>
+            </tr>
+            <tr>
+                <td class="category">Round 1 Ranking</td>
+                <td class="info"><%= r[:round_1_votes] || '' %> votes (<%= r[:round_1_vote_rank] || '' %>)<br /><%= r[:round_1_percentage].try(:gsub, /%\Z/, '') || '' %>% (<%= r[:round_1_percentage_rank] || '' %>)</td>
+            </tr>
+            <tr>
+                <td class="category">Round 2 Ranking</td>
+                <td class="info"><%= r[:round_2_votes] || '' %> votes (<%= r[:round_2_vote_rank] || '' %>)<br /><%= r[:round_2_percentage].try(:gsub, /%\Z/, '') || '' %>% (<%= r[:round_2_percentage_rank] || '' %>)</td>
+            </tr>
+            <tr>
+                <td class="category">Round 3 Ranking</td>
+                <td class="info"><%= r[:round_3_votes] || '' %> votes (<%= r[:round_3_vote_rank] || '' %>)<br /><%= r[:round_3_percentage].try(:gsub, /%\Z/, '') || '' %>% (<%= r[:round_3_percentage_rank] || '' %>)</td>
+            </tr>
+            <tr>
+                <td class="category">Round 4 Ranking</td>
+                <td class="info"><%= r[:round_4_votes] || '' %> votes (<%= r[:round_4_vote_rank] || '' %>)<br /><%= r[:round_4_percentage].try(:gsub, /%\Z/, '') || '' %>% (<%= r[:round_4_percentage_rank] || '' %>)</td>
+            </tr>
+            <tr>
+                <td class="category">Playoff Votes</td>
+                <td class="info"><%= r[:playoff_votes] || '' %></td>
+            </tr>
+            <tr>
+                <td class="category">Total Votes</td>
+                <td class="info"><%= r[:total_votes] || '' %> (<%= r[:total_votes_rank] || '' %>)</td>
+            </tr>
+            <tr>
+                <td class="category">Previous Best</td>
+                <td class="info"><%= r[:previous_best] || '' %></td>
+            </tr>
+            <tr>
+                <td class="category">Defeated</td>
+                <td class="info"><% (r[:defeated] || []).each do |defeated| %><img src="charticons/<%= defeated %>.jpg" /><% end %>
+                </td>
+            </tr>
+        </table>
+        <br /><br />
+        <%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %>
+        <br /><br />
+    <% end %>
+<% end %>
+
+<br /><br /><br />
+
+<% if result_list %>
+    <%= result_list %>
+<% end %>
+
+</body>
+</html>
