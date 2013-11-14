@@ -122,7 +122,7 @@ td.infoc { padding: 1; text-align: center; max-height: 40; width: 240; font-fami
         <br /><br />
         <%= "#{r[:character_code] || '*CHARCODE*'}#{r[:series_code] || '*SERIESCODE*'}#{r[:voice_actor_code] || '*VACODE*'}" %>
         <br /><br />
-        <table class="bracket" border="1">
+        <table class="neobracket" border="1">
             <tr>
                 <td class="category7">Defeated</td>
                 <td class="info7"><% (r[:defeated] || []).each do |defeated| %><img src="charticons/<%= defeated %>.jpg" /><% end %></td>
