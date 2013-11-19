@@ -6,7 +6,7 @@
   <div class="row-fluid">
     <div class="span6">
       <h2>Characters</h2>
-      <h4>In format <em>Japanese Character Name*, English Character Name*, Character code, Voice actor, Voice actor code, Preliminary ranking, Previous best, Round 1 vote rank, Round 1 votes, Round 1 percentage rank, Round 1 percentage, Round 2 vote rank, Round 2 votes, Round 2 percentage rank, Round 2 percentage, Round 3 vote rank, Round 3 votes, Round 3 percentage rank, Round 3 percentage, Round 4 vote rank, Round 4 votes, Round 4 percentage rank, Round 4 percentage, Playoff votes, Round 5 vote rank, Round 5 votes, Round 5 percentage rank, Round 5 percentage, Total votes rank, Total votes, Nickname, Defeated 1, Defeated 2, ...</em> - one per line</h4>
+      <h4>In format <em>Japanese Character Name*, English Character Name*, Character code, Voice actor, Voice actor code, Preliminary ranking, Previous best, Round 1 vote rank, Round 1 votes, Round 1 percentage rank, Round 1 percentage, Round 2 vote rank, Round 2 votes, Round 2 percentage rank, Round 2 percentage, Round 3 vote rank, Round 3 votes, Round 3 percentage rank, Round 3 percentage, Round 4 vote rank, Round 4 votes, Round 4 percentage rank, Round 4 percentage, Playoff votes, Round 5 vote rank, Round 5 votes, Round 5 percentage rank, Round 5 percentage, Round 6 vote rank, Round 6 votes, Round 6 percentage rank, Round 6 percentage, Total votes rank, Total votes, Nickname, Defeated 1, Defeated 2, ...</em> - one per line</h4>
       <small>*: Required field</small>
       <br />
       <%= f.file_field :character_csv %>
@@ -72,6 +72,10 @@
     <h4>
       <%= f.check_box :name_round_6_matches %>
       <%= f.label :name_round_6_matches, 'Generate Round 6 match templates' %>
+    </h4>
+    <h4>
+      <%= f.check_box :name_round_7_matches %>
+      <%= f.label :name_round_7_matches, 'Generate Round 7 match templates' %>
     </h4>
     <%= f.file_field :name_csv %>
   </div>
