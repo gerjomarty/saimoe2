@@ -2,7 +2,14 @@
   <%= @series.name %> | Saimoe
 <% end -%>
 <div class="row-fluid">
-  <div class="span12">
+  <% if @series.image? %>
+    <div class="span2" style="text-align: center; margin: 10px 0;">
+      <%= image_tag @series.image_url, size: '200x200' %>
+    </div>
+    <div class="span10">
+  <% else %>
+    <div class="span12">
+  <% end %>
     <h1><%= @series.name %></h1>
   </div>
 </div>
@@ -138,3 +145,7 @@
 <div class="form-actions">
   <%= link_to 'Series index', series_index_path, class: 'btn' %>
 </div>
+
+<% if @series.image? %>
+  <p>Series image courtesy of <%= link_to 'Square Anime Folder Icons', 'http://animuandomango.blogspot.co.uk/' %>.</p>
+<% end %>

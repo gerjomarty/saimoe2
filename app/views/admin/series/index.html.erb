@@ -1,0 +1,18 @@
+<h1>Listing series</h1>
+
+<%= link_to 'New Series', new_admin_series_path %>
+
+<br />
+
+<table>
+<% @series.each do |series| %>
+  <tr>
+    <td><%= series.name %></td>
+    <td style="background-color: #<%= series.color_code || 'FFFFFF' %>">&nbsp;&nbsp;&nbsp;</td>
+    <td><%= series.color_code ? "##{series.color_code}" : 'No color code' %></td>
+    <td><%= link_to 'Show', series %></td>
+    <td><%= link_to 'Edit', edit_admin_series_path(series) %></td>
+    <td><%= link_to 'Destroy', admin_series_path(series), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>

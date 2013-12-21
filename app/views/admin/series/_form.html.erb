@@ -1,0 +1,42 @@
+<%= form_for [:admin, @series], class: 'form-horizontal', html: {multipart: true} do |f| %>
+    <div class="well">
+        <div class="control-group">
+            <%= f.label :name, 'Name' %>
+            <div class="controls">
+                <%= f.text_field :name %>
+            </div>
+        </div>
+        <div class="control-group">
+            <%= f.label :color_code, 'Color code' %>
+            <div class="controls">
+                <div class="input-prepend">
+                    <span class="add-on">#</span>
+                    <%= f.text_field :color_code %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="well">
+        <% if @series.image? %>
+            <%= image_tag @series.image_url %>
+        <% else %>
+            <p>No image</p>
+        <% end %>
+        <div class="control-group">
+            <%= f.label :image, 'Select an image from file...' %>
+            <%= content_tag(:div, class: 'controls') { f.file_field :image } %>
+            <%= f.hidden_field :image_cache %>
+        </div>
+        <div class="control-group">
+            <%= f.label :remote_image_url, '...or upload one from a URL' %>
+            <%= content_tag(:div, class: 'controls') { f.text_field :remote_image_url } %>
+        </div>
+        <div class="control-group">
+            <%= f.label :remove_image, 'Remove current image?' %>
+            <%= content_tag(:div, class: 'controls') { f.check_box :remove_image } %>
+        </div>
+    </div>
+    <div class="form-actions">
+        <%= f.submit %>
+    </div>
+<% end %>

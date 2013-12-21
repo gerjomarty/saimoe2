@@ -6,6 +6,7 @@ Saimoe2::Application.routes.draw do
     get 'clear-cache', to: 'admin#clear_cache', as: :clear_cache
 
     resources :characters, except: :show
+    resources :series, except: :show
   end
 
   with_options only: [:index, :show] do |m|

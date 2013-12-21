@@ -9,6 +9,8 @@ class Series < ActiveRecord::Base
 
   before_validation :generate_sortable_name
 
+  mount_uploader :image, SeriesImageUploader
+
   has_many :main_characters, class_name: 'Character', inverse_of: :main_series, foreign_key: :main_series_id
   has_many :character_roles, inverse_of: :series
 
