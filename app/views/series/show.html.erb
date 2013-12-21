@@ -4,7 +4,7 @@
 <div class="row-fluid">
   <% if @series.image? %>
     <div class="span2" style="text-align: center; margin: 10px 0;">
-      <%= image_tag @series.image_url, size: '200x200' %>
+      <%= image_tag @series.image_url(:normal), size: '200x200' %>
     </div>
     <div class="span10">
   <% else %>
