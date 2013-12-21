@@ -8,8 +8,6 @@ class SeriesImageUploader < CarrierWave::Uploader::Base
     "series-images"
   end
 
-  process convert: 'png'
-
   process :set_content_type
 
   version :normal do
@@ -17,7 +15,7 @@ class SeriesImageUploader < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(jpg jpeg gif png ico)
+    %w(jpg jpeg gif png)
   end
 
   def filename
