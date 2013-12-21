@@ -113,8 +113,19 @@ class StatisticsListViewModel
 
   def render_name entity, series
     content_tag(:td, class: (:emphasize if should_bold_entity?(entity))) do
-      tag = link_to(entity.to_s, polymorphic_path(entity))
-      tag += (' @ ' + link_to(series.to_s, polymorphic_path(series))).html_safe if series
+      if should_bold_entity?(entity)
+        tag = entity.to_s
+      else
+        tag = link_to(entity.to_s, polymorphic_path(entity))
+      end
+      if series
+        tag += ' @ '.html_safe
+        if should_bold_entity?(entity)
+          tag += series.to_s
+        else
+          tag += link_to(series.to_s, polymorphic_path(series)).html_safe
+        end
+      end
       tag
     end
   end
