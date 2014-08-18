@@ -27,6 +27,13 @@
             <% end %>
           <% end %>
 
+          <% if @tournament.year == '2014' %>
+            <%= menu_group do %>
+              <%= menu_item 'Code Generator', 'http://rose-lilac.sakura.ne.jp/code/index.html' %>
+              <%= menu_item 'Voting Board', 'http://saimoe.thread.jp/ast/' %>
+            <% end %>
+          <% end %>
+
         <% end %>
 
     <% end %>

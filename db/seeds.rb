@@ -50,7 +50,7 @@ def build_match_details year, stage, group, match_no, match_hash, va_hash
                     group: me[:previous_match][:group],
                     match_number: me[:previous_match][:match_number] == 'null' ? nil : me[:previous_match][:match_number]).first!
     if prev_match.nil? && (MatchInfo::STAGES - [:round_1, :round_1_playoff]).include?(stage)
-      raise "Possible problem with prev match for match entry #{me.inspect}" unless year.to_s == '2013'
+      raise "Possible problem with prev match for match entry #{me.inspect}" unless %w(2013 2014).include?(year.to_s)
     end
     MatchEntry.create! me.slice(:number_of_votes, :position).merge(match: m, appearance: app, previous_match: prev_match)
   end
@@ -65,14 +65,14 @@ end
 
 $stderr.print "Initialising tournaments..."
 
-(2002..2013).each do |year|
+(2002..2014).each do |year|
   t = Tournament.find_or_initialize_by_year year.to_s
   t.group_stages = case year
     when 2002
       [:round_1, :round_1_playoff, :round_2, :round_2_playoff, :round_3, :group_final]
     when 2003
       [:round_1, :round_1_playoff, :round_2, :round_3, :group_final]
-    when 2004, 2010
+    when 2004, 2010, 2014
       [:round_1, :round_2, :group_final]
     when 2005..2009, 2011, 2012
       [:round_1, :round_2, :round_3, :group_final]
@@ -86,6 +86,8 @@ $stderr.print "Initialising tournaments..."
       [:last_16, :quarter_final, :semi_final, :final]
     when 2003..2012
       [:quarter_final, :semi_final, :final]
+    when 2014
+      [:last_32, :last_16, :quarter_final, :semi_final, :final]
     else
       raise "Year #{year} doesn't have final stages defined"
   end
@@ -159,7 +161,7 @@ end
 
 $stderr.puts " done!"
 
-(2002..2013).each do |year|
+(2002..2014).each do |year|
   year = year.to_s
   $stderr.print "Loading match data from #{year}..."
 

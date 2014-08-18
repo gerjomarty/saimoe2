@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130810172407) do
+ActiveRecord::Schema.define(:version => 20131221174512) do
 
   create_table "appearances", :force => true do |t|
     t.string   "character_display_name"
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(:version => 20130810172407) do
     t.datetime "updated_at",                 :null => false
     t.string   "slug",                       :null => false
     t.string   "sortable_name",              :null => false
+    t.string   "image"
   end
 
   add_index "series", ["slug"], :name => "index_series_on_slug", :unique => true
