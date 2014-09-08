@@ -40,7 +40,24 @@ class MatchEntry < ActiveRecord::Base
     return value unless value.nil?
 
     return false unless is_finished?
-    match.match_entries.where(number_of_votes: match.match_entries.maximum(:number_of_votes)).include? self
+
+    if match.group == :losers_playoff_single
+      case match.stage
+      when :losers_playoff_round_1
+        no_of_winners = 24
+      when :losers_playoff_round_2
+        no_of_winners = 16
+      when :losers_playoff_finals
+        no_of_winners = 8
+      else
+        raise "Unknown playoff stage #{match.stage} passed"
+      end
+
+      winning_vote_count = match.match_entries.ordered_by_votes[no_of_winners - 1].number_of_votes
+      self.number_of_votes >= winning_vote_count
+    else
+      match.match_entries.where(number_of_votes: match.match_entries.maximum(:number_of_votes)).include? self
+    end
   end
 
   def vote_share

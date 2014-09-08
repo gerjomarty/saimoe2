@@ -72,12 +72,14 @@ $stderr.print "Initialising tournaments..."
       [:round_1, :round_1_playoff, :round_2, :round_2_playoff, :round_3, :group_final]
     when 2003
       [:round_1, :round_1_playoff, :round_2, :round_3, :group_final]
-    when 2004, 2010, 2014
+    when 2004, 2010
       [:round_1, :round_2, :group_final]
     when 2005..2009, 2011, 2012
       [:round_1, :round_2, :round_3, :group_final]
     when 2013
       [:round_1, :round_2, :round_3, :group_final, :losers_playoff_round_1, :losers_playoff_round_2, :losers_playoff_finals]
+    when 2014
+      [:round_1, :round_2, :group_final, :losers_playoff_round_1, :losers_playoff_round_2, :losers_playoff_finals]
     else
       raise "Year #{year} doesn't have group stages defined"
   end
@@ -94,7 +96,7 @@ $stderr.print "Initialising tournaments..."
   t.group_stages_with_playoffs_to_display =
     if year == 2002
       [:round_1, :round_2]
-    elsif year == 2013
+    elsif year == 2013 || year == 2014
       [:losers_playoff_round_1, :losers_playoff_round_2, :losers_playoff_finals]
     else
       nil

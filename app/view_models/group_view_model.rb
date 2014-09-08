@@ -25,12 +25,19 @@ class GroupViewModel
 
   def render_group_stages
     stages.collect.with_index do |stage, index|
-      {
-        stage: MatchInfo.pretty_stage(stage),
-        match_view_models: matches_for(stage).collect do |match|
-          MatchViewModel.new(match, cache: :group, table_margins: index > 0)
-        end
-      }
+      if group == :losers_playoff_single
+        {
+          stage: MatchInfo.pretty_stage(stage),
+          linked_match: matches_for(stage).first
+        }
+      else
+        {
+          stage: MatchInfo.pretty_stage(stage),
+          match_view_models: matches_for(stage).collect do |match|
+            MatchViewModel.new(match, cache: :group, table_margins: index > 0)
+          end
+        }
+      end
     end
   end
 

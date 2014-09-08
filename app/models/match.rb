@@ -143,7 +143,12 @@ class Match < ActiveRecord::Base
       when :final                                then 'Grand Final'
       when :semi_final, :quarter_final, :last_16 then "#{pretty_stage} #{match_number}"
       when :group_final                          then "#{pretty_group} Final"
-      else                                            "#{pretty_stage} Match #{pretty_group(:short)}#{match_number}"
+      else
+        if [:losers_playoff, :losers_playoff_single].include? group
+          "#{pretty_stage} Match #{match_number}".chomp(' Match ')
+        else
+          "#{pretty_stage} Match #{pretty_group(:short)}#{match_number}"
+        end
       end
     when :short
       case stage

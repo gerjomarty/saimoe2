@@ -140,7 +140,7 @@ class CharacterEntry
           content_tag(:span, span_options) { character_display_name }
         end
       elsif previous_match
-        text = "Winner of #{previous_match.pretty(:short)}"
+        text = "See Match #{previous_match.pretty(:short)}"
         span_options = {}.tap do |o|
           o.merge!(title: text)
           o.merge!(itemprop: :name) if schema_markup
