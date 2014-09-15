@@ -52,12 +52,14 @@ class MatchEntry < ActiveRecord::Base
       else
         raise "Unknown playoff stage #{match.stage} passed"
       end
-
-      winning_vote_count = match.match_entries.ordered_by_votes[no_of_winners - 1].number_of_votes
-      self.number_of_votes >= winning_vote_count
+    elsif match.stage == :last_32
+      no_of_winners = 2
     else
-      match.match_entries.where(number_of_votes: match.match_entries.maximum(:number_of_votes)).include? self
+      no_of_winners = 1
     end
+
+    winning_vote_count = match.match_entries.ordered_by_votes[no_of_winners - 1].number_of_votes
+    self.number_of_votes >= winning_vote_count
   end
 
   def vote_share
