@@ -58,8 +58,10 @@ class Admin::AdminController < ApplicationController
         app = m.winning_match_entries[0].appearance
         if MatchEntry.where(previous_match_id: m.id).size == 1
           next_me = MatchEntry.where(previous_match_id: m.id).first
-          next_me.appearance = app
-          next_me.save!
+          unless next_me.match.playoff_match?
+            next_me.appearance = app
+            next_me.save!
+          end
         end
       end
     end
