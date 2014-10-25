@@ -140,9 +140,9 @@ class Match < ActiveRecord::Base
     case length
     when :long
       case stage
-      when :final                                then 'Grand Final'
-      when :semi_final, :quarter_final, :last_16 then "#{pretty_stage} #{match_number}"
-      when :group_final                          then "#{pretty_group} Final"
+      when :final                                          then 'Grand Final'
+      when :semi_final, :quarter_final, :last_16, :last_32 then "#{pretty_stage} #{match_number}"
+      when :group_final                                    then "#{pretty_group} Final"
       else
         if [:losers_playoff, :losers_playoff_single].include? group
           "#{pretty_stage} Match #{match_number}".chomp(' Match ')
@@ -156,6 +156,7 @@ class Match < ActiveRecord::Base
       when :semi_final             then "SF #{match_number}"
       when :quarter_final          then "QF #{match_number}"
       when :last_16                then "L16 #{match_number}"
+      when :last_32                then "L32 #{match_number}"
       when :losers_playoff_finals  then "LP Final #{match_number}"
       when :losers_playoff_round_2 then "LP R2 #{match_number}"
       when :losers_playoff_round_1 then "LP R1 #{match_number}"
