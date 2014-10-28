@@ -46,22 +46,26 @@
 
         <div class="cb"></div>
 
-        <% if vm.last_16_view_models.any? %>
-            <hr />
-            <h3><%= MatchInfo.pretty_stage(:last_16) %></h3>
-            <div class="last-16">
-                <% vm.last_16_view_models.each do |matches_block| %>
-                    <div class="last-16-block">
-                        <%= render partial: 'view_models/match',
-                                   object: matches_block[0],
-                                   as: :vm %>
-                        <div class="cb"></div>
-                        <%= render partial: 'view_models/match',
-                                   object: matches_block[1],
-                                   as: :vm %>
-                    </div>
-                <% end %>
-            </div>
+        <% [[:last_16, vm.last_16_view_models],
+            [:last_32, vm.last_32_view_models]].each do |stage, view_models| %>
+            <% if view_models.any? %>
+                <div class="cb"></div>
+                <hr />
+                <h3><%= MatchInfo.pretty_stage(stage) %></h3>
+                <div class="last-x">
+                    <% view_models.each do |matches_block| %>
+                        <div class="last-x-block">
+                            <%= render partial: 'view_models/match',
+                                       object: matches_block[0],
+                                       as: :vm %>
+                            <div class="cb"></div>
+                            <%= render partial: 'view_models/match',
+                                       object: matches_block[1],
+                                       as: :vm %>
+                        </div>
+                    <% end %>
+                </div>
+            <% end %>
         <% end %>
     </div>
 <% end %>

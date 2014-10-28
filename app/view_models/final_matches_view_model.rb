@@ -52,7 +52,13 @@ class FinalMatchesViewModel
 
   def last_16_view_models
     last_16_matches.collect do |match|
-      MatchViewModel.new(match, cache: :final_matches)
+      MatchViewModel.new(match, cache: :final_matches, match_name: :short)
+    end.each_slice(2)
+  end
+
+  def last_32_view_models
+    last_32_matches.collect do |match|
+      MatchViewModel.new(match, cache: :final_matches, match_name: :short)
     end.each_slice(2)
   end
 
@@ -89,5 +95,9 @@ class FinalMatchesViewModel
 
   def last_16_matches
     @last_16_matches ||= matches.select {|m| m.stage == :last_16}
+  end
+
+  def last_32_matches
+    @last_32_matches ||= matches.select {|m| m.stage == :last_32}
   end
 end
