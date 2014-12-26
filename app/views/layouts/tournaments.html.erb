@@ -26,14 +26,6 @@
               <%= menu_item 'Rounds by voice actor prevalence', short_tournament_action_path(@tournament.year, :rounds_by_voice_actor_prevalence)  %>
             <% end %>
           <% end %>
-
-          <% if @tournament.year == '2014' %>
-            <%= menu_group do %>
-              <%= menu_item 'Code Generator', 'http://rose-lilac.sakura.ne.jp/code/index.html' %>
-              <%= menu_item 'Voting Board', 'http://saimoe.thread.jp/ast/' %>
-            <% end %>
-          <% end %>
-
         <% end %>
 
     <% end %>
