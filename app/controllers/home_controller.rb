@@ -2,11 +2,15 @@ class HomeController < ApplicationController
   layout 'tournaments'
 
   def index
-    @most_recent_view_models = Match.ordered_by_date
-                                    .where(is_finished: true,
-                                           date: Match.where(is_finished: true).maximum(:date)).collect do |m|
-                                             MatchViewModel.new(m, cache: :home_most_recent, match_name: :short, show_percentages: true, match_entry_ordering: :ordered_by_votes)
-                                           end
+    if Tournament.all.any?(&:currently_on?)
+      @most_recent_view_models = Match.ordered_by_date
+                                      .where(is_finished: true,
+                                             date: Match.where(is_finished: true).maximum(:date)).collect do |m|
+                                               MatchViewModel.new(m, cache: :home_most_recent, match_name: :short, show_percentages: true, match_entry_ordering: :ordered_by_votes)
+                                             end
+    else
+      @most_recent_view_models = []
+    end
 
     today = Time.zone.now.advance(hours: 1).to_date
 
