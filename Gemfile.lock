@@ -137,6 +137,11 @@ GEM
       activesupport (= 3.2.11)
       bundler (~> 1.0)
       railties (= 3.2.11)
+    rails_12factor (0.0.3)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.5)
+    rails_stdout_logging (0.0.5)
     railties (3.2.11)
       actionpack (= 3.2.11)
       activesupport (= 3.2.11)
@@ -240,6 +245,7 @@ DEPENDENCIES
   pg
   rack-canonical-host (~> 0.0.0)
   rails (= 3.2.11)
+  rails_12factor
   rake
   rmagick
   rspec-rails (~> 2.12.0)
@@ -251,3 +257,9 @@ DEPENDENCIES
   thin
   twitter-bootstrap-rails (~> 2.2.0)
   uglifier (>= 1.0.3)
+
+RUBY VERSION
+   ruby 1.9.3p545
+
+BUNDLED WITH
+   1.13.1
